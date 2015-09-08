@@ -35,20 +35,34 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <Folder Include="Commands\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicType.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandClass.cs" />
+    <Compile Include="Commands\CommandInvoker.cs" />
+    <Compile Include="Commands\ICommandInvoker.cs" />
+    <Compile Include="Communication\EventMessage.cs" />
+    <Compile Include="Communication\EventMessageEventArgs.cs" />
     <Compile Include="Communication\Exceptions.cs" />
     <Compile Include="Communication\FrameHeader.cs" />
     <Compile Include="Communication\Function.cs" />
+    <Compile Include="Communication\IMessageChannel.cs" />
     <Compile Include="Communication\ISerialPort.cs" />
     <Compile Include="Communication\Message.cs" />
+    <Compile Include="Communication\MessageChannel.cs" />
     <Compile Include="Communication\MessageType.cs" />
     <Compile Include="Communication\ReceiveStatus.cs" />
     <Compile Include="Communication\TransmitOptions.cs" />
+    <Compile Include="Extentions.cs" />
+    <Compile Include="GenericType.cs" />
     <Compile Include="LogLevel.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeProtocolInfo.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security.cs" />
+    <Compile Include="ZWaveDriver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
