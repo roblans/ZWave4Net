@@ -8,7 +8,7 @@ namespace ZWave4Net.Console
 {
     class Program
     {
-        public static LogLevel LogThreshold = LogLevel.Info;
+        public static LogLevel LogThreshold = LogLevel.Debug;
 
         static void Main(string[] args)
         {
