@@ -49,7 +49,7 @@ namespace ZWave4Net
 
         public override string ToString()
         {
-            return string.Format("GenericType = {0}, BasicType = {1}, Listening = {2}, Version = {3}, Security = {4}, Routing = {5}, MaxBaudrate = {6}", GenericType, BasicType, Listening, Version, Security, Routing, MaxBaudrate);
+            return string.Format($"GenericType = {GenericType}, BasicType = {BasicType}, Listening = {Listening}, Version = {Version}, Security = {Security}, Routing = {Routing}, MaxBaudrate = {MaxBaudrate}");
         }
     }
 }

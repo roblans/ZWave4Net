@@ -44,13 +44,13 @@ namespace ZWave4Net.Commands
         protected override void OnResponse(Enum response, byte[] payload)
         {
             var alarmData = AlarmData.Parse(payload);
-            Platform.Log(LogLevel.Info, string.Format("Response: Node = {0}, Class = {1}, Command = {2}, {3}", Node, ClassName, response, alarmData));
+            Platform.Log(LogLevel.Info, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, {alarmData}"));
         }
 
         protected override void OnEvent(Enum @event, byte[] payload)
         {
             var alarmData = AlarmData.Parse(payload);
-            Platform.Log(LogLevel.Info, string.Format("Event: Node = {0}, Class = {1}, Command = {2}, {3}", Node, ClassName, @event, alarmData));
+            Platform.Log(LogLevel.Info, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, {alarmData}"));
         }
     }
 

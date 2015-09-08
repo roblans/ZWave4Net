@@ -21,16 +21,13 @@ namespace ZWave4Net
         public async Task Open()
         {
             Channel.Open();
-            Platform.Log(LogLevel.Info, string.Format("Version: {0}", await GetVersion()));
-            Platform.Log(LogLevel.Info, string.Format("HomeID: {0:X}", await GetHomeID()));
+            Platform.Log(LogLevel.Info, string.Format($"Version: {await GetVersion()}"));
+            Platform.Log(LogLevel.Info, string.Format($"HomeID: {await GetHomeID():X}"));
 
             DiscoverNodes();
             foreach (var node in await GetNodes())
             {
-                Platform.Log(LogLevel.Info, string.Format("Discovered: Node = {0}, {1}", node, await GetNodeProtocolInfo(node)));
-                //Log(string.Format("NodeInformation: {0}", BitConverter.ToString(await SendNodeInformation(node))));
-                //Log(string.Format("RequestNodeInfo: {0}", BitConverter.ToString(await RequestNodeInfo(node))));SerialApiApplNodeInformation
-                //Log(string.Format("SerialApiApplNodeInformation: {0}", BitConverter.ToString(await SerialApiApplNodeInformation(node))));
+                Platform.Log(LogLevel.Info, string.Format($"Discovered: Node = {node}, {await GetNodeProtocolInfo(node)}"));
             }
         }
 

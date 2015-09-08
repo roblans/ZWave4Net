@@ -47,12 +47,12 @@ namespace ZWave4Net.Commands
 
         protected override void OnResponse(Enum response, byte[] payload)
         {
-            Platform.Log(LogLevel.Info, string.Format("Response: Node = {0}, Class = {1}, Command = {2}, {3}", Node, ClassName, response, BitConverter.ToString(payload)));
+            Platform.Log(LogLevel.Info, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, {BitConverter.ToString(payload)}"));
         }
 
         protected override void OnEvent(Enum @event, byte[] payload)
         {
-            Platform.Log(LogLevel.Info, string.Format("Event: Node = {0}, Class = {1}, Command = {2}, {3}", Node, ClassName, @event, BitConverter.ToString(payload)));
+            Platform.Log(LogLevel.Info, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, {BitConverter.ToString(payload)}"));
         }
     }
 }
