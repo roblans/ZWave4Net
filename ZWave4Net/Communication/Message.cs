@@ -33,8 +33,12 @@ namespace ZWave4Net.Communication
 
         public override string ToString()
         {
-            var payload = Payload != null ? BitConverter.ToString(Payload) : null;
-            return string.Format($"{Header}, {Type}, {Function}, {payload}");
+            if (Header == FrameHeader.SOF)
+            {
+                var payload = Payload != null ? BitConverter.ToString(Payload) : null;
+                return string.Format($"{Header}, {Type}, {Function}, {payload}");
+            }
+            return string.Format($"{Header}");
         }
 
         public Task Write(Stream stream)
