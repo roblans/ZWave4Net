@@ -17,14 +17,28 @@ namespace ZWave4Net.Samples.DiscoverNodes
             // redirect loggger
             Platform.LogMessage = Logger.LogMessage;
 
+            // check if there are serial ports available
+            if (System.IO.Ports.SerialPort.GetPortNames().Count() == 0)
+                throw new Exception("No serial port available");
+
+            //  default name of serialport
+            var portName = "COM1";
+
+            // only one port available?
+            if (System.IO.Ports.SerialPort.GetPortNames().Count() == 1)
+            {
+                // yes, so use that port
+                portName = System.IO.Ports.SerialPort.GetPortNames().First();
+            }
+
             // run and wait
-            Run().Wait();
+            Run(portName).Wait();
         }
 
-        static async Task Run()
+        static async Task Run(string portName)
         {
             // create the serialport
-            var port = new SerialPort(System.IO.Ports.SerialPort.GetPortNames().First());
+            var port = new SerialPort(portName);
 
             // create the driver
             var driver = new ZWaveDriver(port);
