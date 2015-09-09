@@ -28,6 +28,8 @@ namespace ZWave4Net
         public void Open()
         {
             _port.Open();
+            _port.DiscardInBuffer();
+            _port.DiscardOutBuffer();
         }
 
         public void Close()

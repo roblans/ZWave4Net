@@ -21,6 +21,19 @@ namespace ZWave4Net
         public async Task Open()
         {
             Channel.Open();
+
+            for(var attempt = 0; attempt < 3; attempt++)
+            {
+                try
+                {
+                    await GetVersion();
+                }
+                catch(CommunicationException)
+                {
+
+                }
+                await Task.Delay(100);
+            }
             await DiscoverNodes();
         }
 

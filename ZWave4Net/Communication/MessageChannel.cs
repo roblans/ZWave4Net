@@ -19,7 +19,7 @@ namespace ZWave4Net.Communication
 
         public event EventHandler<EventMessageEventArgs> EventReceived;
 
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
+        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
         public readonly ISerialPort Port;
 
         public MessageChannel(ISerialPort port)
