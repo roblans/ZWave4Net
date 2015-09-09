@@ -31,15 +31,15 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 portName = System.IO.Ports.SerialPort.GetPortNames().First();
             }
 
-            // run and wait
-            Run(portName).Wait();
-        }
-
-        static async Task Run(string portName)
-        {
             // create the serialport
             var port = new SerialPort(portName);
 
+            // run and wait
+            Run(port).Wait();
+        }
+
+        static async Task Run(SerialPort port)
+        {
             // create the driver
             var driver = new ZWaveDriver(port);
 
