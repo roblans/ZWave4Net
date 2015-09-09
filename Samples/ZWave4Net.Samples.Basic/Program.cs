@@ -51,7 +51,7 @@ namespace ZWave4Net.Samples.Basic
                 Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
 
-                Platform.LogMessage(LogLevel.Info, "Enter the ID of a node (Q to quit)");
+                Platform.LogMessage(LogLevel.Info, "Enter the ID of a node");
                 var input = await Task.Run(() => Console.ReadLine());
                 var nodeID = byte.Parse(input);
 
