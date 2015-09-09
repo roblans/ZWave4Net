@@ -46,6 +46,10 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 // wait for return
                 Console.ReadLine();
             }
+            catch(Exception ex)
+            {
+                Platform.LogMessage(LogLevel.Error, ex.Message);
+            }
             finally
             {
                 // and finally close the driver
