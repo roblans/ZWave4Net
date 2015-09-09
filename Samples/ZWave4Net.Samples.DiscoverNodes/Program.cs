@@ -64,8 +64,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     Console.WriteLine($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
                 }
 
-                // wait for return
-                Console.ReadLine();
+                await Task.Run(() => Console.ReadLine());
             }
             catch(Exception ex)
             {

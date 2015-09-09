@@ -25,10 +25,10 @@ namespace ZWave4Net.Commands
             get { return Enum.GetValues(typeof(alarmCmd)).Cast<Enum>().ToArray(); }
         }
 
-        public async Task<AlarmData> Get()
+        public async Task<AlarmValue> Get()
         {
             var response = await Invoker.Invoke(new Command(ClassID, alarmCmd.Get));
-            return AlarmData.Parse(response.Payload);
+            return AlarmValue.Parse(response.Payload);
         }
 
         protected override bool IsCorrelated(Enum request, Enum response)
@@ -43,13 +43,13 @@ namespace ZWave4Net.Commands
 
         protected override void OnResponse(Enum response, byte[] payload)
         {
-            var alarmData = AlarmData.Parse(payload);
+            var alarmData = AlarmValue.Parse(payload);
             Platform.LogMessage(LogLevel.Info, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, {alarmData}"));
         }
 
         protected override void OnEvent(Enum @event, byte[] payload)
         {
-            var alarmData = AlarmData.Parse(payload);
+            var alarmData = AlarmValue.Parse(payload);
             Platform.LogMessage(LogLevel.Info, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, {alarmData}"));
         }
     }

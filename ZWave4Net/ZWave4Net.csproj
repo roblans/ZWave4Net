@@ -39,9 +39,7 @@
   <ItemGroup>
     <Compile Include="BasicType.cs" />
     <Compile Include="Commands\Alarm.cs" />
-    <Compile Include="Commands\AlarmData.cs" />
-    <Compile Include="Commands\AlarmEvent.cs" />
-    <Compile Include="Commands\AlarmType.cs" />
+    <Compile Include="Commands\AlarmValue.cs" />
     <Compile Include="Commands\Basic.cs" />
     <Compile Include="Commands\Battery.cs" />
     <Compile Include="Commands\BatteryLevel.cs" />
