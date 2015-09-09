@@ -8,6 +8,6 @@ namespace ZWave4Net
 {
     public static class Platform
     {
-        public static Action<LogLevel, string> Log = (_, __) => { };
+        public static Action<LogLevel, string> LogMessage = (_, __) => { };
     }
 }

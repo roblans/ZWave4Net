@@ -68,7 +68,7 @@ namespace ZWave4Net.Communication
                 // add checksum 
                 buffer.Add(buffer.Skip(1).Aggregate((byte)0xFF, (total, next) => total ^= next));
 
-                Platform.Log(LogLevel.Debug, string.Format($"Transmitted: {BitConverter.ToString(buffer.ToArray())}"));
+                Platform.LogMessage(LogLevel.Debug, string.Format($"Transmitted: {BitConverter.ToString(buffer.ToArray())}"));
 
                 return stream.WriteAsync(buffer.ToArray(), 0, buffer.Count);
             }
@@ -99,13 +99,13 @@ namespace ZWave4Net.Communication
             switch (header)
             {
                 case FrameHeader.ACK:
-                    Platform.Log(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
+                    Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
                     return Message.Acknowledgment;
                 case FrameHeader.NAK:
-                    Platform.Log(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
+                    Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
                     return Message.NegativeAcknowledgment;
                 case FrameHeader.CAN:
-                    Platform.Log(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
+                    Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
                     return Message.Cancel;
             }
 
@@ -121,7 +121,7 @@ namespace ZWave4Net.Communication
                 var function = (Function)buffer[3];
                 var payload = buffer.Skip(4).Take(length - 3).ToArray();
 
-                Platform.Log(LogLevel.Debug, string.Format($"Received: {BitConverter.ToString(buffer.ToArray())}"));
+                Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {BitConverter.ToString(buffer.ToArray())}"));
 
                 if (buffer.Skip(1).Take(buffer.Length - 2).Aggregate((byte)0xFF, (total, next) => (byte)(total ^ next)) != buffer[buffer.Length - 1])
                     throw new ChecksumException();

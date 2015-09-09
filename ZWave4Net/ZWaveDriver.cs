@@ -21,13 +21,13 @@ namespace ZWave4Net
         public async Task Open()
         {
             Channel.Open();
-            Platform.Log(LogLevel.Info, string.Format($"Version: {await GetVersion()}"));
-            Platform.Log(LogLevel.Info, string.Format($"HomeID: {await GetHomeID():X}"));
+            Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await GetVersion()}"));
+            Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await GetHomeID():X}"));
 
             DiscoverNodes();
             foreach (var node in await GetNodes())
             {
-                Platform.Log(LogLevel.Info, string.Format($"Discovered: Node = {node}, {await GetNodeProtocolInfo(node)}"));
+                Platform.LogMessage(LogLevel.Info, string.Format($"Discovered: Node = {node}, {await GetNodeProtocolInfo(node)}"));
             }
         }
 
@@ -94,9 +94,9 @@ namespace ZWave4Net
             return _nodes != null ? await _nodes : new Node[0];
         }
 
-        public void Close()
+        public async Task Close()
         {
-            Channel.Close(true);
+            await Channel.Close();
         }
     }
 }

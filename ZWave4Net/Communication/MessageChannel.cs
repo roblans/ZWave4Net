@@ -42,17 +42,18 @@ namespace ZWave4Net.Communication
 
         }
 
-        public void Close(bool wait)
+        public Task Close()
         {
-            _receiveQueue.CompleteAdding();
-            _transmitQueue.CompleteAdding();
-
-            if (wait)
+            return Task.Run(() => 
             {
+                _receiveQueue.CompleteAdding();
+                _transmitQueue.CompleteAdding();
+
                 _receiveTask.Wait();
                 _transmitTask.Wait();
-            }
-            Port.Close();
+
+                Port.Close();
+            });
         }
 
         private async void ProcessPort(ISerialPort port)
@@ -99,7 +100,7 @@ namespace ZWave4Net.Communication
 
         private void OnReceived(Message response)
         {
-            Platform.Log(LogLevel.Debug, string.Format($"Received: {response}"));
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {response}"));
 
             switch (response.Header)
             {
@@ -153,7 +154,7 @@ namespace ZWave4Net.Communication
 
         private void OnTransmit(Message request)
         {
-            Platform.Log(LogLevel.Debug, string.Format($"Transmitting: {request}"));
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Transmitting: {request}"));
 
             request.Write(Port.OutputStream);
         }
