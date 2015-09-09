@@ -9,24 +9,18 @@ namespace ZWave4Net.Communication
 {
     class EventMessage
     {
-        public readonly ReceiveStatus Status;
-        public readonly byte NodeID;
-        public readonly Command Command;
+        public ReceiveStatus Status { get; private set; }
+        public byte NodeID { get; private set; }
+        public Command Command { get; private set; }
 
-        private EventMessage(ReceiveStatus status, byte nodeID, Command command)
-        {
-            Status = status;
-            NodeID = nodeID;
-            Command = command;
-        }
 
         public static EventMessage Parse(byte[] data)
         {
-            var status = (ReceiveStatus)data[0];
-            var nodeID = data[1];
-            var command = Command.Parse(data.Skip(2).ToArray());
-
-            return new EventMessage(status, nodeID, command);
+            var eventMessage = new EventMessage();
+            eventMessage.Status = (ReceiveStatus)data[0];
+            eventMessage.NodeID = data[1];
+            eventMessage.Command = Command.Parse(data.Skip(2).ToArray());
+            return eventMessage;
         }
     }
 }

@@ -8,43 +8,44 @@ namespace ZWave4Net
 {
     public class NodeProtocolInfo
     {
-        private readonly byte _capability;
-        private readonly byte _reserved;
+        public byte Capability { get; private set; }
+        public byte Reserved { get; private set; }
+        public BasicType BasicType { get; private set; }
+        public GenericType GenericType { get; private set; }
+        public byte SpecificType { get; private set; }
+        public Security Security { get; private set; }
 
-        public readonly BasicType BasicType;
-        public readonly GenericType GenericType;
-        public readonly byte SpecificType;
-        public readonly Security Security;
-
-        public NodeProtocolInfo(byte[] data)
+        public static NodeProtocolInfo Parse(byte[] data)
         {
-            _capability = data[0];
-            Security = (Security)data[1];
-            _reserved = data[2];
-
-            BasicType = (BasicType)data[3];
-            GenericType = (GenericType)data[4];
-            SpecificType = data[5];
+            return new NodeProtocolInfo()
+            {
+                Capability = data[0],
+                Security = (Security)data[1],
+                Reserved = data[2],
+                BasicType = (BasicType)data[3],
+                GenericType = (GenericType)data[4],
+                SpecificType = data[5],
+            };
         }
 
         public bool Routing
         {
-            get { return (_capability & 0x40) != 0; }
+            get { return (Capability & 0x40) != 0; }
         }
 
         public bool IsListening
         {
-            get { return (_capability & 0x80) != 0; }
+            get { return (Capability & 0x80) != 0; }
         }
 
         public byte Version
         {
-            get { return (byte)((_capability & 0x07) + 1); }
+            get { return (byte)((Capability & 0x07) + 1); }
         }
 
         public int MaxBaudrate
         {
-            get { return ((_capability & 0x38) == 0x10) ? 40000 : 9600; }
+            get { return ((Capability & 0x38) == 0x10) ? 40000 : 9600; }
         }
 
         public override string ToString()

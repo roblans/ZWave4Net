@@ -30,7 +30,7 @@ namespace ZWave4Net
         public async Task<NodeProtocolInfo> GetNodeProtocolInfo()
         {
             var response = await Driver.Channel.Send(Function.GetNodeProtocolInfo, this);
-            return new NodeProtocolInfo(response.Payload);
+            return NodeProtocolInfo.Parse(response.Payload);
         }
 
         public override string ToString()
