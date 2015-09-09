@@ -33,14 +33,21 @@ namespace ZWave4Net.Samples.DiscoverNodes
             await driver.Open();
             try
             {
+                // get Version and HomeID/NetworkID 
+                Console.WriteLine($"Version: {await driver.GetVersion()}");
+                Console.WriteLine($"HomeID: {await driver.GetHomeID():X}");
+
                 // start the discovery process
-                driver.DiscoverNodes();
+                await driver.DiscoverNodes();
 
                 // wait for the discovery process to complete and get the nodes
                 foreach (var node in await driver.GetNodes())
                 {
+                    // get protocolinfo from node
+                    var protocolInfo = await node.GetNodeProtocolInfo();
+                    
                     // dump node
-                    Console.WriteLine($"Node {node}");
+                    Console.WriteLine($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
                 }
 
                 // wait for return

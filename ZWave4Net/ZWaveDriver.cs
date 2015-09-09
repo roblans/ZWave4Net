@@ -21,14 +21,7 @@ namespace ZWave4Net
         public async Task Open()
         {
             Channel.Open();
-            Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await GetVersion()}"));
-            Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await GetHomeID():X}"));
-
-            DiscoverNodes();
-            foreach (var node in await GetNodes())
-            {
-                Platform.LogMessage(LogLevel.Info, string.Format($"Discovered: Node = {node}, {await GetNodeProtocolInfo(node)}"));
-            }
+            await DiscoverNodes();
         }
 
 
@@ -45,9 +38,9 @@ namespace ZWave4Net
             return BitConverter.ToUInt32(response.Payload.Take(4).Reverse().ToArray(), 0);
         }
 
-        public void DiscoverNodes()
+        public Task DiscoverNodes()
         {
-            _nodes = Task.Run(async () =>
+            return _nodes = Task.Run(async () =>
             {
                 var response = await Channel.Send(Function.DiscoveryNodes);
                 var values = response.Payload.Skip(3).Take(29).ToArray();
@@ -58,36 +51,31 @@ namespace ZWave4Net
                 {
                     if (bits[i])
                     {
-                        nodes.Add(new Node((byte)(i + 1), this));
+                        var node = new Node((byte)(i + 1), this);
+                        nodes.Add(node);
                     }
                 }
                 return nodes.ToArray();
             });
         }
 
-        public async Task<NodeProtocolInfo> GetNodeProtocolInfo(Node node)
-        {
-            var response = await Channel.Send(Function.GetNodeProtocolInfo, node);
-            return new NodeProtocolInfo(response.Payload);
-        }
+        //public async Task<byte[]> SendNodeInformation(Node node)
+        //{
+        //    var response = await Channel.Send(Function.SendNodeInformation, node);
+        //    return response.Payload;
+        //}
 
-        public async Task<byte[]> SendNodeInformation(Node node)
-        {
-            var response = await Channel.Send(Function.SendNodeInformation, node);
-            return response.Payload;
-        }
+        //public async Task<byte[]> RequestNodeInfo(Node node)
+        //{
+        //    var response = await Channel.Send(Function.RequestNodeInfo, node);
+        //    return response.Payload;
+        //}
 
-        public async Task<byte[]> RequestNodeInfo(Node node)
-        {
-            var response = await Channel.Send(Function.RequestNodeInfo, node);
-            return response.Payload;
-        }
-
-        public async Task<byte[]> SerialApiApplNodeInformation(Node node)
-        {
-            var response = await Channel.Send(Function.SerialApiApplNodeInformation, node);
-            return response.Payload;
-        }
+        //public async Task<byte[]> SerialApiApplNodeInformation(Node node)
+        //{
+        //    var response = await Channel.Send(Function.SerialApiApplNodeInformation, node);
+        //    return response.Payload;
+        //}
 
         public async Task<Node[]> GetNodes()
         {

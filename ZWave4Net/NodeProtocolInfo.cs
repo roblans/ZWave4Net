@@ -32,7 +32,7 @@ namespace ZWave4Net
             get { return (_capability & 0x40) != 0; }
         }
 
-        public bool Listening
+        public bool IsListening
         {
             get { return (_capability & 0x80) != 0; }
         }
@@ -49,7 +49,7 @@ namespace ZWave4Net
 
         public override string ToString()
         {
-            return string.Format($"GenericType = {GenericType}, BasicType = {BasicType}, Listening = {Listening}, Version = {Version}, Security = [{Security}], Routing = {Routing}, MaxBaudrate = {MaxBaudrate}");
+            return string.Format($"GenericType = {GenericType}, BasicType = {BasicType}, Listening = {IsListening}, Version = {Version}, Security = [{Security}], Routing = {Routing}, MaxBaudrate = {MaxBaudrate}");
         }
     }
 }

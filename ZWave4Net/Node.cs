@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZWave4Net.Commands;
+using ZWave4Net.Communication;
 
 namespace ZWave4Net
 {
@@ -26,9 +27,15 @@ namespace ZWave4Net
             _commandClasses.Add(new ManufacturerSpecific(this));
         }
 
+        public async Task<NodeProtocolInfo> GetNodeProtocolInfo()
+        {
+            var response = await Driver.Channel.Send(Function.GetNodeProtocolInfo, this);
+            return new NodeProtocolInfo(response.Payload);
+        }
+
         public override string ToString()
         {
-            return NodeID.ToString("D3");
+            return string.Format($"{NodeID:D3}");
         }
 
         public T GetCommandClass<T>() where T : CommandClass
