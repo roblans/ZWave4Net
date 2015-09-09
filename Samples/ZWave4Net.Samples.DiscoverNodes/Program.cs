@@ -11,8 +11,8 @@ namespace ZWave4Net.Samples.DiscoverNodes
     {
         static void Main(string[] args)
         {
-            // set threshold for logmessages, change to Info or Debug to get detailed logging
-            Logger.LogThreshold = LogLevel.Warn;
+            // set threshold for logmessages, change to Debug to get detailed logging
+            Logger.LogThreshold = LogLevel.Info;
             
             // redirect loggger
             Platform.LogMessage = Logger.LogMessage;
@@ -48,8 +48,8 @@ namespace ZWave4Net.Samples.DiscoverNodes
             try
             {
                 // get Version and HomeID/NetworkID 
-                Console.WriteLine($"Version: {await driver.GetVersion()}");
-                Console.WriteLine($"HomeID: {await driver.GetHomeID():X}");
+                Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
+                Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
 
                 // start the discovery process
                 await driver.DiscoverNodes();
@@ -59,9 +59,9 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 {
                     // get protocolinfo from node
                     var protocolInfo = await node.GetNodeProtocolInfo();
-                    
+
                     // dump node
-                    Console.WriteLine($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
+                    Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
 
                 await Task.Run(() => Console.ReadLine());
