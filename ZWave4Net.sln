@@ -5,9 +5,17 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWave4Net", "ZWave4Net\ZWave4Net.csproj", "{51C0D6D7-820F-4D41-A66E-00346DB26C9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWave4Net.Console", "ZWave4Net.Console\ZWave4Net.Console.csproj", "{22E1869B-E69D-4454-B9D0-082D260574A2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{23632232-3BCB-4EBC-A470-931FDE151E4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWave4Net.Samples.DiscoverNodes", "Samples\ZWave4Net.Samples.DiscoverNodes\ZWave4Net.Samples.DiscoverNodes.csproj", "{1AC88380-F5B0-4703-B6B8-6A05D316EF43}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ZWave4Net.Platform", "ZWave4Net.Platform\ZWave4Net.Platform.shproj", "{6507E942-3C4E-42D6-835D-5368DD3E6612}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ZWave4Net.Platform\ZWave4Net.Platform.projitems*{1ac88380-f5b0-4703-b6b8-6a05d316ef43}*SharedItemsImports = 4
+		ZWave4Net.Platform\ZWave4Net.Platform.projitems*{6507e942-3c4e-42d6-835d-5368dd3e6612}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -17,12 +25,15 @@ Global
 		{51C0D6D7-820F-4D41-A66E-00346DB26C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51C0D6D7-820F-4D41-A66E-00346DB26C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51C0D6D7-820F-4D41-A66E-00346DB26C9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22E1869B-E69D-4454-B9D0-082D260574A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22E1869B-E69D-4454-B9D0-082D260574A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22E1869B-E69D-4454-B9D0-082D260574A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22E1869B-E69D-4454-B9D0-082D260574A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AC88380-F5B0-4703-B6B8-6A05D316EF43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC88380-F5B0-4703-B6B8-6A05D316EF43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC88380-F5B0-4703-B6B8-6A05D316EF43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC88380-F5B0-4703-B6B8-6A05D316EF43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1AC88380-F5B0-4703-B6B8-6A05D316EF43} = {23632232-3BCB-4EBC-A470-931FDE151E4F}
 	EndGlobalSection
 EndGlobal
