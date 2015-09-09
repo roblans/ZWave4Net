@@ -25,13 +25,13 @@ namespace ZWave4Net.Commands
             get { return Enum.GetValues(typeof(command)).Cast<Enum>().ToArray(); }
         }
 
-        public async Task<byte> Get()
+        public async Task<byte> GetValue()
         {
             var response = await Invoker.Invoke(new Command(ClassID, command.Get));
             return response.Payload.First();
         }
 
-        public Task Set(byte value)
+        public Task SetValue(byte value)
         {
             return Invoker.Invoke(new Command(ClassID, command.Set, value));
         }

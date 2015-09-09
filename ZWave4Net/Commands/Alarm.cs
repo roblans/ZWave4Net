@@ -25,7 +25,7 @@ namespace ZWave4Net.Commands
             get { return Enum.GetValues(typeof(alarmCmd)).Cast<Enum>().ToArray(); }
         }
 
-        public async Task<AlarmValue> Get()
+        public async Task<AlarmValue> GetValue()
         {
             var response = await Invoker.Invoke(new Command(ClassID, alarmCmd.Get));
             return AlarmValue.Parse(response.Payload);
@@ -43,14 +43,14 @@ namespace ZWave4Net.Commands
 
         protected override void OnResponse(Enum response, byte[] payload)
         {
-            var alarmData = AlarmValue.Parse(payload);
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, {alarmData}"));
+            var value = AlarmValue.Parse(payload);
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, {value}"));
         }
 
         protected override void OnEvent(Enum @event, byte[] payload)
         {
-            var alarmData = AlarmValue.Parse(payload);
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, {alarmData}"));
+            var value = AlarmValue.Parse(payload);
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, {value}"));
         }
     }
 
