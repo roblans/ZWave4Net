@@ -19,11 +19,11 @@ namespace ZWave4Net
             NodeID = nodeID;
             Driver = driver;
 
-            //_commandClasses.Add(new Basic(this));
-            //_commandClasses.Add(new Alarm(this));
-            //_commandClasses.Add(new WakeUp(this));
-            //_commandClasses.Add(new Battery(this));
-            //_commandClasses.Add(new ManufacturerSpecific(this));
+            _commandClasses.Add(new Basic(this));
+            _commandClasses.Add(new Alarm(this));
+            _commandClasses.Add(new WakeUp(this));
+            _commandClasses.Add(new Battery(this));
+            _commandClasses.Add(new ManufacturerSpecific(this));
         }
 
         public override string ToString()
