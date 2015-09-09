@@ -50,6 +50,7 @@ namespace ZWave4Net.Samples.Basic
                 // get Version and HomeID/NetworkID 
                 Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
+                Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
                 Platform.LogMessage(LogLevel.Info, "Enter the ID of a node");
                 var input = await Task.Run(() => Console.ReadLine());

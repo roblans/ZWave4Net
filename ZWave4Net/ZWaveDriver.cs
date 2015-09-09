@@ -51,6 +51,12 @@ namespace ZWave4Net
             return BitConverter.ToUInt32(response.Payload.Take(4).Reverse().ToArray(), 0);
         }
 
+        public async Task<byte> GetControllerID()
+        {
+            var response = await Channel.Send(Function.MemoryGetId);
+            return response.Payload[4];
+        }
+
         private Task DiscoverNodes()
         {
             return _nodes = Task.Run(async () =>
