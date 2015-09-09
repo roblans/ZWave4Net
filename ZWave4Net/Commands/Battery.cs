@@ -37,16 +37,10 @@ namespace ZWave4Net.Commands
             return false;
         }
 
-        protected override void OnResponse(Enum response, byte[] payload)
+        protected override void OnReport(Enum command, byte[] payload)
         {
             var level = ParseLevel(payload);
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, Level = {level}"));
-        }
-
-        protected override void OnEvent(Enum @event, byte[] payload)
-        {
-            var level = ParseLevel(payload);
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, Level = {level}"));
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, Level = {level}"));
         }
 
         private BatteryLevel ParseLevel(byte[] payload)

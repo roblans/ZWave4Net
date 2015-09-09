@@ -38,16 +38,10 @@ namespace ZWave4Net.Commands
             return IsCorrelated(r, s);
         }
 
-        internal void HandleResponse(Command response)
-        {
-            var command = Commands.Single(element => Convert.ToByte(element) == response.CommandID);
-            OnResponse(command, response.Payload);
-        }
-
         internal void HandleEvent(Command @event)
         {
             var command = Commands.Single(element => Convert.ToByte(element) == @event.CommandID);
-            OnEvent(command, @event.Payload);
+            OnReport(command, @event.Payload);
         }
 
         protected virtual bool IsCorrelated(Enum request, Enum response)
@@ -55,11 +49,7 @@ namespace ZWave4Net.Commands
             return false;
         }
 
-        protected virtual void OnResponse(Enum response, byte[] payload)
-        {
-        }
-
-        protected virtual void OnEvent(Enum @event, byte[] payload)
+        protected virtual void OnReport(Enum @event, byte[] payload)
         {
         }
     }

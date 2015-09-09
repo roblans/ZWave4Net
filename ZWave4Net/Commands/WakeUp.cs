@@ -45,14 +45,9 @@ namespace ZWave4Net.Commands
             return false;
         }
 
-        protected override void OnResponse(Enum response, byte[] payload)
+        protected override void OnReport(Enum command, byte[] payload)
         {
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, {BitConverter.ToString(payload)}"));
-        }
-
-        protected override void OnEvent(Enum @event, byte[] payload)
-        {
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, {BitConverter.ToString(payload)}"));
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {BitConverter.ToString(payload)}"));
         }
     }
 }

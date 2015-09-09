@@ -37,7 +37,6 @@ namespace ZWave4Net.Commands
             {
                 _pendingCommands.Remove(request);
                 request.Item2.SetResult(e.Message.Command);
-                CommandClass.HandleResponse(e.Message.Command);
                 return;
             }
 

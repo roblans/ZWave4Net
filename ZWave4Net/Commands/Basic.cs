@@ -8,6 +8,8 @@ namespace ZWave4Net.Commands
 {
     public class Basic : CommandClass
     {
+        public event EventHandler<ValueChangedEventArgs<byte>> ValueChanged;
+
         enum command
         {
             Set = 0x01,
@@ -18,6 +20,15 @@ namespace ZWave4Net.Commands
         public Basic(Node node)
             : base(0x20, node)
         {
+        }
+        
+        protected void OnValueChanged(ValueChangedEventArgs<byte> e)
+        {
+            var handler = ValueChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
 
         protected override Enum[] Commands
@@ -41,16 +52,12 @@ namespace ZWave4Net.Commands
             return object.Equals(request, command.Get) && object.Equals(response, command.Report);
         }
 
-        protected override void OnResponse(Enum response, byte[] payload)
+        protected override void OnReport(Enum command, byte[] payload)
         {
             var value = payload.First();
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Response: Node = {Node}, Class = {ClassName}, Command = {response}, Value = {value}"));
-        }
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, Value = {value}"));
 
-        protected override void OnEvent(Enum @event, byte[] payload)
-        {
-            var value = payload.First();
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, Value = {value}"));
+            OnValueChanged(new ValueChangedEventArgs<byte>(value));
         }
     }
 }

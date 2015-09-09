@@ -51,6 +51,7 @@
     <Compile Include="Commands\ICommandInvoker.cs" />
     <Compile Include="Commands\ManufacturerSpecific.cs" />
     <Compile Include="Commands\ProductData.cs" />
+    <Compile Include="Commands\ValueChangedEventArgs.cs" />
     <Compile Include="Commands\WakeUp.cs" />
     <Compile Include="Communication\EventMessage.cs" />
     <Compile Include="Communication\EventMessageEventArgs.cs" />
