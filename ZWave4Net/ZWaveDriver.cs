@@ -38,7 +38,7 @@ namespace ZWave4Net
             return BitConverter.ToUInt32(response.Payload.Take(4).Reverse().ToArray(), 0);
         }
 
-        public Task DiscoverNodes()
+        private Task DiscoverNodes()
         {
             return _nodes = Task.Run(async () =>
             {

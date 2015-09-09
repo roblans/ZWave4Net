@@ -43,16 +43,13 @@ namespace ZWave4Net.Samples.DiscoverNodes
             // create the driver
             var driver = new ZWaveDriver(port);
 
-            // open the driver
+            // open the driver, this will start the discovery process
             await driver.Open();
             try
             {
                 // get Version and HomeID/NetworkID 
                 Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
-
-                // start the discovery process
-                var discover = driver.DiscoverNodes();
 
                 // wait for the discovery process to complete and get the nodes
                 foreach (var node in await driver.GetNodes())

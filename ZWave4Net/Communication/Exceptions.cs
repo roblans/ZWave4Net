@@ -13,28 +13,21 @@ namespace ZWave4Net.Communication
         public CommunicationException(string message, Exception inner) : base(message, inner) { }
     }
 
-    public class ProtocolException : CommunicationException
-    {
-        public ProtocolException() { }
-        public ProtocolException(string message) : base(message) { }
-        public ProtocolException(string message, Exception inner) : base(message, inner) { }
-    }
-
-    public class ResponseException : CommunicationException
-    {
-        public ResponseException() { }
-        public ResponseException(string message) : base(message) { }
-        public ResponseException(string message, Exception inner) : base(message, inner) { }
-    }
-
-    public class ChecksumException : ResponseException
+    public class ChecksumException : CommunicationException
     {
         public ChecksumException() { }
         public ChecksumException(string message) : base(message) { }
         public ChecksumException(string message, Exception inner) : base(message, inner) { }
     }
 
-    public class NakResponseException : ResponseException
+    public class UnknownFrameException : CommunicationException
+    {
+        public UnknownFrameException() { }
+        public UnknownFrameException(string message) : base(message) { }
+        public UnknownFrameException(string message, Exception inner) : base(message, inner) { }
+    }
+
+    public class NakResponseException : CommunicationException
     {
         public NakResponseException() { }
         public NakResponseException(string message) : base(message) { }

@@ -129,7 +129,7 @@ namespace ZWave4Net.Communication
                 return new Message(type, function, payload);
             }
 
-            throw new ProtocolException("Frameheader is not supported");
+            throw new UnknownFrameException("Frameheader is not supported");
         }
     }
 

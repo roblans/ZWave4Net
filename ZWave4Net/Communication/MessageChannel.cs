@@ -19,7 +19,7 @@ namespace ZWave4Net.Communication
 
         public event EventHandler<EventMessageEventArgs> EventReceived;
 
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(1);
+        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
         public readonly ISerialPort Port;
 
         public MessageChannel(ISerialPort port)
@@ -66,9 +66,16 @@ namespace ZWave4Net.Communication
                     var message = await Message.Read(port.InputStream);
                     _receiveQueue.Add(message);
                 }
-                catch (ChecksumException)
+                catch (ChecksumException ex)
                 {
+                    Platform.LogMessage(LogLevel.Error, ex.Message);
                     _transmitQueue.Add(Message.NegativeAcknowledgment);
+                    throw;
+                }
+                catch (UnknownFrameException ex)
+                {
+                    Platform.LogMessage(LogLevel.Error, ex.Message);
+                    throw;
                 }
                 catch (IOException)
                 {
