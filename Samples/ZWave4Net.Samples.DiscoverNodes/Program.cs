@@ -21,7 +21,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
             if (System.IO.Ports.SerialPort.GetPortNames().Count() == 0)
                 throw new Exception("No serial port available");
 
-            //  default name of serialport
+            //  default name of serialport, change this to the correct portname if you have more than one serialport
             var portName = "COM1";
 
             // only one port available?
