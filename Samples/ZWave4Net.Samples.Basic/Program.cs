@@ -51,31 +51,34 @@ namespace ZWave4Net.Samples.Basic
                 Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
 
-                while (true)
-                {
-                    Platform.LogMessage(LogLevel.Info, "Enter the ID of a node (Q to quit)");
-                    var input = await Task.Run(() => Console.ReadLine());
-                    if (input.ToLower() == "q")
-                        return;
+                Platform.LogMessage(LogLevel.Info, "Enter the ID of a node (Q to quit)");
+                var input = await Task.Run(() => Console.ReadLine());
+                var nodeID = byte.Parse(input);
 
-                    var nodeID = byte.Parse(input);
-                    var node = (await driver.GetNodes()).SingleOrDefault(element => element.NodeID == nodeID);
-                    if (node == null)
-                    {
-                        Platform.LogMessage(LogLevel.Error, string.Format($"Error: Node {nodeID} does not exists."));
-                        continue;
-                    }
-                    var basic = node.GetCommandClass<ZWave4Net.Commands.Basic>();
-                    try
-                    {
-                        var value = await basic.GetValue();
-                        Platform.LogMessage(LogLevel.Info, string.Format($"Basic value of Node {node.NodeID} is {value}"));
-                    }
-                    catch (TimeoutException)
-                    {
-                        Platform.LogMessage(LogLevel.Info, string.Format($"Basic value of Node {node.NodeID} is not supported (is the node a controller or is the node sleeping?)"));
-                    }
+                var node = (await driver.GetNodes()).SingleOrDefault(element => element.NodeID == nodeID);
+                if (node == null)
+                {
+                    Platform.LogMessage(LogLevel.Error, string.Format($"Error: Node {nodeID} does not exists."));
+                    return;
                 }
+
+                var basic = node.GetCommandClass<ZWave4Net.Commands.Basic>();
+                basic.ValueChanged += (_, e) =>
+                {
+                    Platform.LogMessage(LogLevel.Info, string.Format($"Value changed to {e.Value}"));
+                };
+                Platform.LogMessage(LogLevel.Info, string.Format($"Subscribed to ValueChanged event"));
+
+                try
+                {
+                    var value = await basic.GetValue();
+                    Platform.LogMessage(LogLevel.Info, string.Format($"Value is {value}"));
+                }
+                catch (TimeoutException)
+                {
+                    Platform.LogMessage(LogLevel.Info, string.Format($"Get current value failed. (is the node a controller or is the node sleeping?)"));
+                }
+                await Task.Run(() => Console.ReadLine());
             }
             catch (Exception ex)
             {
