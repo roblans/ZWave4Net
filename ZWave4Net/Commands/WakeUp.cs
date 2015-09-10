@@ -28,13 +28,13 @@ namespace ZWave4Net.Commands
 
         public async Task<byte> GetInterval()
         {
-            var response = await Invoker.Invoke(new Command(ClassID, wakeUpCmd.IntervalGet));
+            var response = await Invoker.Send(new Command(ClassID, wakeUpCmd.IntervalGet));
             return response.Payload.First();
         }
 
         public Task SetInterval(byte value)
         {
-            return Invoker.Invoke(new Command(ClassID, wakeUpCmd.IntervalSet, value));
+            return Invoker.Send(new Command(ClassID, wakeUpCmd.IntervalSet, value));
         }
 
         protected override bool IsCorrelated(Enum request, Enum response)

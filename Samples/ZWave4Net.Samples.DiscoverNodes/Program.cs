@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZWave4Net;
+using ZWave4Net.Commands;
 
 namespace ZWave4Net.Samples.DiscoverNodes
 {
@@ -12,7 +13,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
         static void Main(string[] args)
         {
             // set threshold for logmessages, change to Debug to get detailed logging
-            Logger.LogThreshold = LogLevel.Info;
+            Logger.LogThreshold = LogLevel.Debug;
             
             // redirect loggger
             Platform.LogMessage = Logger.LogMessage;
@@ -61,6 +62,10 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     // dump node
                     Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
+
+                //var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 4);
+                //var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
+                //await switchBinary.ToggleValue();
 
                 await Task.Run(() => Console.ReadLine());
             }

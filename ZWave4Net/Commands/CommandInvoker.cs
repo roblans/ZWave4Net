@@ -12,7 +12,7 @@ namespace ZWave4Net.Commands
         private readonly List<Tuple<Command, TaskCompletionSource<Command>>> _pendingCommands = new List<Tuple<Command, TaskCompletionSource<Command>>>();
 
         public readonly CommandClass CommandClass;
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(1);
+        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
 
         public CommandInvoker(CommandClass commandClass)
         {
@@ -43,7 +43,16 @@ namespace ZWave4Net.Commands
             CommandClass.HandleEvent(e.Message.Command);
         }
 
-        public async Task<Command> Invoke(Command command)
+        public async Task Post(Command command)
+        {
+            var payload = new List<byte>();
+            payload.Add(CommandClass.Node.NodeID);
+            payload.AddRange(command.Serialize());
+
+            await Channel.Send(new Message(MessageType.Request, Function.SendData, payload.ToArray())).ConfigureAwait(false);
+        }
+
+        public async Task<Command> Send(Command command)
         {
             var payload = new List<byte>();
             payload.Add(CommandClass.Node.NodeID);
@@ -55,8 +64,8 @@ namespace ZWave4Net.Commands
 
             try
             {
-                await Channel.Send(new Message(MessageType.Request, Function.SendData, payload.ToArray()));
-                return await completionSource.Task.Run(ResponseTimeout);
+                await Channel.Send(new Message(MessageType.Request, Function.SendData, payload.ToArray())).ConfigureAwait(false);
+                return await completionSource.Task.Run(ResponseTimeout).ConfigureAwait(false);
             }
             catch (TimeoutException)
             {

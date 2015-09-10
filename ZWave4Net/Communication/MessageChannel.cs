@@ -63,7 +63,7 @@ namespace ZWave4Net.Communication
                 try
                 {
                     // ToDo: implement Message.Read(Stream, CancelationToken) to allow graceful termination of this task
-                    var message = await Message.Read(port.InputStream);
+                    var message = await Message.Read(port.InputStream).ConfigureAwait(false);
                     _receiveQueue.Add(message);
                 }
                 catch (ChecksumException ex)
@@ -176,7 +176,7 @@ namespace ZWave4Net.Communication
 
             try
             {
-                return await completionSource.Task.Run(ResponseTimeout);
+                return await completionSource.Task.Run(ResponseTimeout).ConfigureAwait(false);
             }
             catch (TimeoutException)
             {

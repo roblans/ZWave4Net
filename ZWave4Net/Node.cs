@@ -25,6 +25,7 @@ namespace ZWave4Net
             _commandClasses.Add(new WakeUp(this));
             _commandClasses.Add(new Battery(this));
             _commandClasses.Add(new ManufacturerSpecific(this));
+            _commandClasses.Add(new SwitchBinary(this));
         }
 
         public async Task<NodeProtocolInfo> GetNodeProtocolInfo()

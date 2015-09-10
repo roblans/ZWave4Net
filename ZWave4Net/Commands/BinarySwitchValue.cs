@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ZWave4Net.Commands
 {
-    interface ICommandInvoker
+    public enum BinarySwitchValue
     {
-        Task<Command> Send(Command command);
-    }
+        Off,
+        On,
+    };
 }

@@ -45,12 +45,14 @@
     <Compile Include="Commands\Basic.cs" />
     <Compile Include="Commands\Battery.cs" />
     <Compile Include="Commands\BatteryLevel.cs" />
+    <Compile Include="Commands\BinarySwitchValue.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandClass.cs" />
     <Compile Include="Commands\CommandInvoker.cs" />
     <Compile Include="Commands\ICommandInvoker.cs" />
     <Compile Include="Commands\ManufacturerSpecific.cs" />
     <Compile Include="Commands\ProductData.cs" />
+    <Compile Include="Commands\SwitchBinary.cs" />
     <Compile Include="Commands\ValueChangedEventArgs.cs" />
     <Compile Include="Commands\WakeUp.cs" />
     <Compile Include="Communication\EventMessage.cs" />
