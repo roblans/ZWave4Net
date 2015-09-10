@@ -53,7 +53,6 @@ namespace ZWave4Net.Samples.Basic
 
         static async Task Run(ZWaveDriver driver)
         {
-            // create the driver
             try
             {
                 // get Version and HomeID/NetworkID 
