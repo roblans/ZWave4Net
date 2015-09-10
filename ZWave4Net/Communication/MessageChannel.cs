@@ -42,18 +42,15 @@ namespace ZWave4Net.Communication
 
         }
 
-        public Task Close()
+        public void Close()
         {
-            return Task.Run(() => 
-            {
-                _receiveQueue.CompleteAdding();
-                _transmitQueue.CompleteAdding();
+            _receiveQueue.CompleteAdding();
+            _transmitQueue.CompleteAdding();
 
-                _receiveTask.Wait();
-                _transmitTask.Wait();
+            _receiveTask.Wait();
+            _transmitTask.Wait();
 
-                Port.Close();
-            });
+            Port.Close();
         }
 
         private async void ProcessPort(ISerialPort port)

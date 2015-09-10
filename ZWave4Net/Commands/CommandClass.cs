@@ -41,7 +41,7 @@ namespace ZWave4Net.Commands
         internal void HandleEvent(Command @event)
         {
             var command = Commands.Single(element => Convert.ToByte(element) == @event.CommandID);
-            OnReport(command, @event.Payload);
+            OnEvent(command, @event.Payload);
         }
 
         protected virtual bool IsCorrelated(Enum request, Enum response)
@@ -49,7 +49,7 @@ namespace ZWave4Net.Commands
             return false;
         }
 
-        protected virtual void OnReport(Enum @event, byte[] payload)
+        protected virtual void OnEvent(Enum command, byte[] payload)
         {
         }
     }

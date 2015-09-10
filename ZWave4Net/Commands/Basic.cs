@@ -52,7 +52,7 @@ namespace ZWave4Net.Commands
             return object.Equals(request, command.Get) && object.Equals(response, command.Report);
         }
 
-        protected override void OnReport(Enum command, byte[] payload)
+        protected override void OnEvent(Enum command, byte[] payload)
         {
             var value = payload.First();
             Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, Value = {value}"));
