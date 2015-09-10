@@ -25,7 +25,7 @@ namespace ZWave4Net.Commands
 
         public async Task<BatteryLevel> GetLevel()
         {
-            var response = await Invoker.Send(new Command(ClassID, batteryCmd.Get)).ConfigureAwait(false);
+            var response = await Invoker.Send(new Command(ClassID, batteryCmd.Get));
             return ParseLevel(response.Payload);
         }
 

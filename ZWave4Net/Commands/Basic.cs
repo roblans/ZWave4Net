@@ -38,7 +38,7 @@ namespace ZWave4Net.Commands
 
         public async Task<byte> GetValue()
         {
-            var response = await Invoker.Send(new Command(ClassID, command.Get)).ConfigureAwait(false);
+            var response = await Invoker.Send(new Command(ClassID, command.Get));
             return response.Payload.First();
         }
 

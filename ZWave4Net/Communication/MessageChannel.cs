@@ -159,7 +159,6 @@ namespace ZWave4Net.Communication
         private void OnTransmit(Message request)
         {
             Platform.LogMessage(LogLevel.Debug, string.Format($"Transmitting: {request}"));
-
             request.Write(Port.OutputStream);
         }
 

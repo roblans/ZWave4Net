@@ -27,7 +27,7 @@ namespace ZWave4Net.Commands
 
         public async Task<AlarmValue> GetValue()
         {
-            var response = await Invoker.Send(new Command(ClassID, alarmCmd.Get)).ConfigureAwait(false);
+            var response = await Invoker.Send(new Command(ClassID, alarmCmd.Get));
             return AlarmValue.Parse(response.Payload);
         }
 

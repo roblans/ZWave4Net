@@ -74,15 +74,16 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
 
-                var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 4);
-                var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
-                await switchBinary.ToggleValue();
+                //var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 4);
+                //var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
+                //await switchBinary.ToggleValue();
 
                 await Task.Run(() => Console.ReadLine());
             }
             catch(Exception ex)
             {
                 Platform.LogMessage(LogLevel.Error, ex.Message);
+                await Task.Run(() => Console.ReadLine());
             }
         }
     }

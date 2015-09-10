@@ -12,7 +12,7 @@ namespace ZWave4Net.Commands
         private readonly List<Tuple<Command, TaskCompletionSource<Command>>> _pendingCommands = new List<Tuple<Command, TaskCompletionSource<Command>>>();
 
         public readonly CommandClass CommandClass;
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
+        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(10);
 
         public CommandInvoker(CommandClass commandClass)
         {
