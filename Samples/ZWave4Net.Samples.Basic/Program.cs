@@ -60,6 +60,9 @@ namespace ZWave4Net.Samples.Basic
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
+                // start the discovery process
+                driver.DiscoverNodes();
+
                 Platform.LogMessage(LogLevel.Info, "Enter the ID of a node");
                 var input = await Task.Run(() => Console.ReadLine());
                 var nodeID = byte.Parse(input);
