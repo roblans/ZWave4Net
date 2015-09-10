@@ -35,23 +35,34 @@ namespace ZWave4Net.Samples.DiscoverNodes
             // create the serialport
             var port = new SerialPort(portName);
 
-            // run and wait
-            Run(port).Wait();
-        }
-
-        static async Task Run(SerialPort port)
-        {
             // create the driver
             var driver = new ZWaveDriver(port);
 
-            // open the driver, this will start the discovery process
-            await driver.Open();
+            // open the driver
+            driver.Open();
+            try
+            {
+                // run and wait
+                Run(driver).Wait();
+            }
+            finally
+            {
+                // close the driver
+                driver.Close();
+            }
+        }
+
+        static async Task Run(ZWaveDriver driver)
+        {
             try
             {
                 // get Version and HomeID/NetworkID 
                 Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
+
+                // start the discovery process
+                driver.DiscoverNodes();
 
                 // wait for the discovery process to complete and get the nodes
                 foreach (var node in await driver.GetNodes())
@@ -63,20 +74,15 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
 
-                //var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 4);
-                //var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
-                //await switchBinary.ToggleValue();
+                var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 4);
+                var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
+                await switchBinary.ToggleValue();
 
                 await Task.Run(() => Console.ReadLine());
             }
             catch(Exception ex)
             {
                 Platform.LogMessage(LogLevel.Error, ex.Message);
-            }
-            finally
-            {
-                // and finally close the driver
-                await driver.Close();
             }
         }
     }

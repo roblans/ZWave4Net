@@ -28,7 +28,7 @@ namespace ZWave4Net.Commands
 
         public async Task<byte> GetInterval()
         {
-            var response = await Invoker.Send(new Command(ClassID, wakeUpCmd.IntervalGet));
+            var response = await Invoker.Send(new Command(ClassID, wakeUpCmd.IntervalGet)).ConfigureAwait(false);
             return response.Payload.First();
         }
 
