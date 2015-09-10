@@ -42,11 +42,5 @@ namespace ZWave4Net.Commands
             var response = await Invoker.Send(new Command(ClassID, switchBinaryCmd.Get));
             return response.Payload.First() == 0xFF ? BinarySwitchValue.On : BinarySwitchValue.Off;
         }
-
-        public async Task ToggleValue()
-        {
-            var value = await GetValue().ConfigureAwait(false);
-            await SetValue(value == BinarySwitchValue.On ? BinarySwitchValue.Off : BinarySwitchValue.On);
-        }
     }
 }
