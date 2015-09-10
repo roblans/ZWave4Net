@@ -70,7 +70,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     var protocolInfo = await node.GetNodeProtocolInfo();
 
                     // dump node
-                    Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
+                    Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node} {protocolInfo.GenericType} {(protocolInfo.IsListening ? "Awake" : "Asleep")}"));
                 }
 
                 await Task.Run(() => Console.ReadLine());
