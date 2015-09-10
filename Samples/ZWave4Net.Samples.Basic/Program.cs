@@ -22,7 +22,7 @@ namespace ZWave4Net.Samples.Basic
                 throw new Exception("No serial port available");
 
             //  default name of serialport, change this to the correct portname if you have more than one serialport
-            var portName = "COM1";
+            var portName = "COM5";
 
             // only one port available?
             if (System.IO.Ports.SerialPort.GetPortNames().Count() == 1)
@@ -34,17 +34,26 @@ namespace ZWave4Net.Samples.Basic
             // create the serialport
             var port = new SerialPort(portName);
 
-            // run and wait
-            Run(port).Wait();
-        }
-
-        static async Task Run(SerialPort port)
-        {
             // create the driver
             var driver = new ZWaveDriver(port);
 
-            // open the driver, this will start the discovery process
-            await driver.Open();
+            // open the driver
+            driver.Open();
+            try
+            {
+                // run and wait
+                Run(driver).Wait();
+            }
+            finally
+            {
+                // close the driver
+                driver.Close();
+            }
+        }
+
+        static async Task Run(ZWaveDriver driver)
+        {
+            // create the driver
             try
             {
                 // get Version and HomeID/NetworkID 
@@ -84,11 +93,6 @@ namespace ZWave4Net.Samples.Basic
             catch (Exception ex)
             {
                 Platform.LogMessage(LogLevel.Error, ex.Message);
-            }
-            finally
-            {
-                // and finally close the driver
-                await driver.Close();
             }
         }
     }

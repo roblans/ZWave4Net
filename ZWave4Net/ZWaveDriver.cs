@@ -18,23 +18,9 @@ namespace ZWave4Net
             Channel = new MessageChannel(port);
         }
 
-        public async Task Open()
+        public void Open()
         {
             Channel.Open();
-
-            for(var attempt = 0; attempt < 3; attempt++)
-            {
-                try
-                {
-                    await GetVersion();
-                }
-                catch(CommunicationException)
-                {
-
-                }
-                await Task.Delay(100);
-            }
-            await DiscoverNodes();
         }
 
 
@@ -57,9 +43,9 @@ namespace ZWave4Net
             return response.Payload[4];
         }
 
-        private Task DiscoverNodes()
+        public void DiscoverNodes()
         {
-            return _nodes = Task.Run(async () =>
+            _nodes = Task.Run(async () =>
             {
                 var response = await Channel.Send(Function.DiscoveryNodes);
                 var values = response.Payload.Skip(3).Take(29).ToArray();
@@ -101,9 +87,9 @@ namespace ZWave4Net
             return _nodes != null ? await _nodes : new Node[0];
         }
 
-        public async Task Close()
+        public void Close()
         {
-            await Channel.Close();
+            Channel.Close();
         }
     }
 }
