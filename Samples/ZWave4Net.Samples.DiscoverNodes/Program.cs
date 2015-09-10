@@ -13,7 +13,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
         static void Main(string[] args)
         {
             // set threshold for logmessages, change to Debug to get detailed logging
-            Logger.LogThreshold = LogLevel.Debug;
+            Logger.LogThreshold = LogLevel.Info;
             
             // redirect loggger
             Platform.LogMessage = Logger.LogMessage;
@@ -75,6 +75,14 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 }
 
                 //var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 4);
+                //var configuration = wallPlug.GetCommandClass<Configuration>();
+
+                //for(var i=1; i < 9; i++)
+                //{
+                //    await configuration.SetValue(62, (byte)i);
+                //    await Task.Delay(1000);
+                //}
+
                 //var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
                 //await switchBinary.ToggleValue();
 
