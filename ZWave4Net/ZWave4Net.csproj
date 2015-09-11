@@ -72,6 +72,7 @@
     <Compile Include="GenericType.cs" />
     <Compile Include="LogLevel.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="NodeCollection.cs" />
     <Compile Include="NodeProtocolInfo.cs" />
     <Compile Include="Platform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

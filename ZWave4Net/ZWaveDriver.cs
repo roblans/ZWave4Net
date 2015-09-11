@@ -10,7 +10,7 @@ namespace ZWave4Net
 {
     public class ZWaveDriver
     {
-        private Task<Node[]> _nodes;
+        private Task<NodeCollection> _nodes;
         internal readonly MessageChannel Channel;
 
         public ZWaveDriver(ISerialPort port)
@@ -50,7 +50,7 @@ namespace ZWave4Net
                 var response = await Channel.Send(Function.DiscoveryNodes);
                 var values = response.Payload.Skip(3).Take(29).ToArray();
 
-                var nodes = new List<Node>();
+                var nodes = new NodeCollection();
                 var bits = new BitArray(values);
                 for (byte i = 0; i < bits.Length; i++)
                 {
@@ -60,7 +60,7 @@ namespace ZWave4Net
                         nodes.Add(node);
                     }
                 }
-                return nodes.ToArray();
+                return nodes;
             });
         }
 
@@ -82,9 +82,9 @@ namespace ZWave4Net
         //    return response.Payload;
         //}
 
-        public async Task<Node[]> GetNodes()
+        public async Task<NodeCollection> GetNodes()
         {
-            return _nodes != null ? await _nodes : new Node[0];
+            return _nodes != null ? await _nodes : new NodeCollection();
         }
 
         public void Close()
