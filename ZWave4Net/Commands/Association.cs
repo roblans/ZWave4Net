@@ -33,14 +33,14 @@ namespace ZWave4Net.Commands
             return AssociationValue.Parse(response.Payload);
         }
 
-        public Task Add(byte groupID, byte NodeID)
+        public Task Add(byte groupID, byte nodeID)
         {
-            return Invoker.Post(new Command(ClassID, associationCmd.Set, groupID, NodeID));
+            return Invoker.Post(new Command(ClassID, associationCmd.Set, groupID, nodeID));
         }
 
-        public Task Remove(byte groupID, byte NodeID)
+        public Task Remove(byte groupID, byte nodeID)
         {
-            return Invoker.Post(new Command(ClassID, associationCmd.Remove, groupID, NodeID));
+            return Invoker.Post(new Command(ClassID, associationCmd.Remove, groupID, nodeID));
         }
 
         protected override bool IsCorrelated(Enum request, Enum response)
