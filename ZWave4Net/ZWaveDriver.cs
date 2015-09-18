@@ -82,19 +82,7 @@ namespace ZWave4Net
         //    return response.Payload;
         //}
 
-        public async Task<byte[]> GetConfiguration()
-        {
-            var response = await Channel.Send(Function.GetConfiguration, 81, 242, 220, 252);
-            return response.Payload;
-        }
-
-        public async Task<byte[]> SetConfiguration()
-        {
-            var response = await Channel.Send(Function.SetConfiguration, 0xF2);
-            return response.Payload;
-        }
-
-        public async Task<NodeCollection> GetNodes()
+        public async Task<Node[]> GetNodes()
         {
             return _nodes != null ? await _nodes : new NodeCollection();
         }
