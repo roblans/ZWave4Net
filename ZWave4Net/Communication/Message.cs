@@ -9,7 +9,7 @@ namespace ZWave4Net.Communication
 {
     class Message
     {
-        private static byte callbackID = 255;
+        private static byte callbackID = 0;
         public static readonly Message Acknowledgment = new Message(FrameHeader.ACK);
         public static readonly Message NegativeAcknowledgment = new Message(FrameHeader.NAK);
         public static readonly Message Cancel = new Message(FrameHeader.CAN);
@@ -25,15 +25,23 @@ namespace ZWave4Net.Communication
             Type = type;
             Function = function;
             Payload = payload;
+
+            for(int i=0; i< 300; i++)
+            {
+                var callbackID = GetNextCallbackID();
+                Platform.LogMessage(LogLevel.Warn, callbackID.ToString());
+
+            }
         }
 
         public Message(MessageType type, Function function, params byte[] payload)
             : this(FrameHeader.SOF, type, function, payload)
         {
         }
+
         private static byte GetNextCallbackID()
         {
-            lock (typeof(Message)) { return (byte)((callbackID++ % 255) + 1); }
+            lock (typeof(Message)) { return callbackID = (byte)((callbackID % 255) + 1); }
         }
 
         public override string ToString()
@@ -66,9 +74,15 @@ namespace ZWave4Net.Communication
                 {
                     buffer.AddRange(Payload);
                 }
-                buffer.Add((byte)(TransmitOptions.Ack | TransmitOptions.AutoRoute | TransmitOptions.ForceRoute));
-                buffer.Add(GetNextCallbackID());
 
+                if (Function == Communication.Function.SendData)
+                {
+                    buffer.Add((byte)(TransmitOptions.Ack | TransmitOptions.AutoRoute | TransmitOptions.ForceRoute));
+                    var callbackID = GetNextCallbackID();
+                    Platform.LogMessage(LogLevel.Warn, callbackID.ToString());
+                    buffer.Add(callbackID);
+                }
+                
                 // update length
                 buffer[1] = (byte)(buffer.Count - 1);
 
