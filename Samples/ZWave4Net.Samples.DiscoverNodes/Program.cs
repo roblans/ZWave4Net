@@ -76,7 +76,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
 
-                var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 5);
+                var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 6);
                 var configuration = wallPlug.GetCommandClass<Configuration>();
 
                 //for(var i=1; i < 9; i++)
@@ -95,6 +95,9 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 //await switchBinary.SetValue(BinarySwitchValue.Off);
 
                 var associaton = wallPlug.GetCommandClass<Association>();
+                await associaton.Add(1, 1);
+                await associaton.Add(2, 1);
+                await associaton.Add(3, 1);
                 //var a1 = await associaton.Get(1);
                 //var a2 = await associaton.Get(2);
                 //var a3 = await associaton.Get(3);
