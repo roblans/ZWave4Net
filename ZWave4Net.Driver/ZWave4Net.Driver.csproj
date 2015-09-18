@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Communication\Command.cs" />
     <Compile Include="Communication\FrameHeader.cs" />
     <Compile Include="Communication\Function.cs" />
     <Compile Include="Communication\Message.cs" />

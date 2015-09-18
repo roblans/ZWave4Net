@@ -32,6 +32,14 @@ namespace ZWave4Net.Driver.Communication
         {
         }
 
+        public Message(byte nodeID, Command command)
+        {
+            Header = FrameHeader.SOF;
+            Type = MessageType.Request;
+            Function = Communication.Function.SendData;
+            Payload = new[] { nodeID }.Concat(command.Serialize()).ToArray();
+        }
+
         private static byte GetNextCallbackID()
         {
             lock (typeof(Message)) { return callbackID = (byte)((callbackID % 255) + 1); }
