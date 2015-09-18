@@ -11,6 +11,6 @@ namespace ZWave4Net.Communication
         Ack = 0x01,
         LowPower = 0x02,
         AutoRoute = 0x04,
-        ForceRoute = 0x08
+        ForceRoute = 0x20,
     }
 }
