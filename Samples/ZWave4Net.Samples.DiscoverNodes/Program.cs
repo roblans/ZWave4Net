@@ -77,6 +77,15 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 6);
                 var configuration = wallPlug.GetCommandClass<Configuration>();
 
+                for (int i = 0; i < 2; i++)
+                {
+                    Platform.LogMessage(LogLevel.Warn, "GetValue");
+                    var c = await configuration.GetValue(62);
+                    Platform.LogMessage(LogLevel.Warn, "SetValue");
+                    await configuration.SetValue(62, c);
+                    Platform.LogMessage(LogLevel.Warn, "End");
+                    await Task.Delay(1000);
+                }
                 //for(var i=1; i < 9; i++)
                 //{
                 //    await configuration.SetValue(62, (byte)i);

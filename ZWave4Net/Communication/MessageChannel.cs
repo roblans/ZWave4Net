@@ -120,14 +120,11 @@ namespace ZWave4Net.Communication
                     break;
             }
 
-            var request = _pendingMessages.FirstOrDefault(element => IsCorrelated(element.Item1, response));
+            var request = _pendingMessages.FirstOrDefault(element => IsComplete(element.Item1, response));
             if (request != null)
             {
-                if (IsComplete(request.Item1, response))
-                {
-                    _pendingMessages.Remove(request);
-                    request.Item2.SetResult(response);
-                }
+                _pendingMessages.Remove(request);
+                request.Item2.SetResult(response);
                 return;
             }
 
@@ -146,14 +143,10 @@ namespace ZWave4Net.Communication
                 handler(this, e);
             }
         }
-        private bool IsCorrelated(Message request, Message response)
-        {
-            return request.Function == response.Function;
-        }
 
         private bool IsComplete(Message request, Message response)
         {
-            return request.Function == response.Function;
+           return request.Function == response.Function;
         }
 
         private void OnTransmit(Message request)

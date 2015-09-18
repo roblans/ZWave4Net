@@ -25,13 +25,6 @@ namespace ZWave4Net.Communication
             Type = type;
             Function = function;
             Payload = payload;
-
-            for(int i=0; i< 300; i++)
-            {
-                var callbackID = GetNextCallbackID();
-                Platform.LogMessage(LogLevel.Warn, callbackID.ToString());
-
-            }
         }
 
         public Message(MessageType type, Function function, params byte[] payload)
@@ -78,9 +71,7 @@ namespace ZWave4Net.Communication
                 if (Function == Communication.Function.SendData)
                 {
                     buffer.Add((byte)(TransmitOptions.Ack | TransmitOptions.AutoRoute | TransmitOptions.ForceRoute));
-                    var callbackID = GetNextCallbackID();
-                    Platform.LogMessage(LogLevel.Warn, callbackID.ToString());
-                    buffer.Add(callbackID);
+                    buffer.Add(GetNextCallbackID());
                 }
                 
                 // update length
