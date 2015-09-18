@@ -19,7 +19,7 @@ namespace ZWave4Net.Communication
 
         public event EventHandler<EventMessageEventArgs> EventReceived;
 
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
+        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(10);
         public readonly ISerialPort Port;
 
         public MessageChannel(ISerialPort port)
@@ -125,7 +125,6 @@ namespace ZWave4Net.Communication
             {
                 _pendingMessages.Remove(request);
                 request.Item2.SetResult(response);
-                return;
             }
 
             if (response.Function == Function.ApplicationCommandHandler)
@@ -146,7 +145,19 @@ namespace ZWave4Net.Communication
 
         private bool IsComplete(Message request, Message response)
         {
-           return request.Function == response.Function;
+            if (request.Command == null)
+            {
+                return request.Function == response.Function;
+            }
+            if (request.Function == Function.SendData)
+            {
+                if (response.Function == Function.ApplicationCommandHandler && request.NodeID == response.NodeID && request.Command.ClassID == response.Command.ClassID)
+                {
+                    return true;
+                }
+
+            }
+            return false;
         }
 
         private void OnTransmit(Message request)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZWave4Net.Communication;
 
 namespace ZWave4Net.Commands
 {
@@ -35,12 +36,12 @@ namespace ZWave4Net.Commands
 
         public Task Add(byte groupID, byte nodeID)
         {
-            return Invoker.Post(new Command(ClassID, associationCmd.Set, groupID, nodeID));
+            return Invoker.Send(new Command(ClassID, associationCmd.Set, groupID, nodeID));
         }
 
         public Task Remove(byte groupID, byte nodeID)
         {
-            return Invoker.Post(new Command(ClassID, associationCmd.Remove, groupID, nodeID));
+            return Invoker.Send(new Command(ClassID, associationCmd.Remove, groupID, nodeID));
         }
 
         protected override bool IsCorrelated(Enum request, Enum response)

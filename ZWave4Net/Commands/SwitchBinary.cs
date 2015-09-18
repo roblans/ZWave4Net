@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZWave4Net.Communication;
 
 namespace ZWave4Net.Commands
 {
@@ -34,7 +35,7 @@ namespace ZWave4Net.Commands
 
         public Task SetValue(BinarySwitchValue value)
         {
-            return Invoker.Post(new Command(ClassID, switchBinaryCmd.Set, value == BinarySwitchValue.On ? (byte)0xFF : (byte)0x00));
+            return Invoker.Send(new Command(ClassID, switchBinaryCmd.Set, value == BinarySwitchValue.On ? (byte)0xFF : (byte)0x00));
         }
 
         public async Task<BinarySwitchValue> GetValue()

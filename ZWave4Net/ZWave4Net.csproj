@@ -48,7 +48,6 @@
     <Compile Include="Commands\Battery.cs" />
     <Compile Include="Commands\BatteryLevel.cs" />
     <Compile Include="Commands\BinarySwitchValue.cs" />
-    <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandClass.cs" />
     <Compile Include="Commands\CommandInvoker.cs" />
     <Compile Include="Commands\Configuration.cs" />
@@ -58,6 +57,7 @@
     <Compile Include="Commands\SwitchBinary.cs" />
     <Compile Include="Commands\ValueChangedEventArgs.cs" />
     <Compile Include="Commands\WakeUp.cs" />
+    <Compile Include="Communication\Command.cs" />
     <Compile Include="Communication\EventMessage.cs" />
     <Compile Include="Communication\EventMessageEventArgs.cs" />
     <Compile Include="Communication\Exceptions.cs" />

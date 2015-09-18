@@ -14,21 +14,54 @@ namespace ZWave4Net.Communication
         public static readonly Message NegativeAcknowledgment = new Message(FrameHeader.NAK);
         public static readonly Message Cancel = new Message(FrameHeader.CAN);
 
+        public readonly bool Received = false;
         public readonly FrameHeader Header;
         public readonly MessageType? Type;
         public readonly Function? Function;
         public readonly byte[] Payload;
+        public readonly byte? NodeID;
+        public readonly Command Command;
+        public readonly ReceiveStatus? ReceiveStatus;
+        public readonly byte? CallbackID;
 
-        private Message(FrameHeader header, MessageType? type = null, Function? function = null, byte[] payload = null)
+        private Message(FrameHeader header, MessageType? type = null, Function? function = null, byte[] payload = null, bool received = false)
         {
+            Received = received;
             Header = header;
             Type = type;
             Function = function;
             Payload = payload;
+
+            if (Function == Communication.Function.ApplicationCommandHandler)
+            {
+                ReceiveStatus = (ReceiveStatus)payload[0];
+                NodeID = payload[1];
+                Command = Command.Parse(payload.Skip(2).ToArray());
+            }
+
+            if (Type == MessageType.Request && Function == Communication.Function.SendData)
+            {
+                if (Received)
+                {
+                    // 4 bytes of payload here
+                    CallbackID = payload[0];
+                }
+                else
+                {
+                    NodeID = payload[0];
+                    Command = Command.Parse(payload.Skip(1).ToArray());
+                    CallbackID = GetNextCallbackID();
+                }
+            }
         }
 
         public Message(MessageType type, Function function, params byte[] payload)
             : this(FrameHeader.SOF, type, function, payload)
+        {
+        }
+
+        public Message(byte nodeID, Command command)
+            : this(MessageType.Request, Communication.Function.SendData, new[] { nodeID }.Concat(command.Serialize()).ToArray())
         {
         }
 
@@ -71,7 +104,7 @@ namespace ZWave4Net.Communication
                 if (Function == Communication.Function.SendData)
                 {
                     buffer.Add((byte)(TransmitOptions.Ack | TransmitOptions.AutoRoute | TransmitOptions.ForceRoute));
-                    buffer.Add(GetNextCallbackID());
+                    buffer.Add(CallbackID.Value);
                 }
                 
                 // update length
@@ -138,7 +171,7 @@ namespace ZWave4Net.Communication
                 if (buffer.Skip(1).Take(buffer.Length - 2).Aggregate((byte)0xFF, (total, next) => (byte)(total ^ next)) != buffer[buffer.Length - 1])
                     throw new ChecksumException();
 
-                return new Message(type, function, payload);
+                return new Message(header, type, function, payload, true);
             }
 
             throw new UnknownFrameException("Frameheader is not supported");

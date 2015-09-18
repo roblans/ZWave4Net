@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZWave4Net.Communication;
 
 namespace ZWave4Net.Commands
 {
@@ -34,7 +35,7 @@ namespace ZWave4Net.Commands
 
         public Task SetValue(byte parameter, byte value)
         {
-            return Invoker.Post((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
+            return Invoker.Send((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
         }
 
 

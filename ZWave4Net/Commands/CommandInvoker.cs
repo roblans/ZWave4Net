@@ -43,28 +43,15 @@ namespace ZWave4Net.Commands
             CommandClass.HandleEvent(e.Message.Command);
         }
 
-        public async Task Post(Command command)
-        {
-            var payload = new List<byte>();
-            payload.Add(CommandClass.Node.NodeID);
-            payload.AddRange(command.Serialize());
-
-            await Channel.Send(new Message(MessageType.Request, Function.SendData, payload.ToArray())).ConfigureAwait(false);
-        }
-
         public async Task<Command> Send(Command command)
         {
-            var payload = new List<byte>();
-            payload.Add(CommandClass.Node.NodeID);
-            payload.AddRange(command.Serialize());
-
             var completionSource = new TaskCompletionSource<Command>();
             var tuple = Tuple.Create(command, completionSource);
             _pendingCommands.Add(tuple);
 
             try
             {
-                await Channel.Send(new Message(MessageType.Request, Function.SendData, payload.ToArray())).ConfigureAwait(false);
+                await Channel.Send(new Message(CommandClass.Node.NodeID, command)).ConfigureAwait(false);
                 return await completionSource.Task.Run(ResponseTimeout).ConfigureAwait(false);
             }
             catch (TimeoutException)

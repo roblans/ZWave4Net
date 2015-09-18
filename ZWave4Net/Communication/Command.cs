@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZWave4Net.Commands
+namespace ZWave4Net.Communication
 {
     class Command
     {
