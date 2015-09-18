@@ -61,8 +61,6 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
-                var x = await driver.GetConfiguration();
-
                 // start the discovery process
                 driver.DiscoverNodes();
 
@@ -95,9 +93,9 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 //await switchBinary.SetValue(BinarySwitchValue.Off);
 
                 var associaton = wallPlug.GetCommandClass<Association>();
-                await associaton.Add(1, 1);
-                await associaton.Add(2, 1);
-                await associaton.Add(3, 1);
+                //await associaton.Add(1, 1);
+                //await associaton.Add(2, 1);
+                //await associaton.Add(3, 1);
                 //var a1 = await associaton.Get(1);
                 //var a2 = await associaton.Get(2);
                 //var a3 = await associaton.Get(3);
