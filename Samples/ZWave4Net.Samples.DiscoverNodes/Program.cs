@@ -13,7 +13,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
         static void Main(string[] args)
         {
             // set threshold for logmessages, change to Debug to get detailed logging
-            Logger.LogThreshold = LogLevel.Info;
+            Logger.LogThreshold = LogLevel.Debug;
             
             // redirect loggger
             Platform.LogMessage = Logger.LogMessage;
@@ -61,6 +61,8 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
+                var x = await driver.GetConfiguration();
+
                 // start the discovery process
                 driver.DiscoverNodes();
 
@@ -74,7 +76,7 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
 
-                var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 4);
+                var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 5);
                 var configuration = wallPlug.GetCommandClass<Configuration>();
 
                 //for(var i=1; i < 9; i++)
@@ -92,6 +94,11 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 //await Task.Delay(1000);
                 //await switchBinary.SetValue(BinarySwitchValue.Off);
 
+                var associaton = wallPlug.GetCommandClass<Association>();
+                //var a1 = await associaton.Get(1);
+                //var a2 = await associaton.Get(2);
+                //var a3 = await associaton.Get(3);
+                //await associaton.Remove(1, 1);
                 await Task.Run(() => Console.ReadLine());
             }
             catch(Exception ex)

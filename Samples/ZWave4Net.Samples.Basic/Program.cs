@@ -83,7 +83,7 @@ namespace ZWave4Net.Samples.Basic
 
                 try
                 {
-                    var value = await basic.GetValue();
+                    var value = await basic.Get();
                     Platform.LogMessage(LogLevel.Info, string.Format($"Value is {value}"));
                 }
                 catch (TimeoutException)
