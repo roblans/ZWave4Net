@@ -13,6 +13,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ZWave4Net.Platform", "ZWave
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWave4Net.Samples.Basic", "Samples\ZWave4Net.Samples.Basic\ZWave4Net.Samples.Basic.csproj", "{CF0813B0-94AA-4813-A54F-6A9C8731FFAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWave4Net.Driver", "ZWave4Net.Driver\ZWave4Net.Driver.csproj", "{8804BF8B-8FFC-4406-958E-85260A12F652}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ZWave4Net.Platform\ZWave4Net.Platform.projitems*{1ac88380-f5b0-4703-b6b8-6a05d316ef43}*SharedItemsImports = 4
@@ -36,6 +38,10 @@ Global
 		{CF0813B0-94AA-4813-A54F-6A9C8731FFAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF0813B0-94AA-4813-A54F-6A9C8731FFAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF0813B0-94AA-4813-A54F-6A9C8731FFAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8804BF8B-8FFC-4406-958E-85260A12F652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8804BF8B-8FFC-4406-958E-85260A12F652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8804BF8B-8FFC-4406-958E-85260A12F652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8804BF8B-8FFC-4406-958E-85260A12F652}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
