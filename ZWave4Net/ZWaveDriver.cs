@@ -82,7 +82,7 @@ namespace ZWave4Net
         //    return response.Payload;
         //}
 
-        public async Task<Node[]> GetNodes()
+        public async Task<NodeCollection> GetNodes()
         {
             return _nodes != null ? await _nodes : new NodeCollection();
         }
