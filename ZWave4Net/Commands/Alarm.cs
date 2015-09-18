@@ -25,7 +25,7 @@ namespace ZWave4Net.Commands
             get { return Enum.GetValues(typeof(alarmCmd)).Cast<Enum>().ToArray(); }
         }
 
-        public async Task<AlarmValue> GetValue()
+        public async Task<AlarmValue> Get()
         {
             var response = await Invoker.Send(new Command(ClassID, alarmCmd.Get));
             return AlarmValue.Parse(response.Payload);

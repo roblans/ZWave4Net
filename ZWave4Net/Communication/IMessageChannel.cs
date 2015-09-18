@@ -19,6 +19,11 @@ namespace ZWave4Net.Communication
             return channel.Send(new Message(MessageType.Request, function));
         }
 
+        public static Task<Message> Send(this IMessageChannel channel, Function function, params byte[] payload)
+        {
+            return channel.Send(new Message(MessageType.Request, function, payload));
+        }
+
         public static Task<Message> Send(this IMessageChannel channel, Function function, Node node)
         {
             return channel.Send(new Message(MessageType.Request, function, node.NodeID));

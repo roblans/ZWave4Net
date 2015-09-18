@@ -82,6 +82,8 @@ namespace ZWave4Net.Communication
         SetSlaveLearnMode = 0xa4,
         GetVirtualNodes = 0xa5,
         IsVirtualNode = 0xa6,
-        SetPromiscuousMode = 0xd0
+        SetPromiscuousMode = 0xd0,
+        SetConfiguration = 0xF2,
+        GetConfiguration = 0xF3,
     }
 }

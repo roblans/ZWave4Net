@@ -23,7 +23,7 @@ namespace ZWave4Net.Commands
             get { return Enum.GetValues(typeof(batteryCmd)).Cast<Enum>().ToArray(); }
         }
 
-        public async Task<BatteryLevel> GetLevel()
+        public async Task<BatteryLevel> Get()
         {
             var response = await Invoker.Send(new Command(ClassID, batteryCmd.Get));
             return ParseLevel(response.Payload);

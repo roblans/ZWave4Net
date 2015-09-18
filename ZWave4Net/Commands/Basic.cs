@@ -36,13 +36,13 @@ namespace ZWave4Net.Commands
             get { return Enum.GetValues(typeof(command)).Cast<Enum>().ToArray(); }
         }
 
-        public async Task<byte> GetValue()
+        public async Task<byte> Get()
         {
             var response = await Invoker.Send(new Command(ClassID, command.Get));
             return response.Payload.First();
         }
 
-        public Task SetValue(byte value)
+        public Task Set(byte value)
         {
             return Invoker.Send(new Command(ClassID, command.Set, value));
         }
