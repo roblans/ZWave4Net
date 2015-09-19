@@ -12,7 +12,7 @@ namespace ZWave4Net.Samples.Basic
         static void Main(string[] args)
         {
             // set threshold for logmessages, change to Debug to get detailed logging
-            Logger.LogThreshold = LogLevel.Info;
+            Logger.LogThreshold = LogLevel.Debug;
 
             // redirect loggger
             Platform.LogMessage = Logger.LogMessage;
@@ -60,9 +60,6 @@ namespace ZWave4Net.Samples.Basic
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
-                // start the discovery process
-                driver.DiscoverNodes();
-
                 Platform.LogMessage(LogLevel.Info, "Enter the ID of a node");
                 var input = await Task.Run(() => Console.ReadLine());
                 var nodeID = byte.Parse(input);
@@ -73,6 +70,12 @@ namespace ZWave4Net.Samples.Basic
                     Platform.LogMessage(LogLevel.Error, string.Format($"Error: Node {nodeID} does not exists."));
                     return;
                 }
+
+                var association = node.GetCommandClass<ZWave4Net.Commands.Association>();
+                await association.Remove(1, 1);
+                await association.Remove(2, 1);
+                await association.Remove(3, 1);
+                await association.Add(1, 1);
 
                 var basic = node.GetCommandClass<ZWave4Net.Commands.Basic>();
                 basic.ValueChanged += (_, e) =>
