@@ -32,10 +32,10 @@ namespace ZWave4Net.Commands
             get { return GetType().Name; }
         }
 
-        internal void HandleEvent(Command @event)
+        internal void HandleEvent(Command command)
         {
-            var command = Commands.Single(element => Convert.ToByte(element) == @event.CommandID);
-            OnEvent(command, @event.Payload);
+            var command = Commands.Single(element => Convert.ToByte(element) == command.CommandID);
+            OnEvent(command, command.Payload);
         }
 
         protected virtual void OnEvent(Enum command, byte[] payload)

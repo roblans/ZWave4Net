@@ -32,10 +32,10 @@ namespace ZWave4Net.Commands
             return AlarmValue.Parse(response.Payload);
         }
 
-        protected override void OnEvent(Enum @event, byte[] payload)
+        protected override void OnEvent(Enum command, byte[] payload)
         {
             var value = AlarmValue.Parse(payload);
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {@event}, {value}"));
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {value}"));
         }
     }
 
