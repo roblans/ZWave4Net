@@ -9,7 +9,7 @@ namespace ZWave4Net.Commands
 {
     class CommandInvoker : ICommandInvoker
     {
-        private readonly List<Tuple<Command, TaskCompletionSource<Command>>> _pendingCommands = new List<Tuple<Command, TaskCompletionSource<Command>>>();
+        private readonly List<Tuple<Message, TaskCompletionSource<Command>, Enum>> _pendingCommands = new List<Tuple<Message, TaskCompletionSource<Command>, Enum>>();
 
         public readonly CommandClass CommandClass;
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(10);
@@ -17,12 +17,25 @@ namespace ZWave4Net.Commands
         public CommandInvoker(CommandClass commandClass)
         {
             CommandClass = commandClass;
+            Channel.SendCompleted += OnSendCompleted;
             Channel.EventReceived += OnEventReceived;
         }
+
 
         private IMessageChannel Channel
         {
             get { return CommandClass.Node.Driver.Channel; }
+        }
+
+        private void OnSendCompleted(object sender, MessageEventArgs e)
+        {
+            var request = _pendingCommands.FirstOrDefault(element => element.Item1 == e.Message && element.Item3 == null);
+            if (request != null)
+            {
+                _pendingCommands.Remove(request);
+                request.Item2.SetResult(null);
+                return;
+            }
         }
 
         private void OnEventReceived(object sender, EventMessageEventArgs e)
@@ -32,7 +45,7 @@ namespace ZWave4Net.Commands
             if (e.Message.Command.ClassID != CommandClass.ClassID)
                 return;
 
-            var request = _pendingCommands.FirstOrDefault(element => CommandClass.IsCorrelated(element.Item1, e.Message.Command));
+            var request = _pendingCommands.FirstOrDefault(element => Convert.ToByte(element.Item3) == e.Message.Command.CommandID);
             if (request != null)
             {
                 _pendingCommands.Remove(request);
@@ -43,15 +56,16 @@ namespace ZWave4Net.Commands
             CommandClass.HandleEvent(e.Message.Command);
         }
 
-        public async Task<Command> Send(Command command)
+        public async Task<Command> Send(Command command, Enum replyCommandID)
         {
+            var message = new Message(CommandClass.Node.NodeID, command);
             var completionSource = new TaskCompletionSource<Command>();
-            var tuple = Tuple.Create(command, completionSource);
+            var tuple = Tuple.Create(message, completionSource, replyCommandID);
             _pendingCommands.Add(tuple);
 
             try
             {
-                await Channel.Send(new Message(CommandClass.Node.NodeID, command)).ConfigureAwait(false);
+                await Channel.Send(message).ConfigureAwait(false);
                 return await completionSource.Task.Run(ResponseTimeout).ConfigureAwait(false);
             }
             catch (TimeoutException)
@@ -59,7 +73,11 @@ namespace ZWave4Net.Commands
                 _pendingCommands.Remove(tuple);
                 throw;
             }
+        }
 
+        public Task Post(Command command)
+        {
+            return Send(command, null);
         }
     }
 }

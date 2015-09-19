@@ -59,6 +59,7 @@
     <Compile Include="Commands\WakeUp.cs" />
     <Compile Include="Communication\Command.cs" />
     <Compile Include="Communication\EventMessage.cs" />
+    <Compile Include="Communication\MessageEventArgs.cs" />
     <Compile Include="Communication\EventMessageEventArgs.cs" />
     <Compile Include="Communication\Exceptions.cs" />
     <Compile Include="Communication\FrameHeader.cs" />

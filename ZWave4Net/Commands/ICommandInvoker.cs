@@ -9,6 +9,6 @@ namespace ZWave4Net.Commands
 {
     interface ICommandInvoker
     {
-        Task<Command> Send(Command command);
+        Task<Command> Send(Command command, Enum replyCommand);
     }
 }

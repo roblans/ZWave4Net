@@ -39,18 +39,13 @@ namespace ZWave4Net.Commands
 
         public async Task<byte> Get()
         {
-            var response = await Invoker.Send(new Command(ClassID, command.Get));
+            var response = await Invoker.Send(new Command(ClassID, command.Get), command.Report);
             return response.Payload.First();
         }
 
         public Task Set(byte value)
         {
-            return Invoker.Send(new Command(ClassID, command.Set, value));
-        }
-
-        protected override bool IsCorrelated(Enum request, Enum response)
-        {
-            return object.Equals(request, command.Get) && object.Equals(response, command.Report);
+            return Invoker.Post(new Command(ClassID, command.Set, value));
         }
 
         protected override void OnEvent(Enum command, byte[] payload)

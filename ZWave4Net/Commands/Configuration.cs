@@ -25,23 +25,15 @@ namespace ZWave4Net.Commands
             get { return Enum.GetValues(typeof(configurationCmd)).Cast<Enum>().ToArray(); }
         }
 
-        protected override bool IsCorrelated(Enum request, Enum response)
-        {
-            if (object.Equals(request, configurationCmd.Get) && object.Equals(response, configurationCmd.Report))
-                return true;
-
-            return false;
-        }
-
         public Task SetValue(byte parameter, byte value)
         {
-            return Invoker.Send((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
+            return Invoker.Post((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
         }
 
 
         public async Task<byte> GetValue(byte parameter)
         {
-            var response = await Invoker.Send(new Command(ClassID, configurationCmd.Get, parameter));
+            var response = await Invoker.Send(new Command(ClassID, configurationCmd.Get, parameter), configurationCmd.Report);
             var length = response.Payload[1];
             if (length == 1)
             {

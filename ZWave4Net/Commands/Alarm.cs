@@ -28,18 +28,8 @@ namespace ZWave4Net.Commands
 
         public async Task<AlarmValue> Get()
         {
-            var response = await Invoker.Send(new Command(ClassID, alarmCmd.Get));
+            var response = await Invoker.Send(new Command(ClassID, alarmCmd.Get), alarmCmd.Report);
             return AlarmValue.Parse(response.Payload);
-        }
-
-        protected override bool IsCorrelated(Enum request, Enum response)
-        {
-            if (object.Equals(request, alarmCmd.Get) && object.Equals(response, alarmCmd.Report))
-                return true;
-            if (object.Equals(request, alarmCmd.SupportedGet) && object.Equals(response, alarmCmd.SupportedReport))
-                return true;
-
-            return false;
         }
 
         protected override void OnEvent(Enum @event, byte[] payload)

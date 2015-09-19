@@ -26,16 +26,8 @@ namespace ZWave4Net.Commands
 
         public async Task<BatteryLevel> Get()
         {
-            var response = await Invoker.Send(new Command(ClassID, batteryCmd.Get));
+            var response = await Invoker.Send(new Command(ClassID, batteryCmd.Get), batteryCmd.Report);
             return ParseLevel(response.Payload);
-        }
-
-        protected override bool IsCorrelated(Enum request, Enum response)
-        {
-            if (object.Equals(request, batteryCmd.Get) && object.Equals(response, batteryCmd.Report))
-                return true;
-
-            return false;
         }
 
         private BatteryLevel ParseLevel(byte[] payload)

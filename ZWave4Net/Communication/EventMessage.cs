@@ -13,7 +13,6 @@ namespace ZWave4Net.Communication
         public byte NodeID { get; private set; }
         public Command Command { get; private set; }
 
-
         public static EventMessage Parse(byte[] data)
         {
             var eventMessage = new EventMessage();

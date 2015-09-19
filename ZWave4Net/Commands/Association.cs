@@ -30,26 +30,18 @@ namespace ZWave4Net.Commands
 
         public async Task<AssociationValue> Get(byte groupID)
         {
-            var response = await Invoker.Send(new Command(ClassID, associationCmd.Get, groupID));
+            var response = await Invoker.Send(new Command(ClassID, associationCmd.Get, groupID), associationCmd.Report);
             return AssociationValue.Parse(response.Payload);
         }
 
         public Task Add(byte groupID, byte nodeID)
         {
-            return Invoker.Send(new Command(ClassID, associationCmd.Set, groupID, nodeID));
+            return Invoker.Post(new Command(ClassID, associationCmd.Set, groupID, nodeID));
         }
 
         public Task Remove(byte groupID, byte nodeID)
         {
-            return Invoker.Send(new Command(ClassID, associationCmd.Remove, groupID, nodeID));
-        }
-
-        protected override bool IsCorrelated(Enum request, Enum response)
-        {
-            if (object.Equals(request, associationCmd.Get) && object.Equals(response, associationCmd.Report))
-                return true;
-
-            return false;
+            return Invoker.Post(new Command(ClassID, associationCmd.Remove, groupID, nodeID));
         }
 
         protected override void OnEvent(Enum @event, byte[] payload)

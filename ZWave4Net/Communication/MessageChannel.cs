@@ -17,6 +17,7 @@ namespace ZWave4Net.Communication
         private readonly BlockingCollection<Message> _transmitQueue = new BlockingCollection<Message>();
         private readonly List<Tuple<Message, TaskCompletionSource<Message>>> _pendingMessages = new List<Tuple<Message, TaskCompletionSource<Message>>>();
 
+        public event EventHandler<MessageEventArgs> SendCompleted;
         public event EventHandler<EventMessageEventArgs> EventReceived;
 
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(10);
@@ -125,12 +126,23 @@ namespace ZWave4Net.Communication
             {
                 _pendingMessages.Remove(request);
                 request.Item2.SetResult(response);
+                OnSendCompleted(new MessageEventArgs(request.Item1));
+                return;
             }
 
             if (response.Function == Function.ApplicationCommandHandler)
             {
                 var eventMessage = EventMessage.Parse(response.Payload);
                 OnEventReceived(new EventMessageEventArgs(eventMessage));
+            }
+        }
+
+        protected virtual void OnSendCompleted(MessageEventArgs e)
+        {
+            var handler = SendCompleted;
+            if (handler != null)
+            {
+                handler(this, e);
             }
         }
 
@@ -145,19 +157,14 @@ namespace ZWave4Net.Communication
 
         private bool IsComplete(Message request, Message response)
         {
-            if (request.Command == null)
+            if (request.Function == Function.SendData)
+            {
+                return request.Function == response.Function && request.CallbackID  == response.CallbackID;
+            }
+            else
             {
                 return request.Function == response.Function;
             }
-            if (request.Function == Function.SendData)
-            {
-                if (response.Function == Function.ApplicationCommandHandler && request.NodeID == response.NodeID && request.Command.ClassID == response.Command.ClassID)
-                {
-                    return true;
-                }
-
-            }
-            return false;
         }
 
         private void OnTransmit(Message request)

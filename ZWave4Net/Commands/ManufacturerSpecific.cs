@@ -26,16 +26,8 @@ namespace ZWave4Net.Commands
 
         public async Task<ProductData> GetProductData()
         {
-            var response = await Invoker.Send(new Command(ClassID, manufacturerSpecificCmd.Get));
+            var response = await Invoker.Send(new Command(ClassID, manufacturerSpecificCmd.Get), manufacturerSpecificCmd.Report);
             return ProductData.Parse(response.Payload);
-        }
-
-        protected override bool IsCorrelated(Enum request, Enum response)
-        {
-            if (object.Equals(request, manufacturerSpecificCmd.Get) && object.Equals(response, manufacturerSpecificCmd.Report))
-                return true;
-
-            return false;
         }
 
         protected override void OnEvent(Enum command, byte[] payload)

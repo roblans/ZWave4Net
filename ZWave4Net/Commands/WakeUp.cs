@@ -29,21 +29,13 @@ namespace ZWave4Net.Commands
 
         public async Task<byte> GetInterval()
         {
-            var response = await Invoker.Send(new Command(ClassID, wakeUpCmd.IntervalGet));
+            var response = await Invoker.Send(new Command(ClassID, wakeUpCmd.IntervalGet), wakeUpCmd.IntervalReport);
             return response.Payload.First();
         }
 
         public Task SetInterval(byte value)
         {
-            return Invoker.Send(new Command(ClassID, wakeUpCmd.IntervalSet, value));
-        }
-
-        protected override bool IsCorrelated(Enum request, Enum response)
-        {
-            if (object.Equals(request, wakeUpCmd.IntervalGet) && object.Equals(response, wakeUpCmd.IntervalReport))
-                return true;
-
-            return false;
+            return Invoker.Post(new Command(ClassID, wakeUpCmd.IntervalSet, value));
         }
 
         protected override void OnEvent(Enum command, byte[] payload)
