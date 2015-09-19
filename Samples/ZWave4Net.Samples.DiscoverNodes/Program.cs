@@ -84,7 +84,6 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     Platform.LogMessage(LogLevel.Warn, "SetValue");
                     await configuration.SetValue(62, c);
                     Platform.LogMessage(LogLevel.Warn, "End");
-                    await Task.Delay(1000);
                 }
                 //for(var i=1; i < 9; i++)
                 //{
