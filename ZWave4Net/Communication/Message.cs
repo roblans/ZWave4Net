@@ -74,6 +74,23 @@ namespace ZWave4Net.Communication
 
         public override string ToString()
         {
+            if (Function == Communication.Function.ApplicationCommandHandler)
+            {
+                return string.Format($"{Header}, {Type}, {Function}, {ReceiveStatus}, Node: {NodeID}, {Command}");
+            }
+
+            if (Type == MessageType.Request && Function == Communication.Function.SendData)
+            {
+                if (Received)
+                {
+                    return string.Format($"{Header}, {Type}, {Function}, CallbackID: {CallbackID}, {TransmissionState}");
+                }
+                else
+                {
+                    return string.Format($"{Header}, {Type}, {Function}, Node: {NodeID}, {Command}, CallbackID: {CallbackID}");
+                }
+            }
+
             if (Header == FrameHeader.SOF)
             {
                 var payload = Payload != null ? BitConverter.ToString(Payload) : null;
@@ -146,13 +163,13 @@ namespace ZWave4Net.Communication
             switch (header)
             {
                 case FrameHeader.ACK:
-                    Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
+                    Platform.LogMessage(LogLevel.Debug, string.Format($"Receiving: {buffer[0]}"));
                     return Message.Acknowledgment;
                 case FrameHeader.NAK:
-                    Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
+                    Platform.LogMessage(LogLevel.Debug, string.Format($"Receiving: {buffer[0]}"));
                     return Message.NegativeAcknowledgment;
                 case FrameHeader.CAN:
-                    Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {buffer[0]}"));
+                    Platform.LogMessage(LogLevel.Debug, string.Format($"Receiving: {buffer[0]}"));
                     return Message.Cancel;
             }
 
@@ -168,7 +185,7 @@ namespace ZWave4Net.Communication
                 var function = (Function)buffer[3];
                 var payload = buffer.Skip(4).Take(length - 3).ToArray();
 
-                Platform.LogMessage(LogLevel.Debug, string.Format($"Received: {BitConverter.ToString(buffer.ToArray())}"));
+                Platform.LogMessage(LogLevel.Debug, string.Format($"Receiving: {BitConverter.ToString(buffer.ToArray())}"));
 
                 if (buffer.Skip(1).Take(buffer.Length - 2).Aggregate((byte)0xFF, (total, next) => (byte)(total ^ next)) != buffer[buffer.Length - 1])
                     throw new ChecksumException();
