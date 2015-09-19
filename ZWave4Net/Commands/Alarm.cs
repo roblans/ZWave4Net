@@ -21,20 +21,15 @@ namespace ZWave4Net.Commands
         {
         }
 
-        protected override Enum[] Commands
-        {
-            get { return Enum.GetValues(typeof(alarmCmd)).Cast<Enum>().ToArray(); }
-        }
-
         public async Task<AlarmValue> Get()
         {
             var response = await Dispatcher.Send(new Command(ClassID, alarmCmd.Get), alarmCmd.Report);
             return AlarmValue.Parse(response.Payload);
         }
 
-        protected override void OnEvent(Enum command, byte[] payload)
+        protected override void OnEvent(Command command)
         {
-            var value = AlarmValue.Parse(payload);
+            var value = AlarmValue.Parse(command.Payload);
             Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {value}"));
         }
     }

@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace ZWave4Net.Commands
 {
-    public class BatteryLevel : Quantity<byte>
+    public enum SwitchBinaryValue
     {
-        public BatteryLevel(byte value) 
-            : base(value, "%")
-        {
-        }
-    }
+        Off,
+        On,
+    };
 }

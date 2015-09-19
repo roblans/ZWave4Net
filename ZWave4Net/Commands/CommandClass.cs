@@ -13,8 +13,6 @@ namespace ZWave4Net.Commands
         public readonly Node Node;
         internal readonly ICommandDispatcher Dispatcher;
 
-        protected abstract Enum[] Commands { get; }
-
         public CommandClass(byte classID, Node node)
         {
             ClassID = classID;
@@ -34,11 +32,10 @@ namespace ZWave4Net.Commands
 
         internal void HandleEvent(EventMessage message)
         {
-            var command = Commands.Single(element => Convert.ToByte(element) == message.Command.CommandID);
-            OnEvent(command, message.Command.Payload);
+            OnEvent(message.Command);
         }
 
-        protected virtual void OnEvent(Enum command, byte[] payload)
+        protected virtual void OnEvent(Command command)
         {
         }
     }

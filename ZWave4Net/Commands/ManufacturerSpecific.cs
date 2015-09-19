@@ -19,21 +19,10 @@ namespace ZWave4Net.Commands
         {
         }
 
-        protected override Enum[] Commands
-        {
-            get { return Enum.GetValues(typeof(manufacturerSpecificCmd)).Cast<Enum>().ToArray(); }
-        }
-
-        public async Task<ProductData> GetProductData()
+        public async Task<ManufacturerSpecificValue> Get()
         {
             var response = await Dispatcher.Send(new Command(ClassID, manufacturerSpecificCmd.Get), manufacturerSpecificCmd.Report);
-            return ProductData.Parse(response.Payload);
-        }
-
-        protected override void OnEvent(Enum command, byte[] payload)
-        {
-            var productInfo = ProductData.Parse(payload);
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {productInfo}"));
+            return ManufacturerSpecificValue.Parse(response.Payload);
         }
     }
 }

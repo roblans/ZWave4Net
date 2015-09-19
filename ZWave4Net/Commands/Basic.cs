@@ -32,11 +32,6 @@ namespace ZWave4Net.Commands
             }
         }
 
-        protected override Enum[] Commands
-        {
-            get { return Enum.GetValues(typeof(command)).Cast<Enum>().ToArray(); }
-        }
-
         public async Task<byte> Get()
         {
             var response = await Dispatcher.Send(new Command(ClassID, command.Get), command.Report);
@@ -48,9 +43,9 @@ namespace ZWave4Net.Commands
             return Dispatcher.Send(new Command(ClassID, command.Set, value));
         }
 
-        protected override void OnEvent(Enum command, byte[] payload)
+        protected override void OnEvent(Command command)
         {
-            var value = payload.First();
+            var value = command.Payload.First();
             Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, Value = {value}"));
 
             OnValueChanged(new ValueChangedEventArgs<byte>(value));

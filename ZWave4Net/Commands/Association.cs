@@ -23,11 +23,6 @@ namespace ZWave4Net.Commands
         {
         }
 
-        protected override Enum[] Commands
-        {
-            get { return Enum.GetValues(typeof(associationCmd)).Cast<Enum>().ToArray(); }
-        }
-
         public async Task<AssociationValue> Get(byte groupID)
         {
             var response = await Dispatcher.Send(new Command(ClassID, associationCmd.Get, groupID), associationCmd.Report);

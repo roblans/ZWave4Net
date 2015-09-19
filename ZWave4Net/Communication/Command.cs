@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ZWave4Net.Communication
 {
-    class Command
+    public class Command
     {
         public readonly byte ClassID;
         public readonly byte CommandID;

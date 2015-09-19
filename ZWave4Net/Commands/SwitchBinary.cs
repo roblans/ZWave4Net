@@ -20,20 +20,15 @@ namespace ZWave4Net.Commands
         {
         }
 
-        protected override Enum[] Commands
+        public Task Set(SwitchBinaryValue value)
         {
-            get { return Enum.GetValues(typeof(switchBinaryCmd)).Cast<Enum>().ToArray(); }
+            return Dispatcher.Send(new Command(ClassID, switchBinaryCmd.Set, value == SwitchBinaryValue.On ? (byte)0xFF : (byte)0x00));
         }
 
-        public Task SetValue(BinarySwitchValue value)
-        {
-            return Dispatcher.Send(new Command(ClassID, switchBinaryCmd.Set, value == BinarySwitchValue.On ? (byte)0xFF : (byte)0x00));
-        }
-
-        public async Task<BinarySwitchValue> GetValue()
+        public async Task<SwitchBinaryValue> Get()
         {
             var response = await Dispatcher.Send(new Command(ClassID, switchBinaryCmd.Get), switchBinaryCmd.Report);
-            return response.Payload.First() == 0xFF ? BinarySwitchValue.On : BinarySwitchValue.Off;
+            return response.Payload.First() == 0xFF ? SwitchBinaryValue.On : SwitchBinaryValue.Off;
         }
     }
 }

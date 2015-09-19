@@ -19,25 +19,10 @@ namespace ZWave4Net.Commands
         {
         }
 
-        protected override Enum[] Commands
-        {
-            get { return Enum.GetValues(typeof(batteryCmd)).Cast<Enum>().ToArray(); }
-        }
-
-        public async Task<BatteryLevel> Get()
+        public async Task<BatteryValue> Get()
         {
             var response = await Dispatcher.Send(new Command(ClassID, batteryCmd.Get), batteryCmd.Report);
-            return ParseLevel(response.Payload);
-        }
-
-        private BatteryLevel ParseLevel(byte[] payload)
-        {
-            var value = payload.First();
-            if (value == 0xFF)
-            {
-                value = 0;
-            }
-            return new BatteryLevel(value);
+            return BatteryValue.Parse(response.Payload);
         }
     }
 }

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ZWave4Net.Commands
 {
-    public class ProductData
+    public class ManufacturerSpecificValue
     {
         public readonly ushort ManufacturerID;
         public readonly ushort ProductType;
         public readonly ushort ProductID;
 
-        private ProductData(ushort manufacturerID, ushort productType, ushort productID)
+        private ManufacturerSpecificValue(ushort manufacturerID, ushort productType, ushort productID)
         {
             ManufacturerID = manufacturerID;
             ProductType = productType;
@@ -24,14 +24,14 @@ namespace ZWave4Net.Commands
             return string.Format("ManufacturerID = {0:X4}, ProductType = {1:X4}, ProductID = {2:X4}", ManufacturerID, ProductType, ProductID);
         }
 
-        public static ProductData Parse(byte[] data)
+        public static ManufacturerSpecificValue Parse(byte[] data)
         {
             data = data.Reverse().ToArray();
             var productID = BitConverter.ToUInt16(data, 0);
             var productType = BitConverter.ToUInt16(data, 2);
             var manufacturerID = BitConverter.ToUInt16(data, 4);
 
-            return new ProductData(manufacturerID, productType, productID);
+            return new ManufacturerSpecificValue(manufacturerID, productType, productID);
         }
     }
 }

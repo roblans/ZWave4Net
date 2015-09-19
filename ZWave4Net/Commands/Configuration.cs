@@ -20,11 +20,6 @@ namespace ZWave4Net.Commands
         {
         }
 
-        protected override Enum[] Commands
-        {
-            get { return Enum.GetValues(typeof(configurationCmd)).Cast<Enum>().ToArray(); }
-        }
-
         public Task SetValue(byte parameter, byte value)
         {
             return Dispatcher.Send((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));

@@ -22,11 +22,6 @@ namespace ZWave4Net.Commands
         {
         }
 
-        protected override Enum[] Commands
-        {
-            get { return Enum.GetValues(typeof(wakeUpCmd)).Cast<Enum>().ToArray(); }
-        }
-
         public async Task<byte> GetInterval()
         {
             var response = await Dispatcher.Send(new Command(ClassID, wakeUpCmd.IntervalGet), wakeUpCmd.IntervalReport);
@@ -38,9 +33,9 @@ namespace ZWave4Net.Commands
             return Dispatcher.Send(new Command(ClassID, wakeUpCmd.IntervalSet, value));
         }
 
-        protected override void OnEvent(Enum command, byte[] payload)
+        protected override void OnEvent(Command command)
         {
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {BitConverter.ToString(payload)}"));
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {BitConverter.ToString(command.Payload)}"));
         }
     }
 }

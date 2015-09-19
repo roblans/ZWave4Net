@@ -75,7 +75,7 @@ namespace ZWave4Net.Samples.Basic
                 // get the wallplug
                 var wallPlug = nodes[6];
                 // turn it off
-                await wallPlug.GetCommandClass<SwitchBinary>().SetValue(BinarySwitchValue.Off);
+                await wallPlug.GetCommandClass<SwitchBinary>().Set(SwitchBinaryValue.Off);
                 // set on color to green
                 await wallPlug.GetCommandClass<Configuration>().SetValue(61, 4);
                 // set on off to none
@@ -90,7 +90,7 @@ namespace ZWave4Net.Samples.Basic
                     if (e.Value == 0xFF)
                     {
                         Platform.LogMessage(LogLevel.Info, "Set wallplug on");
-                        await wallPlug.GetCommandClass<SwitchBinary>().SetValue(BinarySwitchValue.On);
+                        await wallPlug.GetCommandClass<SwitchBinary>().Set(SwitchBinaryValue.On);
                     }
                 };
 
