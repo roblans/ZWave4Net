@@ -63,7 +63,7 @@ namespace ZWave4Net.Communication
         }
 
         public Message(byte nodeID, Command command)
-            : this(MessageType.Request, Communication.Function.SendData, new[] { nodeID }.Concat(command.Serialize()).ToArray())
+            : this(MessageType.Request, Communication.Function.SendData, new[] { nodeID }.Concat(command.ToBytes()).ToArray())
         {
         }
 
@@ -76,7 +76,7 @@ namespace ZWave4Net.Communication
         {
             if (Function == Communication.Function.ApplicationCommandHandler)
             {
-                return string.Format($"{Header}, {Type}, {Function}, {ReceiveStatus}, Node: {NodeID}, {Command}");
+                return string.Format($"{Header}, {Type}, {Function}, {ReceiveStatus}, Node: {NodeID}, Command: [{Command}]");
             }
 
             if (Type == MessageType.Request && Function == Communication.Function.SendData)
@@ -87,7 +87,7 @@ namespace ZWave4Net.Communication
                 }
                 else
                 {
-                    return string.Format($"{Header}, {Type}, {Function}, Node: {NodeID}, {Command}, CallbackID: {CallbackID}");
+                    return string.Format($"{Header}, {Type}, {Function}, Node: {NodeID}, Command: [{Command}], CallbackID: {CallbackID}");
                 }
             }
 

@@ -24,7 +24,12 @@ namespace ZWave4Net.Communication
         {
         }
 
-        public byte[] Serialize()
+        public override string ToString()
+        {
+            return string.Format($"{ClassID}, {CommandID}, {BitConverter.ToString(Payload)}");
+        }
+
+        public byte[] ToBytes()
         {
             var bytes = new List<byte>();
             bytes.Add(0);
