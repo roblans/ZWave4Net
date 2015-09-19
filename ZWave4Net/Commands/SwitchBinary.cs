@@ -27,7 +27,7 @@ namespace ZWave4Net.Commands
 
         public Task SetValue(BinarySwitchValue value)
         {
-            return Dispatcher.Post(new Command(ClassID, switchBinaryCmd.Set, value == BinarySwitchValue.On ? (byte)0xFF : (byte)0x00));
+            return Dispatcher.Send(new Command(ClassID, switchBinaryCmd.Set, value == BinarySwitchValue.On ? (byte)0xFF : (byte)0x00));
         }
 
         public async Task<BinarySwitchValue> GetValue()

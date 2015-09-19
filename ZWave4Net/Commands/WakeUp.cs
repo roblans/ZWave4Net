@@ -35,7 +35,7 @@ namespace ZWave4Net.Commands
 
         public Task SetInterval(byte value)
         {
-            return Dispatcher.Post(new Command(ClassID, wakeUpCmd.IntervalSet, value));
+            return Dispatcher.Send(new Command(ClassID, wakeUpCmd.IntervalSet, value));
         }
 
         protected override void OnEvent(Enum command, byte[] payload)

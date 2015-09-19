@@ -75,7 +75,7 @@ namespace ZWave4Net.Commands
             }
         }
 
-        public Task Post(Command command)
+        public Task Send(Command command)
         {
             return Send(command, null);
         }

@@ -45,7 +45,7 @@ namespace ZWave4Net.Commands
 
         public Task Set(byte value)
         {
-            return Dispatcher.Post(new Command(ClassID, command.Set, value));
+            return Dispatcher.Send(new Command(ClassID, command.Set, value));
         }
 
         protected override void OnEvent(Enum command, byte[] payload)

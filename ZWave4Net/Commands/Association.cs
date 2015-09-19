@@ -36,12 +36,12 @@ namespace ZWave4Net.Commands
 
         public Task Add(byte groupID, byte nodeID)
         {
-            return Dispatcher.Post(new Command(ClassID, associationCmd.Set, groupID, nodeID));
+            return Dispatcher.Send(new Command(ClassID, associationCmd.Set, groupID, nodeID));
         }
 
         public Task Remove(byte groupID, byte nodeID)
         {
-            return Dispatcher.Post(new Command(ClassID, associationCmd.Remove, groupID, nodeID));
+            return Dispatcher.Send(new Command(ClassID, associationCmd.Remove, groupID, nodeID));
         }
 
         protected override void OnEvent(Enum @event, byte[] payload)

@@ -27,7 +27,7 @@ namespace ZWave4Net.Commands
 
         public Task SetValue(byte parameter, byte value)
         {
-            return Dispatcher.Post((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
+            return Dispatcher.Send((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
         }
 
 

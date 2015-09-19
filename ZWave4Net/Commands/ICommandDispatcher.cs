@@ -10,6 +10,6 @@ namespace ZWave4Net.Commands
     interface ICommandDispatcher
     {
         Task<Command> Send(Command command, Enum response);
-        Task Post(Command command);
+        Task Send(Command command);
     }
 }
