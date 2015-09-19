@@ -23,6 +23,7 @@ namespace ZWave4Net.Communication
         public readonly Command Command;
         public readonly ReceiveStatus? ReceiveStatus;
         public readonly byte? CallbackID;
+        public readonly TransmissionState? TransmissionState;
 
         private Message(FrameHeader header, MessageType? type = null, Function? function = null, byte[] payload = null, bool received = false)
         {
@@ -43,8 +44,9 @@ namespace ZWave4Net.Communication
             {
                 if (Received)
                 {
-                    // 4 bytes of payload here
+                    // 4 bytes of payload here, bytes 2 and 3 unknown  
                     CallbackID = payload[0];
+                    TransmissionState = (TransmissionState)payload[1];
                 }
                 else
                 {

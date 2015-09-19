@@ -69,6 +69,7 @@
     <Compile Include="Communication\MessageChannel.cs" />
     <Compile Include="Communication\MessageType.cs" />
     <Compile Include="Communication\ReceiveStatus.cs" />
+    <Compile Include="Communication\TransmissionState.cs" />
     <Compile Include="Communication\TransmitOptions.cs" />
     <Compile Include="Extentions.cs" />
     <Compile Include="GenericType.cs" />
