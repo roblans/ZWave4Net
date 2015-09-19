@@ -84,7 +84,7 @@ namespace ZWave4Net.Samples.Basic
                 // get the motion sensor
                 var motionSensor = nodes[3];
                 // subscribe to basic value changed event
-                motionSensor.GetCommandClass<Commands.Basic>().ValueChanged += async (_, e) =>
+                motionSensor.GetCommandClass<Commands.Basic>().Changed += async (_, e) =>
                 {
                     Platform.LogMessage(LogLevel.Info, string.Format($"MotionSensor changed to {e.Value}"));
                     if (e.Value == 0xFF)
@@ -95,7 +95,7 @@ namespace ZWave4Net.Samples.Basic
                 };
 
                 // subscribe to basic value changed event
-                wallPlug.GetCommandClass<Commands.Basic>().ValueChanged += (_, e) =>
+                wallPlug.GetCommandClass<Commands.Basic>().Changed += (_, e) =>
                 {
                     Platform.LogMessage(LogLevel.Info, string.Format($"Wallplug changed to {e.Value}"));
                 };

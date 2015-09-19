@@ -30,7 +30,6 @@ namespace ZWave4Net.Commands
         protected override void OnEvent(Command command)
         {
             var value = AlarmValue.Parse(command.Payload);
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {value}"));
         }
     }
 

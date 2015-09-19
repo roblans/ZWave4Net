@@ -32,6 +32,7 @@ namespace ZWave4Net.Commands
 
         internal void HandleEvent(EventMessage message)
         {
+            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = [{message.Command}]"));
             OnEvent(message.Command);
         }
 

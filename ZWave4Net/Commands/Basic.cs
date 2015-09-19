@@ -9,7 +9,7 @@ namespace ZWave4Net.Commands
 {
     public class Basic : CommandClass
     {
-        public event EventHandler<ValueChangedEventArgs<byte>> ValueChanged;
+        public event EventHandler<ValueChangedEventArgs<byte>> Changed;
 
         enum command
         {
@@ -23,9 +23,9 @@ namespace ZWave4Net.Commands
         {
         }
         
-        protected void OnValueChanged(ValueChangedEventArgs<byte> e)
+        protected void OnChanged(ValueChangedEventArgs<byte> e)
         {
-            var handler = ValueChanged;
+            var handler = Changed;
             if (handler != null)
             {
                 handler(this, e);
@@ -46,9 +46,7 @@ namespace ZWave4Net.Commands
         protected override void OnEvent(Command command)
         {
             var value = command.Payload.First();
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, Value = {value}"));
-
-            OnValueChanged(new ValueChangedEventArgs<byte>(value));
+            OnChanged(new ValueChangedEventArgs<byte>(value));
         }
     }
 }

@@ -35,7 +35,6 @@ namespace ZWave4Net.Commands
 
         protected override void OnEvent(Command command)
         {
-            Platform.LogMessage(LogLevel.Debug, string.Format($"Event: Node = {Node}, Class = {ClassName}, Command = {command}, {BitConverter.ToString(command.Payload)}"));
         }
     }
 }
