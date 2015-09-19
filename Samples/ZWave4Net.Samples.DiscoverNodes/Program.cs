@@ -61,9 +61,6 @@ namespace ZWave4Net.Samples.DiscoverNodes
                 //Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
                 //Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
-                // start the discovery process
-                driver.DiscoverNodes();
-
                 // wait for the discovery process to complete and get the nodes
                 foreach (var node in await driver.GetNodes())
                 {

@@ -43,9 +43,9 @@ namespace ZWave4Net
             return response.Payload[4];
         }
 
-        public void DiscoverNodes()
+        public Task<NodeCollection> DiscoverNodes()
         {
-            _nodes = Task.Run(async () =>
+            return _nodes = Task.Run(async () =>
             {
                 var response = await Channel.Send(Function.DiscoveryNodes);
                 var values = response.Payload.Skip(3).Take(29).ToArray();
@@ -84,7 +84,11 @@ namespace ZWave4Net
 
         public async Task<NodeCollection> GetNodes()
         {
-            return _nodes != null ? await _nodes : new NodeCollection();
+            if (_nodes == null)
+            {
+                _nodes = DiscoverNodes();
+            }
+            return await _nodes;
         }
 
         public void Close()
