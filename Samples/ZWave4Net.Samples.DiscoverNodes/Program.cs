@@ -57,12 +57,14 @@ namespace ZWave4Net.Samples.DiscoverNodes
             try
             {
                 // get Version and HomeID/NetworkID 
-                //Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
-                //Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
-                //Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
+                Platform.LogMessage(LogLevel.Info, string.Format($"Version: {await driver.GetVersion()}"));
+                Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
+                Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
                 // wait for the discovery process to complete and get the nodes
-                foreach (var node in await driver.GetNodes())
+                var nodes = await driver.GetNodes();
+
+                foreach (var node in nodes)
                 {
                     // get protocolinfo from node
                     var protocolInfo = await node.GetNodeProtocolInfo();
@@ -71,16 +73,13 @@ namespace ZWave4Net.Samples.DiscoverNodes
                     Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
 
-                var wallPlug = (await driver.GetNodes()).First(element => element.NodeID == 6);
+                var wallPlug = nodes[6];
                 var configuration = wallPlug.GetCommandClass<Configuration>();
 
-                for (int i = 0; i < 2; i++)
+                for (int i = 1; i < 8; i++)
                 {
-                    Platform.LogMessage(LogLevel.Warn, "GetValue");
-                    var c = await configuration.GetValue(62);
-                    Platform.LogMessage(LogLevel.Warn, "SetValue");
-                    await configuration.SetValue(62, c);
-                    Platform.LogMessage(LogLevel.Warn, "End");
+                    await configuration.SetValue(62, (byte)i);
+                    await Task.Delay(500);
                 }
                 //for(var i=1; i < 9; i++)
                 //{

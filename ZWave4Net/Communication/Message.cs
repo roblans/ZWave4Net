@@ -76,7 +76,7 @@ namespace ZWave4Net.Communication
         {
             if (Function == Communication.Function.ApplicationCommandHandler)
             {
-                return string.Format($"{Header}, {Type}, {Function}, {ReceiveStatus}, Node: {NodeID}, Command: [{Command}]");
+                return string.Format($"{Header}, {Type}, {Function}, {ReceiveStatus}, Node: {NodeID:D3}, Command: [{Command}]");
             }
 
             if (Type == MessageType.Request && Function == Communication.Function.SendData)
@@ -87,7 +87,7 @@ namespace ZWave4Net.Communication
                 }
                 else
                 {
-                    return string.Format($"{Header}, {Type}, {Function}, Node: {NodeID}, Command: [{Command}], CallbackID: {CallbackID}");
+                    return string.Format($"{Header}, {Type}, {Function}, Node: {NodeID:D3}, Command: [{Command}], CallbackID: {CallbackID}");
                 }
             }
 
