@@ -11,7 +11,7 @@ namespace ZWave4Net.Commands
     {
         public readonly byte ClassID;
         public readonly Node Node;
-        internal readonly CommandInvoker Invoker;
+        internal readonly ICommandDispatcher Dispatcher;
 
         protected abstract Enum[] Commands { get; }
 
@@ -19,7 +19,7 @@ namespace ZWave4Net.Commands
         {
             ClassID = classID;
             Node = node;
-            Invoker = new CommandInvoker(this);
+            Dispatcher = new CommandDispatcher(this);
         }
 
         public override string ToString()

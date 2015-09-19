@@ -7,14 +7,14 @@ using ZWave4Net.Communication;
 
 namespace ZWave4Net.Commands
 {
-    class CommandInvoker : ICommandInvoker
+    class CommandDispatcher : ICommandDispatcher
     {
         private readonly List<Tuple<Message, TaskCompletionSource<Command>, Enum>> _pendingCommands = new List<Tuple<Message, TaskCompletionSource<Command>, Enum>>();
 
         public readonly CommandClass CommandClass;
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(10);
 
-        public CommandInvoker(CommandClass commandClass)
+        public CommandDispatcher(CommandClass commandClass)
         {
             CommandClass = commandClass;
             Channel.SendCompleted += OnSendCompleted;

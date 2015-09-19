@@ -7,8 +7,9 @@ using ZWave4Net.Communication;
 
 namespace ZWave4Net.Commands
 {
-    interface ICommandInvoker
+    interface ICommandDispatcher
     {
         Task<Command> Send(Command command, Enum replyCommand);
+        Task Post(Command command);
     }
 }

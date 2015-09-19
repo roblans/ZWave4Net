@@ -27,13 +27,13 @@ namespace ZWave4Net.Commands
 
         public Task SetValue(byte parameter, byte value)
         {
-            return Invoker.Post((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
+            return Dispatcher.Post((new Command(ClassID, configurationCmd.Set, parameter, 1, value)));
         }
 
 
         public async Task<byte> GetValue(byte parameter)
         {
-            var response = await Invoker.Send(new Command(ClassID, configurationCmd.Get, parameter), configurationCmd.Report);
+            var response = await Dispatcher.Send(new Command(ClassID, configurationCmd.Get, parameter), configurationCmd.Report);
             var length = response.Payload[1];
             if (length == 1)
             {

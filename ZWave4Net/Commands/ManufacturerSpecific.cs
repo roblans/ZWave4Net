@@ -26,7 +26,7 @@ namespace ZWave4Net.Commands
 
         public async Task<ProductData> GetProductData()
         {
-            var response = await Invoker.Send(new Command(ClassID, manufacturerSpecificCmd.Get), manufacturerSpecificCmd.Report);
+            var response = await Dispatcher.Send(new Command(ClassID, manufacturerSpecificCmd.Get), manufacturerSpecificCmd.Report);
             return ProductData.Parse(response.Payload);
         }
 
