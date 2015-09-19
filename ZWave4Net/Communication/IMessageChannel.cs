@@ -8,7 +8,7 @@ namespace ZWave4Net.Communication
 {
     interface IMessageChannel
     {
-        Task<Message> Send(Message request);
+        Task<Message> Send(Message request, TimeSpan? timeout = null);
         event EventHandler<MessageEventArgs> SendCompleted;
         event EventHandler<EventMessageEventArgs> EventReceived;
     }

@@ -12,7 +12,7 @@ namespace ZWave4Net.Commands
         private readonly List<PendingCommand> _pendingCommands = new List<PendingCommand>();
 
         public readonly CommandClass CommandClass;
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(10);
+        public TimeSpan Timeout = TimeSpan.FromSeconds(10);
 
         public CommandDispatcher(CommandClass commandClass)
         {
@@ -52,24 +52,32 @@ namespace ZWave4Net.Commands
                 request.CompletionSource.SetResult(e.Message.Command);
                 return;
             }
-            CommandClass.HandleEvent(e.Message.Command);
+            CommandClass.HandleEvent(e.Message);
         }
 
         public async Task<Command> Send(Command command, Enum response)
         {
+            var retry = 0;
+            var channelTimeout = TimeSpan.FromSeconds(2);
             var message = new Message(CommandClass.Node.NodeID, command);
             var completionSource = new TaskCompletionSource<Command>();
-
+            
             var pendingCommand = new PendingCommand(message, completionSource, response);
-
             _pendingCommands.Add(pendingCommand);
             try
             {
-                await Channel.Send(message).ConfigureAwait(false);
-                return await completionSource.Task.Run(ResponseTimeout).ConfigureAwait(false);
+                await Channel.Send(message, channelTimeout).ConfigureAwait(false);
+                return await completionSource.Task.Run(Timeout).ConfigureAwait(false);
             }
             catch (TimeoutException)
             {
+                if (++retry <= 3)
+                {
+                    channelTimeout = TimeSpan.FromTicks(channelTimeout.Ticks * 2);
+                    Platform.LogMessage(LogLevel.Warn, string.Format($"Timeout on Command: [{command}] to Node: {CommandClass.Node:D3}, retry: {retry}"));
+                    await Channel.Send(message, channelTimeout).ConfigureAwait(false);
+                    return await completionSource.Task.Run(Timeout).ConfigureAwait(false);
+                }
                 _pendingCommands.Remove(pendingCommand);
                 throw;
             }

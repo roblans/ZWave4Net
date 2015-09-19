@@ -20,7 +20,7 @@ namespace ZWave4Net.Communication
         public event EventHandler<MessageEventArgs> SendCompleted;
         public event EventHandler<EventMessageEventArgs> EventReceived;
 
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
+        public TimeSpan Timeout = TimeSpan.FromSeconds(2);
         public readonly ISerialPort Port;
 
         public MessageChannel(ISerialPort port)
@@ -173,7 +173,7 @@ namespace ZWave4Net.Communication
             request.Write(Port.OutputStream);
         }
 
-        public async Task<Message> Send(Message request)
+        public async Task<Message> Send(Message request, TimeSpan? timeout = null)
         {
             var completionSource = new TaskCompletionSource<Message>();
 
@@ -183,7 +183,7 @@ namespace ZWave4Net.Communication
 
             try
             {
-                return await completionSource.Task.Run(ResponseTimeout).ConfigureAwait(false);
+                return await completionSource.Task.Run(timeout ?? Timeout).ConfigureAwait(false);
             }
             catch (TimeoutException)
             {

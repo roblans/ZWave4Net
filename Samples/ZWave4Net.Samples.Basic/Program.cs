@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZWave4Net;
+using ZWave4Net.Commands;
 
 namespace ZWave4Net.Samples.Basic
 {
@@ -12,7 +13,7 @@ namespace ZWave4Net.Samples.Basic
         static void Main(string[] args)
         {
             // set threshold for logmessages, change to Debug to get detailed logging
-            Logger.LogThreshold = LogLevel.Debug;
+            Logger.LogThreshold = LogLevel.Info;
 
             // redirect loggger
             Platform.LogMessage = Logger.LogMessage;
@@ -60,44 +61,51 @@ namespace ZWave4Net.Samples.Basic
                 Platform.LogMessage(LogLevel.Info, string.Format($"HomeID: {await driver.GetHomeID():X}"));
                 Platform.LogMessage(LogLevel.Info, string.Format($"ControllerID: {await driver.GetControllerID():D3}"));
 
-                Platform.LogMessage(LogLevel.Info, "Enter the ID of a node");
-                var input = await Task.Run(() => Console.ReadLine());
-                var nodeID = byte.Parse(input);
 
-                var node = (await driver.GetNodes()).SingleOrDefault(element => element.NodeID == nodeID);
-                if (node == null)
+                var nodes = await driver.GetNodes();
+                foreach (var node in nodes)
                 {
-                    Platform.LogMessage(LogLevel.Error, string.Format($"Error: Node {nodeID} does not exists."));
-                    return;
+                    // get protocolinfo from node
+                    var protocolInfo = await node.GetNodeProtocolInfo();
+
+                    // dump node
+                    Platform.LogMessage(LogLevel.Info, string.Format($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} "));
                 }
 
-                var association = node.GetCommandClass<ZWave4Net.Commands.Association>();
-                await association.Remove(1, 1);
-                await association.Remove(2, 1);
-                await association.Remove(3, 1);
-                await association.Add(1, 1);
+                // get the wallplug
+                var wallPlug = nodes[6];
+                // turn it off
+                await wallPlug.GetCommandClass<SwitchBinary>().SetValue(BinarySwitchValue.Off);
+                // set on color to green
+                await wallPlug.GetCommandClass<Configuration>().SetValue(61, 4);
+                // set on off to none
+                await wallPlug.GetCommandClass<Configuration>().SetValue(62, 8);
 
-                var basic = node.GetCommandClass<ZWave4Net.Commands.Basic>();
-                basic.ValueChanged += (_, e) =>
+                // get the motion sensor
+                var motionSensor = nodes[3];
+                // subscribe to basic value changed event
+                motionSensor.GetCommandClass<Commands.Basic>().ValueChanged += async (_, e) =>
                 {
-                    Platform.LogMessage(LogLevel.Info, string.Format($"Value changed to {e.Value}"));
+                    Platform.LogMessage(LogLevel.Info, string.Format($"MotionSensor changed to {e.Value}"));
+                    if (e.Value == 0xFF)
+                    {
+                        Platform.LogMessage(LogLevel.Info, "Set wallplug on");
+                        await wallPlug.GetCommandClass<SwitchBinary>().SetValue(BinarySwitchValue.On);
+                    }
                 };
-                Platform.LogMessage(LogLevel.Info, string.Format($"Subscribed to ValueChanged event"));
 
-                try
+                // subscribe to basic value changed event
+                wallPlug.GetCommandClass<Commands.Basic>().ValueChanged += (_, e) =>
                 {
-                    var value = await basic.Get();
-                    Platform.LogMessage(LogLevel.Info, string.Format($"Value is {value}"));
-                }
-                catch (TimeoutException)
-                {
-                    Platform.LogMessage(LogLevel.Info, string.Format($"Get current value failed. (is the node a controller or is the node sleeping?)"));
-                }
+                    Platform.LogMessage(LogLevel.Info, string.Format($"Wallplug changed to {e.Value}"));
+                };
+
                 await Task.Run(() => Console.ReadLine());
             }
             catch (Exception ex)
             {
                 Platform.LogMessage(LogLevel.Error, ex.Message);
+                await Task.Run(() => Console.ReadLine());
             }
         }
     }
