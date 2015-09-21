@@ -11,26 +11,36 @@ namespace ZWaveChannelSample
     {
         static void Main(string[] args)
         {
-            byte wallPlugID = 6;
+            // use first serial port
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
+            // create a channel
             var channel = new ZWaveChannel(portName);
 
             // uncommment to see detailed logging
             // channel.Log = Console.Out;
 
+            // subcribe to node events
+            channel.NodeEventReceived += (sender, e) => Console.WriteLine($"Event: NodeID:{e.NodeID:D3} Command:[{e.Command}]");
+
+            // open channel
             channel.Open();
             try
             {
+                // ZWave function: GetVersion
                 var response = channel.Send(Function.GetVersion).Result;
                 var data = response.TakeWhile(element => element != 0).ToArray();
                 var version = Encoding.UTF8.GetString(data, 0, data.Length);
                 Console.WriteLine($"Version: {version}");
 
+                // ZWave function: MemoryGetId
                 response = channel.Send(Function.MemoryGetId).Result;
                 var homeID = BitConverter.ToUInt32(response.Take(4).Reverse().ToArray(), 0);
                 Console.WriteLine($"HomeID: {homeID:X}");
                 Console.WriteLine($"ControllerID: {response[4]:D3}");
+
+                // NodeID of the fibaro wall plug
+                byte wallPlugID = 6;
 
                 // turn wallplug on
                 Console.WriteLine($"Set wallplug on.");
