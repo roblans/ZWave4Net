@@ -11,8 +11,13 @@ namespace ZWaveChannelSample
     {
         static void Main(string[] args)
         {
+            byte wallPlugID = 6;
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
+
             var channel = new ZWaveChannel(portName);
+
+            // uncommment to see detailed logging
+            // channel.Log = Console.Out;
 
             channel.Open();
             try
@@ -26,6 +31,16 @@ namespace ZWaveChannelSample
                 var homeID = BitConverter.ToUInt32(response.Take(4).Reverse().ToArray(), 0);
                 Console.WriteLine($"HomeID: {homeID:X}");
                 Console.WriteLine($"ControllerID: {response[4]:D3}");
+
+                // turn wallplug on
+                Console.WriteLine($"Set wallplug on.");
+                channel.Send(wallPlugID, new Command(0x25, 0x01, 255)).Wait();
+
+                Task.Delay(1000).Wait();
+
+                // turn wallplug off
+                Console.WriteLine($"Set wallplug off.");
+                channel.Send(wallPlugID, new Command(0x25, 0x01, 0)).Wait();
             }
             catch (Exception ex)
             {
