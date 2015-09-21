@@ -37,4 +37,4 @@ namespace ZWave4Net
             _port.Close();
         }
     }
-}
+
