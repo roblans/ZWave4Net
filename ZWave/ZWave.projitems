@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Command.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\CommunicationException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Exceptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Function.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\SerialPort.uap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\SerialPort.net.cs" />

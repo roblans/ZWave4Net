@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ZWave.Driver.Communication
 {
-    public class CommunicationException : Exception
+    public class CommunicationException : System.Exception
     {
         public CommunicationException() { }
         public CommunicationException(string message) : base(message) { }
-        public CommunicationException(string message, Exception inner) : base(message, inner) { }
+        public CommunicationException(string message, System.Exception inner) : base(message, inner) { }
     }
 }
