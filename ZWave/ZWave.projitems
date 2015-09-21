@@ -12,7 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\CommunicationException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Function.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\ISerialPort.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\SerialPort.uap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\SerialPort.net.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\IZWaveChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\NodeEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Protocol\ControllerFunction.cs" />

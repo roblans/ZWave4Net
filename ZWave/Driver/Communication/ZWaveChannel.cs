@@ -20,12 +20,12 @@ namespace ZWave.Driver.Communication
         private readonly BlockingCollection<Message> _responseQueue = new BlockingCollection<Message>();
         private Func<NodeEvent, bool> _nodeEventReceivedPreview;
 
-        public readonly ISerialPort Port;
+        public readonly SerialPort Port;
         public TextWriter Log;
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
 
-        public ZWaveChannel(ISerialPort port)
+        public ZWaveChannel(SerialPort port)
         {
             Port = port;
             _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
@@ -41,7 +41,7 @@ namespace ZWave.Driver.Communication
             }
         }
 
-        private async void ReadPort(ISerialPort port)
+        private async void ReadPort(SerialPort port)
         {
             while (true)
             {
