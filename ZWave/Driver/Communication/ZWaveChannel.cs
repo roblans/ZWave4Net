@@ -25,9 +25,9 @@ namespace ZWave.Driver.Communication
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
 
-        public ZWaveChannel(SerialPort port)
+        public ZWaveChannel(string portName)
         {
-            Port = port;
+            Port = new SerialPort(portName);
             _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
             _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
             _portReadTask = new Task(() => ReadPort(Port));
