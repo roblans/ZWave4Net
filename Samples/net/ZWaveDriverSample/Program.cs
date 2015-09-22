@@ -18,6 +18,9 @@ namespace ZWaveDriverSample
             driver.Open();
             try
             {
+                Console.WriteLine($"Version: {driver.Controller.GetVersion().Result}");
+                Console.WriteLine($"HomeID: {driver.Controller.GetHomeID().Result:X}");
+                Console.WriteLine($"NodeID: {driver.Controller.GetNodeID().Result:D3}");
             }
             catch (Exception ex)
             {
