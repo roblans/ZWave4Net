@@ -79,6 +79,8 @@ namespace ZWave.Driver.Communication
                 }
                 catch (UnknownFrameException ex)
                 {
+                    // probably out of sync on the serial port
+                    // ToDo: handle gracefully 
                     LogMessage(string.Format($"Exception: {ex.Message}"));
                 }
                 catch (IOException)
@@ -131,7 +133,7 @@ namespace ZWave.Driver.Communication
                 var message = default(Message);
                 _responseQueue.TryTake(out message, ResponseTimeout);
                 return message;
-            });
+            }).ConfigureAwait(false);
 
             if (result == null)
                 throw new TimeoutException();
@@ -152,7 +154,7 @@ namespace ZWave.Driver.Communication
                     var message = default(Message);
                     _responseQueue.TryTake(out message, ResponseTimeout);
                     return message;
-                });
+                }).ConfigureAwait(false);
 
                 if (result == null)
                     throw new TimeoutException();
@@ -192,14 +194,15 @@ namespace ZWave.Driver.Communication
 
         private async Task<Byte[]> Exchange(Func<Task<Byte[]>> func)
         {
-            await _semaphore.WaitAsync();
-            try {
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+            try
+            {
                 var attempt = 1;
                 while (true)
                 {
                     try
                     {
-                        return await func();
+                        return await func().ConfigureAwait(false);
                     }
                     catch (CanResponseException)
                     {
@@ -208,6 +211,7 @@ namespace ZWave.Driver.Communication
                         if (attempt++ > 3)
                             throw;
                     }
+                    await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
                 }
             }
             finally
@@ -226,7 +230,7 @@ namespace ZWave.Driver.Communication
                 var response = await WaitForResponse((message) =>
                 {
                     return (message is ControllerFunctionCompleted && ((ControllerFunctionCompleted)message).Function == function);
-                });
+                }).ConfigureAwait(false);
 
                 return ((ControllerFunctionCompleted)response).Payload;
             });
@@ -242,7 +246,7 @@ namespace ZWave.Driver.Communication
                 await WaitForResponse((message) =>
                 {
                     return (message is NodeCommandCompleted && ((NodeCommandCompleted)message).CallbackID == request.CallbackID);
-                });
+                }).ConfigureAwait(false);
 
                 return null;
             });
@@ -271,7 +275,7 @@ namespace ZWave.Driver.Communication
                     await WaitForResponse((message) =>
                     {
                         return (message is NodeCommandCompleted && ((NodeCommandCompleted)message).CallbackID == request.CallbackID);
-                    });
+                    }).ConfigureAwait(false);
 
                     try
                     {
@@ -280,7 +284,7 @@ namespace ZWave.Driver.Communication
                             cancellationTokenSource.CancelAfter(ResponseTimeout);
                             cancellationTokenSource.Token.Register(() => completionSource.TrySetCanceled(), useSynchronizationContext: false);
 
-                            var response = await completionSource.Task;
+                            var response = await completionSource.Task.ConfigureAwait(false);
                             return response.Payload;
                         }
                     }
