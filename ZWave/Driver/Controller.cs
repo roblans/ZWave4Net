@@ -31,10 +31,10 @@ namespace ZWave.Driver
         public async Task<uint> GetHomeID()
         {
             var response = await Channel.Send(Function.MemoryGetId);
-            return BitConverter.ToUInt32(response.Take(4).Reverse().ToArray(), 0);
+            return ByteConverter.ToUInt32(response);
         }
 
-        public async Task<byte> GetID()
+        public async Task<byte> GetControllerID()
         {
             var response = await Channel.Send(Function.MemoryGetId);
             return response[4];

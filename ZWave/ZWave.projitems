@@ -9,6 +9,7 @@
     <Import_RootNamespace>ZWave</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\ByteConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Exceptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Function.cs" />
@@ -32,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Protocol\UnknownMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\ZWaveChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Controller.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\ZWaveDriver.cs" />
   </ItemGroup>
 </Project>
