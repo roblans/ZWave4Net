@@ -14,34 +14,51 @@ namespace ZWave.Driver.Communication
             SwitchBinary = 0x25,
         }
 
-        public readonly byte ClassID;
-        public readonly byte CommandID;
+        private readonly object _class;
+        private readonly object _command;
         public readonly byte[] Payload;
 
-        public Command(byte classID, byte commandID, params byte[] payload)
+        private Command(object @class, object command, params byte[] payload)
         {
-            ClassID = classID;
-            CommandID = commandID;
+            _class = @class;
+            _command = command;
             Payload = payload;
         }
-        public Command(Class @class, Enum command, params byte[] payload)
-            : this(Convert.ToByte(@class), Convert.ToByte(command), payload)
+
+        public Command(byte classID, byte commandID, params byte[] payload)
+            : this((object)classID, (object)commandID, payload)
         {
         }
+
         public Command(Class @class, byte commandID, params byte[] payload)
-            : this(Convert.ToByte(@class), commandID, payload)
+            : this((object)@class, (object)commandID, payload)
         {
         }
 
         public Command(byte classID, Enum command, params byte[] payload)
-            : this(classID, Convert.ToByte(command), payload)
+            : this((object)classID, (object)command, payload)
         {
+        }
+
+        public Command(Class @class, Enum command, params byte[] payload)
+            : this((object)@class, (object)command, payload)
+        {
+
+        }
+
+        public byte ClassID
+        {
+            get { return Convert.ToByte(_class); }
+        }
+
+        public byte CommandID
+        {
+            get { return Convert.ToByte(_command); }
         }
 
         public override string ToString()
         {
-            var className = Enum.IsDefined(typeof(Class), ClassID) ? Enum.ToObject(typeof(Class), ClassID).ToString() : ClassID.ToString();
-            return string.Format($"Class:{className} CommandID:{CommandID} Payload:{BitConverter.ToString(Payload)}");
+            return string.Format($"Class:{_class} Command:{_command} Payload:{BitConverter.ToString(Payload)}");
         }
 
         public byte[] ToBytes()
