@@ -140,14 +140,7 @@ namespace ZWave.Driver.Communication
             var result = await Task.Run((Func<Message>)(() =>
             {
                 var message = default(Message);
-
-/* Unmerged change from project 'ZWave.net45'
-Before:
                 _responseQueue.TryTake(out message, ResponseTimeout);
-After:
-                _responseQueue.TryTake(out message, (TimeSpan)this.ReceiveTimeout);
-*/
-                _responseQueue.TryTake(out message, (TimeSpan)this.ResponseTimeout);
                 return message;
             })).ConfigureAwait(false);
 
@@ -168,14 +161,7 @@ After:
                 var result = await Task.Run((Func<Message>)(() =>
                 {
                     var message = default(Message);
-
-/* Unmerged change from project 'ZWave.net45'
-Before:
                     _responseQueue.TryTake(out message, ResponseTimeout);
-After:
-                    _responseQueue.TryTake(out message, (TimeSpan)this.ReceiveTimeout);
-*/
-                    _responseQueue.TryTake(out message, (TimeSpan)this.ResponseTimeout);
                     return message;
                 })).ConfigureAwait(false);
 
