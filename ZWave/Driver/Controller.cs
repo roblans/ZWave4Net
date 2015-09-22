@@ -34,7 +34,7 @@ namespace ZWave.Driver
             return BitConverter.ToUInt32(response.Take(4).Reverse().ToArray(), 0);
         }
 
-        public async Task<byte> GetNodeID()
+        public async Task<byte> GetID()
         {
             var response = await Channel.Send(Function.MemoryGetId);
             return response[4];

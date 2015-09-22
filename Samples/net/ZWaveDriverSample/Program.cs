@@ -20,7 +20,7 @@ namespace ZWaveDriverSample
             {
                 Console.WriteLine($"Version: {driver.Controller.GetVersion().Result}");
                 Console.WriteLine($"HomeID: {driver.Controller.GetHomeID().Result:X}");
-                Console.WriteLine($"NodeID: {driver.Controller.GetNodeID().Result:D3}");
+                Console.WriteLine($"ControllerID: {driver.Controller.GetID().Result:D3}");
             }
             catch (Exception ex)
             {
