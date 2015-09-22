@@ -18,7 +18,6 @@ namespace ZWave.Driver.Communication
         private readonly BlockingCollection<NodeEvent> _eventQueue = new BlockingCollection<NodeEvent>();
         private readonly BlockingCollection<Message> _transmitQueue = new BlockingCollection<Message>();
         private readonly BlockingCollection<Message> _responseQueue = new BlockingCollection<Message>();
-        private Func<NodeEvent, bool> _nodeEventReceivedPreview;
 
         public readonly SerialPort Port;
         public TextWriter Log;
@@ -110,9 +109,6 @@ namespace ZWave.Driver.Communication
 
         private void OnNodeEventReceived(NodeEvent nodeEvent)
         {
-            if (_nodeEventReceivedPreview != null && _nodeEventReceivedPreview(nodeEvent))
-                return;
-
             var handler = NodeEventReceived;
             if (handler != null)
             {
@@ -206,21 +202,20 @@ namespace ZWave.Driver.Communication
                         cancellationTokenSource.CancelAfter(ResponseTimeout);
                         cancellationTokenSource.Token.Register(() => completionSource.TrySetCanceled(), useSynchronizationContext: false);
 
-                        _nodeEventReceivedPreview = (response) =>
+                        EventHandler<NodeEventArgs> onNodeEventReceived = (_, e) =>
                         {
-                            if (response.NodeID == nodeID && response.Command.ClassID == command.ClassID && response.Command.CommandID == responseCommandID)
+                            if (e.NodeID == nodeID && e.Command.ClassID == command.ClassID && e.Command.CommandID == responseCommandID)
                             {
-                                completionSource.SetResult(response.Command);
-                                return true;
+                                completionSource.SetResult(e.Command);
                             }
-                            return false;
                         };
 
+                        var request = new NodeCommand(nodeID, command);
+                        _transmitQueue.Add(request);
+
+                        NodeEventReceived += onNodeEventReceived;
                         try
                         {
-                            var request = new NodeCommand(nodeID, command);
-                            _transmitQueue.Add(request);
-
                             var response = await WaitForResponse((message) =>
                             {
                                 return (message is NodeCommandCompleted && ((NodeCommandCompleted)message).CallbackID == request.CallbackID);
@@ -237,7 +232,7 @@ namespace ZWave.Driver.Communication
                         }
                         finally
                         {
-                            _nodeEventReceivedPreview = null;
+                            NodeEventReceived -= onNodeEventReceived;
                         }
                     }
                     else
@@ -262,6 +257,11 @@ namespace ZWave.Driver.Communication
                         throw;
                 }
             }
+        }
+
+        private void onNodeEventReceived(object sender, NodeEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<byte[]> Send(Function function, params byte[] payload)
