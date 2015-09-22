@@ -7,7 +7,7 @@ using Windows.Devices.SerialCommunication;
 namespace ZWave.Driver.Communication
 {
 #if WINDOWS_UWP
-    public class SerialPort
+    public class SerialPort : ISerialPort
     {
         private readonly SerialDevice  _device;
 

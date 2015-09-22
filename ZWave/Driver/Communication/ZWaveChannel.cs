@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,19 +21,26 @@ namespace ZWave.Driver.Communication
         private readonly BlockingCollection<Message> _transmitQueue = new BlockingCollection<Message>();
         private readonly BlockingCollection<Message> _responseQueue = new BlockingCollection<Message>();
 
-        public readonly SerialPort Port;
+        public readonly ISerialPort Port;
         public TextWriter Log;
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(2);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
 
-        public ZWaveChannel(string portName)
+        public ZWaveChannel(ISerialPort port)
         {
-            Port = new SerialPort(portName);
+            Port = port;
             _semaphore = new SemaphoreSlim(0, 1);
             _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
             _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
             _portReadTask = new Task(() => ReadPort(Port));
         }
+
+#if NET || WINDOWS_UWP
+        public ZWaveChannel(string portName)
+             : this(new SerialPort(portName))
+        {
+        }
+#endif
 
         private void LogMessage(string message)
         {
@@ -42,7 +50,7 @@ namespace ZWave.Driver.Communication
             }
         }
 
-        private async void ReadPort(SerialPort port)
+        private async void ReadPort(ISerialPort port)
         {
             while (true)
             {

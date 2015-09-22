@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ZWave.Driver.Communication
 {
 #if NET
-    public class SerialPort
+    public class SerialPort : ISerialPort
     {
         private readonly System.IO.Ports.SerialPort _port;
 
