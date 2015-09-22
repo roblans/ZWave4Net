@@ -3,5 +3,6 @@
 
 Supported Targets:
 
-- Managed Framework Applications: net46
+- Managed Framework: net45
 - Universal Windows: uap10.0
+- Portable Class Library: net45 + win8
