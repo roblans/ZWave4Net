@@ -64,6 +64,8 @@ namespace ZWaveDriverSample
 
             report = await basic.Get();
             Console.WriteLine($"Basic report of Node {report.Node:D3} is now [{report}]");
+
+            Console.ReadLine();
         }
     }
 }
