@@ -12,9 +12,10 @@ namespace ZWave.Driver.Communication
 {
     public class ZWaveChannel : IZWaveChannel
     {
-        private Task _portReadTask;
-        private Task _processEventsTask;
-        private Task _transmitTask;
+        private readonly SemaphoreSlim _semaphore;
+        private readonly Task _portReadTask;
+        private readonly Task _processEventsTask;
+        private readonly Task _transmitTask;
         private readonly BlockingCollection<NodeEvent> _eventQueue = new BlockingCollection<NodeEvent>();
         private readonly BlockingCollection<Message> _transmitQueue = new BlockingCollection<Message>();
         private readonly BlockingCollection<Message> _responseQueue = new BlockingCollection<Message>();
@@ -27,6 +28,7 @@ namespace ZWave.Driver.Communication
         public ZWaveChannel(string portName)
         {
             Port = new SerialPort(portName);
+            _semaphore = new SemaphoreSlim(0, 1);
             _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
             _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
             _portReadTask = new Task(() => ReadPort(Port));
@@ -188,117 +190,110 @@ namespace ZWave.Driver.Communication
             _transmitTask.Wait();
         }
 
-        private async Task<Byte[]> SendCommand(byte nodeID, Command command, byte? responseCommandID = null)
+        private async Task<Byte[]> Exchange(Func<Task<Byte[]>> func)
         {
-            var attempt = 1;
-            while (true)
+            await _semaphore.WaitAsync();
+            try {
+                var attempt = 1;
+                while (true)
+                {
+                    try
+                    {
+                        return await func();
+                    }
+                    catch (CanResponseException)
+                    {
+                        LogMessage(string.Format($"CAN received. Retrying (attempt: {attempt})"));
+
+                        if (attempt++ > 3)
+                            throw;
+                    }
+                }
+            }
+            finally
             {
-                try
-                {
-                    if (responseCommandID != null)
-                    {
-                        var completionSource = new TaskCompletionSource<Command>();
-                        var cancellationTokenSource = new CancellationTokenSource();
-                        cancellationTokenSource.CancelAfter(ResponseTimeout);
-                        cancellationTokenSource.Token.Register(() => completionSource.TrySetCanceled(), useSynchronizationContext: false);
-
-                        EventHandler<NodeEventArgs> onNodeEventReceived = (_, e) =>
-                        {
-                            if (e.NodeID == nodeID && e.Command.ClassID == command.ClassID && e.Command.CommandID == responseCommandID)
-                            {
-                                completionSource.SetResult(e.Command);
-                            }
-                        };
-
-                        var request = new NodeCommand(nodeID, command);
-                        _transmitQueue.Add(request);
-
-                        NodeEventReceived += onNodeEventReceived;
-                        try
-                        {
-                            var response = await WaitForResponse((message) =>
-                            {
-                                return (message is NodeCommandCompleted && ((NodeCommandCompleted)message).CallbackID == request.CallbackID);
-                            });
-
-                            try
-                            {
-                                return (await completionSource.Task).Payload;
-                            }
-                            catch(TaskCanceledException)
-                            {
-                                throw new TimeoutException();
-                            }
-                        }
-                        finally
-                        {
-                            NodeEventReceived -= onNodeEventReceived;
-                        }
-                    }
-                    else
-                    {
-                        var request = new NodeCommand(nodeID, command);
-                        _transmitQueue.Add(request);
-
-                        var response = await WaitForResponse((message) =>
-                        {
-                            return (message is NodeCommandCompleted && ((NodeCommandCompleted)message).CallbackID == request.CallbackID);
-                        });
-
-                        return null;
-                    }
-
-                }
-                catch (CanResponseException)
-                {
-                    LogMessage(string.Format($"CAN received. Retrying (attempt: {attempt})"));
-
-                    if (attempt++ > 3)
-                        throw;
-                }
+                _semaphore.Release();
             }
         }
 
-        private void onNodeEventReceived(object sender, NodeEventArgs e)
+        public Task<byte[]> Send(Function function, params byte[] payload)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<byte[]> Send(Function function, params byte[] payload)
-        {
-            var attempt = 1;
-            while (true)
+            return Exchange(async () =>
             {
-                try
+                var request = new ControllerFunction(function);
+                _transmitQueue.Add(request);
+
+                var response = await WaitForResponse((message) =>
                 {
-                    var request = new ControllerFunction(function);
-                    _transmitQueue.Add(request);
+                    return (message is ControllerFunctionCompleted && ((ControllerFunctionCompleted)message).Function == function);
+                });
 
-                    var response = await WaitForResponse((message) =>
-                    {
-                        return message is ControllerFunctionCompleted;
-                    });
-
-                    return ((ControllerFunctionCompleted)response).Payload;
-                }
-                catch (CanResponseException)
-                {
-                    LogMessage(string.Format($"CAN received. Retrying (attempt: {attempt})"));
-
-                    if (++attempt > 3)
-                        throw;
-                }
-            }
+                return ((ControllerFunctionCompleted)response).Payload;
+            });
         }
 
         public Task Send(byte nodeID, Command command)
         {
-            return SendCommand(nodeID, command, null);
+            return Exchange(async () =>
+            {
+                var request = new NodeCommand(nodeID, command);
+                _transmitQueue.Add(request);
+
+                await WaitForResponse((message) =>
+                {
+                    return (message is NodeCommandCompleted && ((NodeCommandCompleted)message).CallbackID == request.CallbackID);
+                });
+
+                return null;
+            });
         }
 
         public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID)
         {
-            return SendCommand(nodeID, command, responseCommandID);
+            return Exchange(async () =>
+            {
+                var completionSource = new TaskCompletionSource<Command>();
+
+                EventHandler<NodeEventArgs> onNodeEventReceived = (_, e) =>
+                {
+                    if (e.NodeID == nodeID && e.Command.ClassID == command.ClassID && e.Command.CommandID == responseCommandID)
+                    {
+                        completionSource.SetResult(e.Command);
+                    }
+                };
+
+                var request = new NodeCommand(nodeID, command);
+                _transmitQueue.Add(request);
+
+                NodeEventReceived += onNodeEventReceived;
+                try
+                {
+                    await WaitForResponse((message) =>
+                    {
+                        return (message is NodeCommandCompleted && ((NodeCommandCompleted)message).CallbackID == request.CallbackID);
+                    });
+
+                    try
+                    {
+                        using (var cancellationTokenSource = new CancellationTokenSource())
+                        {
+                            cancellationTokenSource.CancelAfter(ResponseTimeout);
+                            cancellationTokenSource.Token.Register(() => completionSource.TrySetCanceled(), useSynchronizationContext: false);
+
+                            var response = await completionSource.Task;
+                            return response.Payload;
+                        }
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        throw new TimeoutException();
+                    }
+                }
+                finally
+                {
+                    NodeEventReceived -= onNodeEventReceived;
+                }
+            });
         }
     }
 }
