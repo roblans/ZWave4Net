@@ -31,5 +31,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Protocol\TransmitOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Protocol\UnknownMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\ZWaveChannel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\ZWaveDriver.cs" />
   </ItemGroup>
 </Project>
