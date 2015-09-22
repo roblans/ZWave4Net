@@ -32,11 +32,23 @@ namespace ZWave.Driver
 
         public void Open()
         {
+            Channel.NodeEventReceived += Channel_NodeEventReceived;
             Channel.Open();
+        }
+
+        private async void Channel_NodeEventReceived(object sender, NodeEventArgs e)
+        {
+            var nodes = await GetNodes();
+            var target = nodes[e.NodeID];
+            if (target != null)
+            {
+                target.HandleEvent(e.Command);
+            }
         }
 
         public void Close()
         {
+            Channel.NodeEventReceived -= Channel_NodeEventReceived;
             Channel.Close();
         }
 

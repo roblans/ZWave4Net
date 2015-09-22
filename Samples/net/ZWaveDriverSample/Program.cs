@@ -54,6 +54,8 @@ namespace ZWaveDriverSample
 
             var wallPlug = nodes[wallPlugID];
             var basic = wallPlug.GetCommandClass<Basic>();
+            basic.ReportReceived += (_, e) => Console.WriteLine($"Report {e.Report} received from Node {e.Report.Node:D3}");
+
             var report = await basic.Get();
             Console.WriteLine($"Basic report of Node {report.Node:D3} is {report}");
 

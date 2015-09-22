@@ -15,5 +15,9 @@ namespace ZWave.Driver.CommandClasses
             Node = node;
             Class = @class;
         }
+
+        internal protected virtual void HandleEvent(Command command)
+        {
+        }
     }
 }

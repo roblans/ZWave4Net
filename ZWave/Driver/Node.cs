@@ -9,7 +9,7 @@ namespace ZWave.Driver
 {
     public class Node
     {
-        private List<ICommandClass> _commandClasses = new List<ICommandClass>();
+        private List<CommandClassBase> _commandClasses = new List<CommandClassBase>();
 
         public readonly byte NodeID;
         public readonly ZWaveChannel Channel;
@@ -36,6 +36,15 @@ namespace ZWave.Driver
         public override string ToString()
         {
             return $"{NodeID:D3}";
+        }
+
+        internal void HandleEvent(Command command)
+        {
+            var target = _commandClasses.FirstOrDefault(element => Convert.ToByte(element.Class) == command.ClassID);
+            if (target != null)
+            {
+                target.HandleEvent(command);
+            }
         }
     }
 }
