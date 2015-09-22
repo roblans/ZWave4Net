@@ -232,7 +232,7 @@ namespace ZWave.Driver.Communication
         {
             return Exchange(async () =>
             {
-                var request = new ControllerFunction(function);
+                var request = new ControllerFunction(function, payload);
                 _transmitQueue.Add(request);
 
                 var response = await WaitForResponse((message) =>

@@ -37,10 +37,14 @@ namespace ZWaveDriverSample
             Console.WriteLine($"HomeID: {await driver.GetHomeID():X}");
             Console.WriteLine($"ControllerID: {await driver.GetContollerID():D3}");
 
+            Console.WriteLine();
             var nodes = await driver.GetNodes();
             foreach(var node in nodes)
             {
-                Console.WriteLine(string.Format($"Node: {node}"));
+                var protocolInfo = await node.GetNodeProtocolInfo();
+
+                // dump node
+                Console.WriteLine($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
             }
         }
     }
