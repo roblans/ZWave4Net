@@ -29,7 +29,7 @@ namespace ZWave.Driver.Communication
         public ZWaveChannel(ISerialPort port)
         {
             Port = port;
-            _semaphore = new SemaphoreSlim(0, 1);
+            _semaphore = new SemaphoreSlim(1, 1);
             _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
             _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
             _portReadTask = new Task(() => ReadPort(Port));
