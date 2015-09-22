@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ZWave.portable-net45+win8")]
+[assembly: AssemblyTitle("ZWave")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("VMI HOLLAND BV")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ZWave.portable-net45+win8")]
-[assembly: AssemblyCopyright("Copyright © VMI HOLLAND BV 2015")]
+[assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
