@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\ZWaveChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Controller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Node.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\NodeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\ZWaveDriver.cs" />
   </ItemGroup>
 </Project>
