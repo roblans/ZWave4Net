@@ -7,8 +7,8 @@
     <ProjectGuid>{D718B815-21B9-4195-BEFC-E57886E254E4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ZWave.net45</RootNamespace>
-    <AssemblyName>ZWave.net45</AssemblyName>
+    <RootNamespace>ZWave</RootNamespace>
+    <AssemblyName>ZWave</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
