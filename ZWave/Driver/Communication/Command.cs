@@ -8,12 +8,6 @@ namespace ZWave.Driver.Communication
 {
     public class Command
     {
-        public enum Class : byte
-        {
-            Basic = 0x20,
-            SwitchBinary = 0x25,
-        }
-
         private readonly object _class;
         private readonly object _command;
         public readonly byte[] Payload;
@@ -30,7 +24,7 @@ namespace ZWave.Driver.Communication
         {
         }
 
-        public Command(Class @class, byte commandID, params byte[] payload)
+        public Command(CommandClass @class, byte commandID, params byte[] payload)
             : this((object)@class, (object)commandID, payload)
         {
         }
@@ -40,7 +34,7 @@ namespace ZWave.Driver.Communication
         {
         }
 
-        public Command(Class @class, Enum command, params byte[] payload)
+        public Command(CommandClass @class, Enum command, params byte[] payload)
             : this((object)@class, (object)command, payload)
         {
 

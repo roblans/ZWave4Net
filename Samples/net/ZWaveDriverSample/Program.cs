@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZWave.Driver;
+using ZWave.Driver.CommandClasses;
 
 namespace ZWaveDriverSample
 {
@@ -46,6 +47,16 @@ namespace ZWaveDriverSample
                 // dump node
                 Console.WriteLine($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
             }
+            Console.WriteLine();
+
+            // NodeID of the fibaro wall plug
+            byte wallPlugID = 6;
+
+            var wallPlug = nodes[wallPlugID];
+            var basic = wallPlug.GetCommandClass<Basic>();
+            var report = await basic.Get();
+
+            Console.WriteLine($"Basic report of Node {report.Node:D3} is {report}");
         }
     }
 }
