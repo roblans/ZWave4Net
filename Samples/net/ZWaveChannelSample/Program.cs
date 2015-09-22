@@ -27,30 +27,7 @@ namespace ZWaveChannelSample
             channel.Open();
             try
             {
-                // ZWave function: GetVersion
-                var response = channel.Send(Function.GetVersion).Result;
-                var data = response.TakeWhile(element => element != 0).ToArray();
-                var version = Encoding.UTF8.GetString(data, 0, data.Length);
-                Console.WriteLine($"Version: {version}");
-
-                // ZWave function: MemoryGetId
-                response = channel.Send(Function.MemoryGetId).Result;
-                var homeID = BitConverter.ToUInt32(response.Take(4).Reverse().ToArray(), 0);
-                Console.WriteLine($"HomeID: {homeID:X}");
-                Console.WriteLine($"ControllerID: {response[4]:D3}");
-
-                // NodeID of the fibaro wall plug
-                byte wallPlugID = 6;
-
-                // turn wallplug on
-                Console.WriteLine($"Set wallplug on.");
-                channel.Send(wallPlugID, new Command(Command.Class.SwitchBinary, 0x01, 255)).Wait();
-
-                Task.Delay(1000).Wait();
-
-                // turn wallplug off
-                Console.WriteLine($"Set wallplug off.");
-                channel.Send(wallPlugID, new Command(Command.Class.SwitchBinary, 0x01, 0)).Wait();
+                Run(channel).Wait();
             }
             catch (Exception ex)
             {
@@ -61,6 +38,35 @@ namespace ZWaveChannelSample
                 Console.ReadLine();
                 channel.Close();
             }
+        }
+
+        static private async Task Run(ZWaveChannel channel)
+        {
+            // ZWave function: GetVersion
+            var response = await channel.Send(Function.GetVersion);
+            var data = response.TakeWhile(element => element != 0).ToArray();
+            var version = Encoding.UTF8.GetString(data, 0, data.Length);
+            Console.WriteLine($"Version: {version}");
+
+            // ZWave function: MemoryGetId
+            response = await channel.Send(Function.MemoryGetId);
+            var homeID = BitConverter.ToUInt32(response.Take(4).Reverse().ToArray(), 0);
+            Console.WriteLine($"HomeID: {homeID:X}");
+            Console.WriteLine($"ControllerID: {response[4]:D3}");
+
+            // NodeID of the fibaro wall plug
+            byte wallPlugID = 6;
+
+            // turn wallplug on
+            Console.WriteLine($"Set wallplug on.");
+            await channel.Send(wallPlugID, new Command(Command.Class.SwitchBinary, 0x01, 255));
+
+            await Task.Delay(1000);
+
+            // turn wallplug off
+            Console.WriteLine($"Set wallplug off.");
+            await channel.Send(wallPlugID, new Command(Command.Class.SwitchBinary, 0x01, 0));
+
         }
     }
 }

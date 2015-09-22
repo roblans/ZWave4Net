@@ -18,9 +18,7 @@ namespace ZWaveDriverSample
             driver.Open();
             try
             {
-                Console.WriteLine($"Version: {driver.Controller.GetVersion().Result}");
-                Console.WriteLine($"HomeID: {driver.Controller.GetHomeID().Result:X}");
-                Console.WriteLine($"ControllerID: {driver.Controller.GetNodeID().Result:D3}");
+                Run(driver).Wait();
             }
             catch (Exception ex)
             {
@@ -30,6 +28,19 @@ namespace ZWaveDriverSample
             {
                 Console.ReadLine();
                 driver.Close();
+            }
+        }
+
+        static private async Task Run(ZWaveDriver driver)
+        {
+            Console.WriteLine($"Version: {await driver.GetVersion()}");
+            Console.WriteLine($"HomeID: {await driver.GetHomeID():X}");
+            Console.WriteLine($"ControllerID: {await driver.GetContollerID():D3}");
+
+            var nodes = await driver.GetNodes();
+            foreach(var node in nodes)
+            {
+                Console.WriteLine(string.Format($"Node: {node}"));
             }
         }
     }
