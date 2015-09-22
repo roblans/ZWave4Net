@@ -104,17 +104,23 @@ namespace ZWave.Driver.Communication.Protocol
                 if (buffer.Skip(1).Take(buffer.Length - 2).Aggregate((byte)0xFF, (total, next) => (byte)(total ^ next)) != buffer[buffer.Length - 1])
                     throw new ChecksumException("Checksum failure");
 
-                if (function == Communication.Function.ApplicationCommandHandler)
+                if (type == MessageType.Request)
                 {
-                    return new NodeEvent(payload);
+                    if (function == Communication.Function.ApplicationCommandHandler)
+                    {
+                        return new NodeEvent(payload);
+                    }
+                    if (function == Communication.Function.SendData)
+                    {
+                        return new NodeCommandCompleted(payload);
+                    }
                 }
-                if (type == MessageType.Request && function == Communication.Function.SendData)
+                if (type == MessageType.Response)
                 {
-                    return new NodeCommandCompleted(payload);
-                }
-                if (function != Communication.Function.SendData)
-                {
-                    return new ControllerFunctionCompleted(function, payload);
+                    if (function != Communication.Function.SendData)
+                    {
+                        return new ControllerFunctionCompleted(function, payload);
+                    }
                 }
                 return new UnknownMessage(header, type, function, payload);
             }
