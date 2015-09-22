@@ -44,13 +44,13 @@ namespace ZWaveChannelSample
 
                 // turn wallplug on
                 Console.WriteLine($"Set wallplug on.");
-                channel.Send(wallPlugID, new Command(0x25, 0x01, 255)).Wait();
+                channel.Send(wallPlugID, new Command(Command.Class.SwitchBinary, 0x01, 255)).Wait();
 
                 Task.Delay(1000).Wait();
 
                 // turn wallplug off
                 Console.WriteLine($"Set wallplug off.");
-                channel.Send(wallPlugID, new Command(0x25, 0x01, 0)).Wait();
+                channel.Send(wallPlugID, new Command(Command.Class.SwitchBinary, 0x01, 0)).Wait();
             }
             catch (Exception ex)
             {

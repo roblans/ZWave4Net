@@ -8,6 +8,12 @@ namespace ZWave.Driver.Communication
 {
     public class Command
     {
+        public enum Class : byte
+        {
+            Basic = 0x20,
+            SwitchBinary = 0x25,
+        }
+
         public readonly byte ClassID;
         public readonly byte CommandID;
         public readonly byte[] Payload;
@@ -18,6 +24,14 @@ namespace ZWave.Driver.Communication
             CommandID = commandID;
             Payload = payload;
         }
+        public Command(Class @class, Enum command, params byte[] payload)
+            : this(Convert.ToByte(@class), Convert.ToByte(command), payload)
+        {
+        }
+        public Command(Class @class, byte commandID, params byte[] payload)
+            : this(Convert.ToByte(@class), commandID, payload)
+        {
+        }
 
         public Command(byte classID, Enum command, params byte[] payload)
             : this(classID, Convert.ToByte(command), payload)
@@ -26,7 +40,8 @@ namespace ZWave.Driver.Communication
 
         public override string ToString()
         {
-            return string.Format($"ClassID:{ClassID} CommandID:{CommandID} Payload:{BitConverter.ToString(Payload)}");
+            var className = Enum.IsDefined(typeof(Class), ClassID) ? Enum.ToObject(typeof(Class), ClassID).ToString() : ClassID.ToString();
+            return string.Format($"Class:{className} CommandID:{CommandID} Payload:{BitConverter.ToString(Payload)}");
         }
 
         public byte[] ToBytes()
