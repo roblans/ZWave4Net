@@ -36,6 +36,11 @@ namespace ZWave.Driver.CommandClasses
             await Channel.Send(Node, new Command(Class, command.IntervalSet, seconds[1], seconds[2], seconds[3], targetNodeID));
         }
 
+        public async Task NoMoreInformation()
+        {
+            await Channel.Send(Node, new Command(Class, command.NoMoreInformation));
+        }
+
         protected internal override void HandleEvent(Command command)
         {
             base.HandleEvent(command);
