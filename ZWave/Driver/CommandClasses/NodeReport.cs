@@ -8,7 +8,7 @@ namespace ZWave.Driver.CommandClasses
     {
         public readonly Node Node;
 
-        protected NodeReport(Node node)
+        public NodeReport(Node node)
         {
             Node = node;
         }

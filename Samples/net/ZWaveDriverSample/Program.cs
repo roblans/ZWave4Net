@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZWave.Driver;
 using ZWave.Driver.CommandClasses;
+using ZWave.Driver.Communication;
 
 namespace ZWaveDriverSample
 {
@@ -12,6 +13,9 @@ namespace ZWaveDriverSample
     {
         static void Main(string[] args)
         {
+            var seconds = PayloadConverter.GetBytes(7200);
+            var interval = PayloadConverter.ToUInt32(seconds);
+
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
             var driver = new ZWaveDriver(portName);
@@ -107,6 +111,10 @@ namespace ZWaveDriverSample
             var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
             sensorMultiLevel.Changed += (_, e) => Console.WriteLine($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
+            var wakeUp = motionSensor.GetCommandClass<WakeUp>();
+            wakeUp.Changed += (_, e) => Console.WriteLine($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            wakeUp.Notification += (_, e) => Console.WriteLine($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
             Console.WriteLine("Please wakeup the motion sensor.");
             Console.ReadLine();
 
@@ -125,6 +133,10 @@ namespace ZWaveDriverSample
 
             var sensorMultiLevelReport = await sensorMultiLevel.Get();
             Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
+
+            await wakeUp.SetInterval(TimeSpan.FromHours(2), 0x01);
+            var wakeUpReport = await wakeUp.GetInterval();
+            Console.WriteLine($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
 
             Console.ReadLine();
         }

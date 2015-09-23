@@ -13,6 +13,7 @@ namespace ZWave.Driver.Communication
         Alarm = 0x71,
         ManufacturerSpecific = 0x72,
         Battery = 0x80,
+        WakeUp = 0x84,
         Association = 0x85,
         SensorAlarm = 0x9C,
     }

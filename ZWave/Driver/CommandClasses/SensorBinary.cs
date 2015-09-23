@@ -31,10 +31,10 @@ namespace ZWave.Driver.CommandClasses
             base.HandleEvent(command);
 
             var report = new SensorBinaryReport(Node, command.Payload);
-            OnReportReceived(new ReportEventArgs<SensorBinaryReport>(report));
+            OnChanged(new ReportEventArgs<SensorBinaryReport>(report));
         }
 
-        protected virtual void OnReportReceived(ReportEventArgs<SensorBinaryReport> e)
+        protected virtual void OnChanged(ReportEventArgs<SensorBinaryReport> e)
         {
             var handler = Changed;
             if (handler != null)

@@ -33,10 +33,10 @@ namespace ZWave.Driver.CommandClasses
             base.HandleEvent(command);
 
             var report = new SensorAlarmReport(Node, command.Payload);
-            OnReportReceived(new ReportEventArgs<SensorAlarmReport>(report));
+            OnChanged(new ReportEventArgs<SensorAlarmReport>(report));
         }
 
-        protected virtual void OnReportReceived(ReportEventArgs<SensorAlarmReport> e)
+        protected virtual void OnChanged(ReportEventArgs<SensorAlarmReport> e)
         {
             var handler = Changed;
             if (handler != null)

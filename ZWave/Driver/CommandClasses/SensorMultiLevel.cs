@@ -33,10 +33,10 @@ namespace ZWave.Driver.CommandClasses
             base.HandleEvent(command);
 
             var report = new SensorMultiLevelReport(Node, command.Payload);
-            OnReportReceived(new ReportEventArgs<SensorMultiLevelReport>(report));
+            OnChanged(new ReportEventArgs<SensorMultiLevelReport>(report));
         }
 
-        protected virtual void OnReportReceived(ReportEventArgs<SensorMultiLevelReport> e)
+        protected virtual void OnChanged(ReportEventArgs<SensorMultiLevelReport> e)
         {
             var handler = Changed;
             if (handler != null)
