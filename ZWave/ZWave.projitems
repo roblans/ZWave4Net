@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Driver\BasicType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorAlarm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorAlarmReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorBinaryReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorBinary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\AlarmDetailType.cs" />

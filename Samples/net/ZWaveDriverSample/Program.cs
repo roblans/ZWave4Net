@@ -15,7 +15,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
             var driver = new ZWaveDriver(portName);
-            driver.Channel.Log = Console.Out;
+            //driver.Channel.Log = Console.Out;
 
             driver.Open();
             try
@@ -96,6 +96,9 @@ namespace ZWaveDriverSample
 
             var sensorBinary = motionSensor.GetCommandClass<SensorBinary>();
             sensorBinary.Changed += (_, e) => Console.WriteLine($"SensorBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var sensorAlarm = motionSensor.GetCommandClass<SensorAlarm>();
+            sensorAlarm.Changed += (_, e) => Console.WriteLine($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             Console.WriteLine("Please wakeup the motion sensor.");
             Console.ReadLine();

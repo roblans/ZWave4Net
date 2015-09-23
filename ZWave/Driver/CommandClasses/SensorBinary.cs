@@ -12,7 +12,6 @@ namespace ZWave.Driver.CommandClasses
 
         enum command
         {
-            Set = 0x01,
             Get = 0x02,
             Report = 0x03
         }

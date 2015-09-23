@@ -25,6 +25,7 @@ namespace ZWave.Driver
             _commandClasses.Add(new Alarm(this));
             _commandClasses.Add(new Association(this));
             _commandClasses.Add(new SensorBinary(this));
+            _commandClasses.Add(new SensorAlarm(this));
         }
 
         public T GetCommandClass<T>()  where T : ICommandClass
