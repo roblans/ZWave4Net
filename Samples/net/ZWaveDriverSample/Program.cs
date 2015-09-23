@@ -104,6 +104,9 @@ namespace ZWaveDriverSample
             var sensorAlarm = motionSensor.GetCommandClass<SensorAlarm>();
             sensorAlarm.Changed += (_, e) => Console.WriteLine($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
+            var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
+            sensorMultiLevel.Changed += (_, e) => Console.WriteLine($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
             Console.WriteLine("Please wakeup the motion sensor.");
             Console.ReadLine();
 
@@ -120,7 +123,6 @@ namespace ZWaveDriverSample
             var batteryReport = await battery.Get();
             Console.WriteLine($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
-            var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
             var sensorMultiLevelReport = await sensorMultiLevel.Get();
             Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
 
