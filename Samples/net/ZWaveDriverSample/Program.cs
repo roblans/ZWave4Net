@@ -116,8 +116,9 @@ namespace ZWaveDriverSample
             var batteryReport = await battery.Get();
             Console.WriteLine($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
-            //var alarmReport = await alarm.Get();
-            //Console.WriteLine($"Alarm report of Node {alarmReport.Node:D3} is [{alarmReport}]");
+            var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
+            var sensorMultiLevelReport = await sensorMultiLevel.Get();
+            Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
 
             Console.ReadLine();
         }

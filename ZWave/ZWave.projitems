@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\BasicType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorAlarm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorAlarmReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorMultiLevelReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorMultiLevel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorBinaryReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorBinary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\AlarmDetailType.cs" />
@@ -30,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\ManufacturerSpecific.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\NodeReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\ReportEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\SensorType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\PayloadConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\CommandClass.cs" />

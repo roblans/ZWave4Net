@@ -9,6 +9,7 @@ namespace ZWave.Driver.Communication
         Basic = 0x20,
         SwitchBinary = 0x25,
         SensorBinary = 0x30,
+        SensorMultiLevel = 0x31,
         Alarm = 0x71,
         ManufacturerSpecific = 0x72,
         Battery = 0x80,
