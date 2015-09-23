@@ -21,6 +21,13 @@ namespace ZWaveDriverSample
             {
                 Run(driver).Wait();
             }
+            catch (AggregateException ex)
+            {
+                foreach (var inner in ex.InnerExceptions)
+                {
+                    Console.WriteLine($"{inner.Message}");
+                }
+            }
             catch (Exception ex)
             {
                 Console.WriteLine($"{ex.Message}");
@@ -40,7 +47,7 @@ namespace ZWaveDriverSample
 
             Console.WriteLine();
             var nodes = await driver.GetNodes();
-            foreach(var node in nodes)
+            foreach (var node in nodes)
             {
                 var protocolInfo = await node.GetNodeProtocolInfo();
 
@@ -51,8 +58,15 @@ namespace ZWaveDriverSample
 
             // NodeID of the fibaro wall plug
             byte wallPlugID = 6;
+            await RunWallplugTest(nodes[wallPlugID]);
 
-            var wallPlug = nodes[wallPlugID];
+            // NodeID of the fibaro motionsensor
+            byte motionSensorID = 5;
+            await RunMotionSensorTest(nodes[motionSensorID]);
+        }
+
+        private static async Task RunWallplugTest(Node wallPlug)
+        {
             var basic = wallPlug.GetCommandClass<Basic>();
             basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
@@ -67,6 +81,26 @@ namespace ZWaveDriverSample
 
             var manufacturerSpecific = wallPlug.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
+
+            Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+            Console.ReadLine();
+        }
+
+        private static async Task RunMotionSensorTest(Node motionSensor)
+        {
+            Console.WriteLine("Please wakeup the motion sensor.");
+            Console.ReadLine();
+
+            var basic = motionSensor.GetCommandClass<Basic>();
+            basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var battery = motionSensor.GetCommandClass<Battery>();
+            var batteryReport = await battery.Get();
+            Console.WriteLine($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
+
+            var manufacturerSpecific = motionSensor.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+
             Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
             Console.ReadLine();

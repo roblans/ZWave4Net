@@ -9,5 +9,6 @@ namespace ZWave.Driver.Communication
         Basic = 0x20,
         SwitchBinary = 0x25,
         ManufacturerSpecific = 0x72,
+        Battery = 0x80,
     }
 }
