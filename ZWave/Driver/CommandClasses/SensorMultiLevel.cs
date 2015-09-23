@@ -28,12 +28,6 @@ namespace ZWave.Driver.CommandClasses
             return new SensorMultiLevelReport(Node, response);
         }
 
-        public async Task<SensorMultiLevelReport> GetSupported()
-        {
-            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport);
-            return new SensorMultiLevelReport(Node, response);
-        }
-
         protected internal override void HandleEvent(Command command)
         {
             base.HandleEvent(command);

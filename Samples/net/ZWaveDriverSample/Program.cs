@@ -73,16 +73,20 @@ namespace ZWaveDriverSample
             var basicReport = await basic.Get();
             Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
-            Console.WriteLine($"Toggle basicvalue of Node {basicReport.Node:D3}");
-            await basic.Set((byte)(basicReport.Value == 0x00 ? 0xFF : 0x00));
+            //Console.WriteLine($"Toggle basicvalue of Node {basicReport.Node:D3}");
+            //await basic.Set((byte)(basicReport.Value == 0x00 ? 0xFF : 0x00));
 
             basicReport = await basic.Get();
             Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
             var manufacturerSpecific = wallPlug.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
-
             Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+
+            var sensorMultiLevel = wallPlug.GetCommandClass<SensorMultiLevel>();
+            var sensorMultiLevelReport = await sensorMultiLevel.Get();
+            Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
+
             Console.ReadLine();
         }
 
@@ -117,12 +121,9 @@ namespace ZWaveDriverSample
             Console.WriteLine($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
             var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
-            for (int i = 0; i < 10; i++)
-            {
-                var sensorMultiLevelReport = await sensorMultiLevel.Get();
-                Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
-                await Task.Delay(1000);
-            }
+            var sensorMultiLevelReport = await sensorMultiLevel.Get();
+            Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
+
             Console.ReadLine();
         }
     }
