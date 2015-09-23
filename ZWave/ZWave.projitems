@@ -10,8 +10,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Driver\BasicType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\AlarmDetailType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\AlarmType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Alarm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Battery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\AlarmReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\BatteryReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\ManufacturerSpecificReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\BasicReport.cs" />

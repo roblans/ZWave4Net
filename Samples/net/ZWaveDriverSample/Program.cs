@@ -15,6 +15,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
             var driver = new ZWaveDriver(portName);
+            driver.Channel.Log = Console.Out;
 
             driver.Open();
             try
@@ -54,7 +55,6 @@ namespace ZWaveDriverSample
                 // dump node
                 Console.WriteLine($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
             }
-            Console.WriteLine();
 
             // NodeID of the fibaro wall plug
             byte wallPlugID = 6;
@@ -88,20 +88,26 @@ namespace ZWaveDriverSample
 
         private static async Task RunMotionSensorTest(Node motionSensor)
         {
+            var basic = motionSensor.GetCommandClass<Basic>();
+            basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var alarm = motionSensor.GetCommandClass<Alarm>();
+            alarm.Changed += (_, e) => Console.WriteLine($"Alarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
             Console.WriteLine("Please wakeup the motion sensor.");
             Console.ReadLine();
 
-            var basic = motionSensor.GetCommandClass<Basic>();
-            basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var manufacturerSpecific = motionSensor.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+            Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
             var battery = motionSensor.GetCommandClass<Battery>();
             var batteryReport = await battery.Get();
             Console.WriteLine($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
-            var manufacturerSpecific = motionSensor.GetCommandClass<ManufacturerSpecific>();
-            var manufacturerSpecificReport = await manufacturerSpecific.Get();
-
-            Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+            var alarmReport = await alarm.Get();
+            Console.WriteLine($"Alarm report of Node {alarmReport.Node:D3} is [{alarmReport}]");
 
             Console.ReadLine();
         }
