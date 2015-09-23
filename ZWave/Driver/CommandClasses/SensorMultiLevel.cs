@@ -12,6 +12,8 @@ namespace ZWave.Driver.CommandClasses
 
         enum command
         {
+            SupportedGet = 0x01,
+            SupportedReport = 0x02,
             Get = 0x04,
             Report = 0x05
         }
@@ -23,6 +25,12 @@ namespace ZWave.Driver.CommandClasses
         public async Task<SensorMultiLevelReport> Get()
         {
             var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            return new SensorMultiLevelReport(Node, response);
+        }
+
+        public async Task<SensorMultiLevelReport> GetSupported()
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport);
             return new SensorMultiLevelReport(Node, response);
         }
 
