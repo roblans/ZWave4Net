@@ -15,7 +15,7 @@ namespace ZWave.Driver.CommandClasses
 
         public override string ToString()
         {
-            return $"{Value:X2}";
+            return $"{Value}";
         }
     }
 }

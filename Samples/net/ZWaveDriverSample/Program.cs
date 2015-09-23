@@ -15,7 +15,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
             var driver = new ZWaveDriver(portName);
-            //driver.Channel.Log = Console.Out;
+            driver.Channel.Log = Console.Out;
 
             driver.Open();
             try
