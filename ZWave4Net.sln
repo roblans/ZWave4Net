@@ -23,6 +23,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{15C4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWaveDriverSample", "Samples\net\ZWaveDriverSample\ZWaveDriverSample.csproj", "{0962D3F0-2EB6-4799-B81E-991606E9F19E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "documents", "documents", "{0CC2532D-77A2-4FEA-B9F2-5B4162347DE0}"
+	ProjectSection(SolutionItems) = preProject
+		SampleCommands.txt = SampleCommands.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ZWave\ZWave.projitems*{96b37a40-4227-4063-8008-06bb65862806}*SharedItemsImports = 4
@@ -133,5 +138,6 @@ Global
 		{D718B815-21B9-4195-BEFC-E57886E254E4} = {15C4E1D5-BC8A-4039-B9DC-6193CB10A752}
 		{96B37A40-4227-4063-8008-06BB65862806} = {15C4E1D5-BC8A-4039-B9DC-6193CB10A752}
 		{0962D3F0-2EB6-4799-B81E-991606E9F19E} = {D8B26987-727D-485E-8ABF-956FB1D89823}
+		{0CC2532D-77A2-4FEA-B9F2-5B4162347DE0} = {13646915-2614-40CE-93BE-C57691FA4D06}
 	EndGlobalSection
 EndGlobal
