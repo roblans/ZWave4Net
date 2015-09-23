@@ -56,14 +56,18 @@ namespace ZWaveDriverSample
             var basic = wallPlug.GetCommandClass<Basic>();
             basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
-            var report = await basic.Get();
-            Console.WriteLine($"Basic report of Node {report.Node:D3} is [{report}]");
+            var basicReport = await basic.Get();
+            Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
-            Console.WriteLine($"Toggle basicvalue of Node {report.Node:D3}");
-            await basic.Set((byte)(report.Value == 0x00 ? 0xFF : 0x00));
+            Console.WriteLine($"Toggle basicvalue of Node {basicReport.Node:D3}");
+            await basic.Set((byte)(basicReport.Value == 0x00 ? 0xFF : 0x00));
 
-            report = await basic.Get();
-            Console.WriteLine($"Basic report of Node {report.Node:D3} is [{report}]");
+            basicReport = await basic.Get();
+            Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
+
+            var manufacturerSpecific = wallPlug.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+            Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
             Console.ReadLine();
         }

@@ -20,8 +20,9 @@ namespace ZWave.Driver
             Channel = channel;
 
             _commandClasses.Add(new Basic(this));
+            _commandClasses.Add(new ManufacturerSpecific(this));
         }
-        
+
         public T GetCommandClass<T>()  where T : ICommandClass
         {
             return _commandClasses.OfType<T>().FirstOrDefault();

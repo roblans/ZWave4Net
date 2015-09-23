@@ -23,7 +23,7 @@ namespace ZWave.Driver.Communication.Protocol
 
         public override string ToString()
         {
-            return string.Concat(base.ToString(), " ", string.Format($"NodeID:{NodeID} Command:[{Command}] CallbackID:{CallbackID}"));
+            return string.Concat(base.ToString(), " ", $"NodeID:{NodeID}, Command:[{Command}], CallbackID:{CallbackID}");
         }
 
         private static byte GetNextCallbackID()

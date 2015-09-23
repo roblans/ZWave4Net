@@ -52,7 +52,7 @@ namespace ZWave.Driver.Communication
 
         public override string ToString()
         {
-            return string.Format($"Class:{_class} Command:{_command} Payload:{BitConverter.ToString(Payload)}");
+            return $"Class:{_class}, Command:{_command}, Payload:{BitConverter.ToString(Payload)}";
         }
 
         public byte[] ToBytes()

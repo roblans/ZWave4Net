@@ -16,6 +16,11 @@ namespace ZWave.Driver.CommandClasses
             Class = @class;
         }
 
+        protected ZWaveChannel Channel
+        {
+            get { return Node.Channel; }
+        }
+
         internal protected virtual void HandleEvent(Command command)
         {
         }

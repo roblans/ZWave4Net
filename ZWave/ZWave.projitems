@@ -11,13 +11,15 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Driver\BasicType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\ManufacturerSpecificReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\BasicReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\CommandClassBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Extentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\ICommandClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\ManufacturerSpecific.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\NodeReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\ReportEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\ByteConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\PayloadConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\CommandClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\Communication\Exceptions.cs" />

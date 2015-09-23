@@ -59,7 +59,7 @@ namespace ZWave.Driver.Communication
                 {
                     // wait for message received (blocking)
                     var message = await Message.Read(port.InputStream).ConfigureAwait(false);
-                    LogMessage(string.Format($"Received: {message}"));
+                    LogMessage($"Received: {message}");
 
                     // ignore ACK, no processing of ACK needed
                     if (message == Message.ACK)
@@ -83,14 +83,14 @@ namespace ZWave.Driver.Communication
                 }
                 catch (ChecksumException ex)
                 {
-                    LogMessage(string.Format($"Exception: {ex.Message}"));
+                    LogMessage($"Exception: {ex.Message}");
                     _transmitQueue.Add(Message.NAK);
                 }
                 catch (UnknownFrameException ex)
                 {
                     // probably out of sync on the serial port
                     // ToDo: handle gracefully 
-                    LogMessage(string.Format($"Exception: {ex.Message}"));
+                    LogMessage($"Exception: {ex.Message}");
                 }
                 catch (IOException)
                 {
@@ -132,7 +132,7 @@ namespace ZWave.Driver.Communication
         private void OnTransmit(Message message)
         {
             message.Write(Port.OutputStream).ConfigureAwait(false);
-            LogMessage(string.Format($"Transmitted: {message}"));
+            LogMessage($"Transmitted: {message}");
         }
 
         private async Task<Message> Receive()
@@ -215,7 +215,7 @@ namespace ZWave.Driver.Communication
                     }
                     catch (CanResponseException)
                     {
-                        LogMessage(string.Format($"CAN received. Retrying (attempt: {attempt})"));
+                        LogMessage($"CAN received. Retrying (attempt: {attempt})");
 
                         if (attempt++ > 3)
                             throw;

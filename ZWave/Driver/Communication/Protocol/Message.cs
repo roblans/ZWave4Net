@@ -26,7 +26,7 @@ namespace ZWave.Driver.Communication.Protocol
 
         public override string ToString()
         {
-            return string.Format($"{Header} {Type} {Function}");
+            return $"{Header} {Type} {Function}";
         }
 
         protected virtual List<byte> GetPayload()
@@ -124,7 +124,7 @@ namespace ZWave.Driver.Communication.Protocol
                 }
                 return new UnknownMessage(header, type, function, payload);
             }
-            throw new UnknownFrameException(string.Format($"Frame {header} is not supported"));
+            throw new UnknownFrameException($"Frame {header} is not supported");
         }
 
         public override int GetHashCode()

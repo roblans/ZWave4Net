@@ -20,7 +20,7 @@ namespace ZWave.Driver.Communication.Protocol
         {
             if (Payload != null)
             {
-                return string.Concat(base.ToString(), " ", string.Format($"Payload:{BitConverter.ToString(Payload)}"));
+                return string.Concat(base.ToString(), " ", $"Payload:{BitConverter.ToString(Payload)}");
             }
             return base.ToString();
         }

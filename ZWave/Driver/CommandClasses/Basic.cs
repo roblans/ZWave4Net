@@ -23,13 +23,13 @@ namespace ZWave.Driver.CommandClasses
 
         public async Task<BasicReport> Get()
         {
-            var response = await Node.Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
             return new BasicReport(Node, response);
         }
 
         public async Task Set(byte value)
         {
-            await Node.Channel.Send(Node, new Command(Class, command.Set, value));
+            await Channel.Send(Node, new Command(Class, command.Set, value));
         }
 
         protected internal override void HandleEvent(Command command)

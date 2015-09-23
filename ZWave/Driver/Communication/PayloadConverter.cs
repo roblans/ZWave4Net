@@ -5,8 +5,18 @@ using System.Text;
 
 namespace ZWave.Driver.Communication
 {
-    static class ByteConverter
+    static class PayloadConverter
     {
+        public static UInt16 ToUInt16(byte[] value, int startIndex = 0)
+        {
+            return BitConverter.ToUInt16(value.Skip(startIndex).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
+        }
+
+        public static Int16 ToInt16(byte[] value, int startIndex = 0)
+        {
+            return BitConverter.ToInt16(value.Skip(startIndex).Take(sizeof(Int16)).Reverse().ToArray(), 0);
+        }
+
         public static UInt32 ToUInt32(byte[] value, int startIndex = 0)
         {
             return BitConverter.ToUInt32(value.Skip(startIndex).Take(sizeof(UInt32)).Reverse().ToArray(), 0);
