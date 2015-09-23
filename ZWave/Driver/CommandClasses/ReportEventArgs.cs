@@ -4,11 +4,11 @@ using System.Text;
 
 namespace ZWave.Driver.CommandClasses
 {
-    public class ReportReceivedEventArgs<T> where T : NodeReport
+    public class ReportEventArgs<T> where T : NodeReport
     {
         public readonly T Report;
 
-        public ReportReceivedEventArgs(T report)
+        public ReportEventArgs(T report)
         {
             Report = report;
         }

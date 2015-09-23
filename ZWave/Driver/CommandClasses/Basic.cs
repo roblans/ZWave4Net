@@ -15,7 +15,7 @@ namespace ZWave.Driver.CommandClasses
             Report = 0x03
         }
 
-        public event EventHandler<ReportReceivedEventArgs<BasicReport>> ReportReceived;
+        public event EventHandler<ReportEventArgs<BasicReport>> Changed;
 
         public Basic(Node node) : base(node, CommandClass.Basic)
         {
@@ -37,12 +37,12 @@ namespace ZWave.Driver.CommandClasses
             base.HandleEvent(command);
 
             var report = new BasicReport(Node, command.Payload);
-            OnReportReceived(new ReportReceivedEventArgs<BasicReport>(report));
+            OnReportReceived(new ReportEventArgs<BasicReport>(report));
         }
 
-        protected virtual void OnReportReceived(ReportReceivedEventArgs<BasicReport> e)
+        protected virtual void OnReportReceived(ReportEventArgs<BasicReport> e)
         {
-            var handler = ReportReceived;
+            var handler = Changed;
             if (handler != null)
             {
                 handler(this, e);

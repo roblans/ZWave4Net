@@ -54,7 +54,7 @@ namespace ZWaveDriverSample
 
             var wallPlug = nodes[wallPlugID];
             var basic = wallPlug.GetCommandClass<Basic>();
-            basic.ReportReceived += (_, e) => Console.WriteLine($"Report [{e.Report}] received from Node {e.Report.Node:D3}");
+            basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var report = await basic.Get();
             Console.WriteLine($"Basic report of Node {report.Node:D3} is [{report}]");
@@ -63,7 +63,7 @@ namespace ZWaveDriverSample
             await basic.Set((byte)(report.Value == 0x00 ? 0xFF : 0x00));
 
             report = await basic.Get();
-            Console.WriteLine($"Basic report of Node {report.Node:D3} is now [{report}]");
+            Console.WriteLine($"Basic report of Node {report.Node:D3} is [{report}]");
 
             Console.ReadLine();
         }
