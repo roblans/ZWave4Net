@@ -271,7 +271,9 @@ namespace ZWave.Driver.Communication
                 {
                     if (e.NodeID == nodeID && e.Command.ClassID == command.ClassID && e.Command.CommandID == responseCommandID)
                     {
-                        completionSource.SetResult(e.Command);
+                        // BugFix: 
+                        // http://stackoverflow.com/questions/19481964/calling-taskcompletionsource-setresult-in-a-non-blocking-manner
+                        Task.Run(() => completionSource.SetResult(e.Command));
                     }
                 };
 

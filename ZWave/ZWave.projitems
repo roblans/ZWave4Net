@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\AlarmType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Basic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Alarm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Association.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Battery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\AlarmReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\BatteryReport.cs" />

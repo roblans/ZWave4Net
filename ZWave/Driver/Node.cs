@@ -23,6 +23,7 @@ namespace ZWave.Driver
             _commandClasses.Add(new ManufacturerSpecific(this));
             _commandClasses.Add(new Battery(this));
             _commandClasses.Add(new Alarm(this));
+            _commandClasses.Add(new Association(this));
         }
 
         public T GetCommandClass<T>()  where T : ICommandClass
