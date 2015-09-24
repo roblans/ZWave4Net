@@ -16,8 +16,7 @@ namespace ZWave.Driver.CommandClasses
         internal SensorMultiLevelReport(Node node, byte[] payload) : base(node)
         {
             Type = (SensorType)payload[0];
-            var ignore = default(byte);
-            Value = PayloadConverter.ParseSensorValue(payload.Skip(1).ToArray(), out ignore, out Scale, out ignore);
+            Value = PayloadConverter.ParseSensorValue(payload.Skip(1).ToArray(), out Scale);
             Unit = GetUnit(Type, Scale);
         }
 

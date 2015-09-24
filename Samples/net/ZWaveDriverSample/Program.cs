@@ -74,6 +74,12 @@ namespace ZWaveDriverSample
             var basic = wallPlug.GetCommandClass<Basic>();
             basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
+            var sensorMultiLevel = wallPlug.GetCommandClass<SensorMultiLevel>();
+            sensorMultiLevel.Changed += (_, e) => Console.WriteLine($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var meter = wallPlug.GetCommandClass<Meter>();
+            meter.Changed += (_, e) => Console.WriteLine($"Meter report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
             var basicReport = await basic.Get();
             Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
@@ -87,11 +93,9 @@ namespace ZWaveDriverSample
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
             Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
-            var sensorMultiLevel = wallPlug.GetCommandClass<SensorMultiLevel>();
             var sensorMultiLevelReport = await sensorMultiLevel.Get();
             Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
 
-            var meter = wallPlug.GetCommandClass<Meter>();
             var meterReport = await meter.Get();
             Console.WriteLine($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
 
