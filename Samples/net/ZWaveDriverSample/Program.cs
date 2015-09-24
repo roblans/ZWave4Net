@@ -80,6 +80,11 @@ namespace ZWaveDriverSample
             var meter = wallPlug.GetCommandClass<Meter>();
             meter.Changed += (_, e) => Console.WriteLine($"Meter report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
+            var association = wallPlug.GetCommandClass<Association>();
+            await association.Add(1, 1);
+            await association.Add(2, 1);
+            await association.Add(3, 1);
+
             var basicReport = await basic.Get();
             Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
