@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Driver\BasicType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\Meter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\MeterReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\MeterType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\WakeUpNotificationReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\WakeUpReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Driver\CommandClasses\WakeUp.cs" />
