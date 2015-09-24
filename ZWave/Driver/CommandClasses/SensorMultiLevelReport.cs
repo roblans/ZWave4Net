@@ -55,24 +55,25 @@ namespace ZWave.Driver.CommandClasses
         {
             // http://www.google.nl/url?q=http://www.cooperindustries.com/content/dam/public/wiringdevices/products/documents/technical_specifications/aspirerf_adtechguide_100713.pdf&sa=U&ved=0CBwQFjAAOApqFQoTCN-G7K7djcgCFeZr2wod5eILEA&usg=AFQjCNGzaMFiMosWoKLG-Wvo1A2p5QDbTw
             // http://www.google.nl/url?q=http://svn.linuxmce.org/trac/browser/trunk/src/ZWave/ZWApi.cpp%3Frev%3D27702&sa=U&ved=0CCYQFjAEOBRqFQoTCKboxvHkjcgCFYkH2wodxRoB0w&usg=AFQjCNFg3uMoEuAIX6R61kDS-5Q9C-F-GA
+            // https://searchcode.com/codesearch/view/90040075/
             // bits 7,6,5: precision, bits 4,3: scale, bits 2,1,0 : size
             var precision = (byte)((payload[0] & 0xE0) >> 5);
             scale = (byte)((payload[0] & 0x18) >> 3);
             var size = (byte)(payload[0] & 0x07);
 
-            var value = (long)payload[1];
-            switch (size)
+            var value = (ulong)0;
+            for(int i = 0; i < size; i++)
             {
-                case 2:
-                    value = PayloadConverter.ToInt16(payload, 1);
-                    break;
-                case 4:
-                    value = PayloadConverter.ToInt32(payload, 1);
-                    break;
-                case 8:
-                    value = PayloadConverter.ToInt64(payload, 1);
-                    break;
+                value <<= sizeof(byte);
+                value |= payload[i + 1];
             }
+
+            // deal with sign extension. All values are signed
+            if ((payload[1] & 0x80) == 0x80)
+            {
+                value |= (0xFFFFFFFFFFFFFFFF << size);
+            }
+
             return (float)(value / Math.Pow(10, precision));
         }
 
