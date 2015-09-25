@@ -1,5 +1,5 @@
 # ZWave4Net
- ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick. 
+ ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick. It uses an event-driven, non-blocking model that makes it lightweight and efficient.
 
 Supported Targets:
 
@@ -19,5 +19,6 @@ Supported Z-Wave command classes:
 - WakeUp
 - Association
 - SensorAlarm
+- Meter
 
 
