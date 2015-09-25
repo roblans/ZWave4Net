@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZWave.Driver;
-using ZWave.Driver.CommandClasses;
-using ZWave.Driver.Communication;
+using ZWave.Controller;
+using ZWave.Controller.CommandClasses;
+using ZWave.Communication;
 
 namespace ZWaveDriverSample
 {
@@ -18,13 +18,13 @@ namespace ZWaveDriverSample
 
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
-            var driver = new ZWaveDriver(portName);
+            var controller = new ZWaveContoller(portName);
             //driver.Channel.Log = Console.Out;
 
-            driver.Open();
+            controller.Open();
             try
             {
-                Run(driver).Wait();
+                Run(controller).Wait();
             }
             catch (AggregateException ex)
             {
@@ -40,11 +40,11 @@ namespace ZWaveDriverSample
             finally
             {
                 Console.ReadLine();
-                driver.Close();
+                controller.Close();
             }
         }
 
-        static private async Task Run(ZWaveDriver driver)
+        static private async Task Run(ZWaveContoller driver)
         {
             Console.WriteLine($"Version: {await driver.GetVersion()}");
             Console.WriteLine($"HomeID: {await driver.GetHomeID():X}");
