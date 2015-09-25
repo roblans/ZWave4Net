@@ -125,7 +125,6 @@ namespace ZWaveDriverSample
             sensorMultiLevel.Changed += (_, e) => Console.WriteLine($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var wakeUp = motionSensor.GetCommandClass<WakeUp>();
-            wakeUp.Changed += (_, e) => Console.WriteLine($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
             wakeUp.Notification += (_, e) => Console.WriteLine($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             Console.WriteLine("Please wakeup the motion sensor.");

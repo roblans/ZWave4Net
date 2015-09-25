@@ -8,7 +8,6 @@ namespace ZWave.Controller.CommandClasses
 {
     public class WakeUp : CommandClassBase
     {
-        public event EventHandler<ReportEventArgs<WakeUpReport>> Changed;
         public event EventHandler<ReportEventArgs<WakeUpNotificationReport>> Notification;
 
         enum command
@@ -45,27 +44,11 @@ namespace ZWave.Controller.CommandClasses
         {
             base.HandleEvent(command);
 
-            if (command.CommandID == Convert.ToByte(WakeUp.command.IntervalReport))
-            {
-                var report = new WakeUpReport(Node, command.Payload);
-                OnChanged(new ReportEventArgs<WakeUpReport>(report));
-                return;
-            }
-
             if (command.CommandID == Convert.ToByte(WakeUp.command.Notification))
             {
                 var report = new WakeUpNotificationReport(Node);
                 OnNotification(new ReportEventArgs<WakeUpNotificationReport>(report));
                 return;
-            }
-        }
-
-        protected virtual void OnChanged(ReportEventArgs<WakeUpReport> e)
-        {
-            var handler = Changed;
-            if (handler != null)
-            {
-                handler(this, e);
             }
         }
 
