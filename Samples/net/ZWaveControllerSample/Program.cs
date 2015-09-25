@@ -108,6 +108,9 @@ namespace ZWaveDriverSample
             await association.Add(2, 1);
             await association.Add(3, 1);
 
+            var supportedCommandClasses = await wallPlug.GetSupportedCommandClasses();
+            Console.WriteLine($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+
             var basic = wallPlug.GetCommandClass<Basic>();
             var basicReport = await basic.Get();
             Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");

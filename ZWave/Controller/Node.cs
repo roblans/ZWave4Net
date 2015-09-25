@@ -44,6 +44,17 @@ namespace ZWave.Controller
             return _commandClasses.OfType<T>().FirstOrDefault();
         }
 
+        public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses()
+        {
+            var version = GetCommandClass<CommandClasses.Version>();
+            var reports = new List<VersionCommandClassReport>();
+            foreach(var commandClass in Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
+            {
+                reports.Add(await version.GetCommandClass(commandClass));
+            }
+            return reports.ToArray();
+        }
+
         public async Task<NodeProtocolInfo> GetNodeProtocolInfo()
         {
             var response = await Channel.Send(Function.GetNodeProtocolInfo, NodeID);
