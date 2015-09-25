@@ -112,6 +112,13 @@ namespace ZWaveDriverSample
             var basicReport = await basic.Get();
             Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
+            var version = wallPlug.GetCommandClass<ZWave.Controller.CommandClasses.Version>();
+            var versionReport = await version.Get();
+            Console.WriteLine($"VersionReport report of Node {versionReport.Node:D3} is [{versionReport}]");
+
+            var commandClassVersionReport = await version.GetCommandClass(CommandClass.Meter);
+            Console.WriteLine($"CommandClassVersionReport report of Node {commandClassVersionReport.Node:D3} is [{commandClassVersionReport}]");
+
             var manufacturerSpecific = wallPlug.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
             Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");

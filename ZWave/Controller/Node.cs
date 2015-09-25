@@ -31,6 +31,7 @@ namespace ZWave.Controller
             _commandClasses.Add(new WakeUp(this));
             _commandClasses.Add(new Meter(this));
             _commandClasses.Add(new SwitchBinary(this));
+            _commandClasses.Add(new CommandClasses.Version(this));
         }
 
         protected ZWaveChannel Channel

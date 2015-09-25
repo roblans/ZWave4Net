@@ -16,6 +16,7 @@ namespace ZWave.Channel
         Battery = 0x80,
         WakeUp = 0x84,
         Association = 0x85,
+        Version = 0x86,
         SensorAlarm = 0x9C,
     }
 }
