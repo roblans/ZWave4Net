@@ -128,6 +128,8 @@ namespace ZWaveDriverSample
             Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
 
             var meter = wallPlug.GetCommandClass<Meter>();
+            var meterSupportedReport = await meter.GetSupported();
+            Console.WriteLine($"MeterSupportedReport report of Node {meterSupportedReport.Node:D3} is [{meterSupportedReport}]");
             var meterReport = await meter.Get();
             Console.WriteLine($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
 

@@ -31,12 +31,21 @@ namespace ZWave.Controller.CommandClasses
             return new MeterReport(Node, response);
         }
 
+        public async Task<MeterSupportedReport> GetSupported()
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport);
+            return new MeterSupportedReport(Node, response);
+        }
+
         protected internal override void HandleEvent(Command command)
         {
             base.HandleEvent(command);
 
-            var report = new MeterReport(Node, command.Payload);
-            OnChanged(new ReportEventArgs<MeterReport>(report));
+            if (command.CommandID == Convert.ToByte(Meter.command.Report))
+            {
+                var report = new MeterReport(Node, command.Payload);
+                OnChanged(new ReportEventArgs<MeterReport>(report));
+            }
         }
 
         protected virtual void OnChanged(ReportEventArgs<MeterReport> e)

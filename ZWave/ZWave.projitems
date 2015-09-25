@@ -33,6 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\SerialPort.uap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\ZWaveChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\BasicType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\MeterSupportedReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\VersionCommandClassReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\VersionReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\Version.cs" />

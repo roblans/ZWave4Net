@@ -20,7 +20,7 @@ namespace ZWave.Controller.CommandClasses
             Unit = GetUnit(Type, Scale);
         }
 
-        private static string GetUnit(MeterType type, byte scale)
+        public static string GetUnit(MeterType type, byte scale)
         {
             var electricityUnits = new[] { "kWh", "kVAh", "W", "pulses", "V", "A", "Power Factor", "" };
             var gasUnits = new[] { "cubic meters", "cubic feet", "", "pulses", "", "", "", "" };
