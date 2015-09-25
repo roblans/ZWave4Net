@@ -155,6 +155,9 @@ namespace ZWaveDriverSample
             await association.Add(2, 1);
             await association.Add(3, 1);
 
+            var supportedCommandClasses = await motionSensor.GetSupportedCommandClasses();
+            Console.WriteLine($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+
             var manufacturerSpecific = motionSensor.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
             Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
