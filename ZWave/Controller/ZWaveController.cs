@@ -8,23 +8,23 @@ using ZWave.Channel;
 
 namespace ZWave.Controller
 {
-    public class ZWaveContoller
+    public class ZWaveController
     {
         private Task<NodeCollection> _getNodes;
         public readonly ZWaveChannel Channel;
 
-        private ZWaveContoller(ZWaveChannel channel)
+        private ZWaveController(ZWaveChannel channel)
         {
             Channel = channel;
         }
 
-        public ZWaveContoller(ISerialPort port)
+        public ZWaveController(ISerialPort port)
             : this(new ZWaveChannel(port))
         {
         }
 
 #if NET || WINDOWS_UWP
-        public ZWaveContoller(string portName)
+        public ZWaveController(string portName)
             : this(new ZWaveChannel(portName))
         {
         }
@@ -84,7 +84,7 @@ namespace ZWave.Controller
                 {
                     if (bits[i])
                     {
-                        var node = new Node((byte)(i + 1), Channel);
+                        var node = new Node((byte)(i + 1), this);
                         nodes.Add(node);
                     }
                 }

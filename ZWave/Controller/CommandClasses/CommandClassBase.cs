@@ -18,7 +18,7 @@ namespace ZWave.Controller.CommandClasses
 
         protected ZWaveChannel Channel
         {
-            get { return Node.Channel; }
+            get { return Node.Contoller.Channel; }
         }
 
         internal protected virtual void HandleEvent(Command command)

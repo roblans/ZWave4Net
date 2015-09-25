@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ZWave.Controller;
 using ZWave.Controller.CommandClasses;
 using ZWave.Channel;
 
@@ -12,12 +13,12 @@ namespace ZWave.Controller
         private List<CommandClassBase> _commandClasses = new List<CommandClassBase>();
 
         public readonly byte NodeID;
-        public readonly ZWaveChannel Channel;
+        public readonly ZWaveController Contoller;
 
-        public Node(byte nodeID, ZWaveChannel channel)
+        public Node(byte nodeID, ZWaveController contoller)
         {
             NodeID = nodeID;
-            Channel = channel;
+            Contoller = contoller;
 
             _commandClasses.Add(new Basic(this));
             _commandClasses.Add(new ManufacturerSpecific(this));
@@ -29,6 +30,11 @@ namespace ZWave.Controller
             _commandClasses.Add(new SensorMultiLevel(this));
             _commandClasses.Add(new WakeUp(this));
             _commandClasses.Add(new Meter(this));
+        }
+
+        protected ZWaveChannel Channel
+        {
+            get { return Contoller.Channel; }
         }
 
         public T GetCommandClass<T>()  where T : ICommandClass
