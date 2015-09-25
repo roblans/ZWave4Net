@@ -21,9 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWave.portable-net45+win8",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{15C4E1D5-BC8A-4039-B9DC-6193CB10A752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWaveControllerSample", "Samples\net\ZWaveDriverSample\ZWaveControllerSample.csproj", "{0962D3F0-2EB6-4799-B81E-991606E9F19E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{AF4919C6-8D7B-48BE-BF56-373344956BE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWaveControllerSample", "Samples\net\ZWaveControllerSample\ZWaveControllerSample.csproj", "{0962D3F0-2EB6-4799-B81E-991606E9F19E}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
