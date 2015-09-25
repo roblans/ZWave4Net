@@ -30,6 +30,7 @@ namespace ZWave.Controller
             _commandClasses.Add(new SensorMultiLevel(this));
             _commandClasses.Add(new WakeUp(this));
             _commandClasses.Add(new Meter(this));
+            _commandClasses.Add(new SwitchBinary(this));
         }
 
         protected ZWaveChannel Channel

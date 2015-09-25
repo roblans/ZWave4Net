@@ -13,13 +13,11 @@ namespace ZWaveDriverSample
     {
         static void Main(string[] args)
         {
-            var seconds = PayloadConverter.GetBytes(7200);
-            var interval = PayloadConverter.ToUInt32(seconds);
 
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
             var controller = new ZWaveController(portName);
-            //driver.Channel.Log = Console.Out;
+            //controller.Channel.Log = Console.Out;
 
             controller.Open();
             try
@@ -96,6 +94,9 @@ namespace ZWaveDriverSample
 
             var wakeUp = node.GetCommandClass<WakeUp>();
             wakeUp.Notification += (_, e) => Console.WriteLine($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var switchBinary = node.GetCommandClass<SwitchBinary>();
+            switchBinary.Changed += (_, e) => Console.WriteLine($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
         }
 
         private static async Task RunWallplugTest(Node wallPlug)
@@ -122,6 +123,12 @@ namespace ZWaveDriverSample
             var meter = wallPlug.GetCommandClass<Meter>();
             var meterReport = await meter.Get();
             Console.WriteLine($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
+
+            var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
+            var switchBinaryReport = await switchBinary.Get();
+            Console.WriteLine($"SwitchBinaryReport report of Node {switchBinaryReport.Node:D3} is [{switchBinaryReport}]");
+
+            await switchBinary.Set((byte)(switchBinaryReport.Value == 0x00 ? 0xFF : 0x00));
 
             Console.ReadLine();
         }
