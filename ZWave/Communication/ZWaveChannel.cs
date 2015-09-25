@@ -29,7 +29,9 @@ namespace ZWave.Communication
 
         public ZWaveChannel(ISerialPort port)
         {
-            Port = port;
+            if ((Port = port) == null)
+                throw new ArgumentNullException(nameof(port));
+
             _semaphore = new SemaphoreSlim(1, 1);
             _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
             _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
@@ -45,7 +47,7 @@ namespace ZWave.Communication
 
         private void LogMessage(string message)
         {
-            if (Log != null)
+            if (Log != null && message != null)
             {
                 Log.WriteLine(message);
             }
@@ -53,6 +55,9 @@ namespace ZWave.Communication
 
         private async void ReadPort(ISerialPort port)
         {
+            if (port == null)
+                throw new ArgumentNullException(nameof(port));
+
             while (true)
             {
                 try
@@ -102,6 +107,11 @@ namespace ZWave.Communication
 
         private void ProcessQueue<T>(BlockingCollection<T> queue, Action<T> process) where T : Message
         {
+            if (queue == null)
+                throw new ArgumentNullException(nameof(queue));
+            if (process == null)
+                throw new ArgumentNullException(nameof(process));
+
             while (!queue.IsCompleted)
             {
                 var message = default(Message);
@@ -122,6 +132,9 @@ namespace ZWave.Communication
 
         private void OnNodeEventReceived(NodeEvent nodeEvent)
         {
+            if (nodeEvent == null)
+                throw new ArgumentNullException(nameof(nodeEvent));
+
             var handler = NodeEventReceived;
             if (handler != null)
             {
@@ -131,6 +144,9 @@ namespace ZWave.Communication
 
         private void OnTransmit(Message message)
         {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             message.Write(Port.OutputStream).ConfigureAwait(false);
             LogMessage($"Transmitted: {message}");
         }
@@ -156,6 +172,9 @@ namespace ZWave.Communication
 
         private async Task<Message> WaitForResponse(Func<Message, bool> predicate)
         {
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             while (true)
             {
                 var result = await Task.Run((Func<Message>)(() =>
@@ -203,6 +222,9 @@ namespace ZWave.Communication
 
         private async Task<Byte[]> Exchange(Func<Task<Byte[]>> func)
         {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+
             await _semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
@@ -247,6 +269,11 @@ namespace ZWave.Communication
 
         public Task Send(byte nodeID, Command command)
         {
+            if (nodeID == 0)
+                throw new ArgumentOutOfRangeException(nameof(nodeID), nodeID, "nodeID can not be 0");
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
             return Exchange(async () =>
             {
                 var request = new NodeCommand(nodeID, command);
@@ -263,6 +290,11 @@ namespace ZWave.Communication
 
         public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID)
         {
+            if (nodeID == 0)
+                throw new ArgumentOutOfRangeException(nameof(nodeID), nodeID, "nodeID can not be 0");
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
             return Exchange(async () =>
             {
                 var completionSource = new TaskCompletionSource<Command>();

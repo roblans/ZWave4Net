@@ -16,8 +16,11 @@ namespace ZWave.Communication.Protocol
         public NodeCommand(byte nodeID, Command command)
             : base(FrameHeader.SOF, MessageType.Request, Communication.Function.SendData)
         {
-            NodeID = nodeID;
-            Command = command;
+            if ((NodeID = nodeID) == 0)
+                throw new ArgumentOutOfRangeException(nameof(NodeID), nodeID, "NodeID can not be 0");
+            if ((Command = command) == null)
+                throw new ArgumentNullException(nameof(command));
+
             CallbackID = GetNextCallbackID();
         }
 
