@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZWave.Communication.Protocol
+namespace ZWave.Channel.Protocol
 {
     class Message : IEquatable<Message>
     {
@@ -106,18 +106,18 @@ namespace ZWave.Communication.Protocol
 
                 if (type == MessageType.Request)
                 {
-                    if (function == Communication.Function.ApplicationCommandHandler)
+                    if (function == Channel.Function.ApplicationCommandHandler)
                     {
                         return new NodeEvent(payload);
                     }
-                    if (function == Communication.Function.SendData)
+                    if (function == Channel.Function.SendData)
                     {
                         return new NodeCommandCompleted(payload);
                     }
                 }
                 if (type == MessageType.Response)
                 {
-                    if (function != Communication.Function.SendData)
+                    if (function != Channel.Function.SendData)
                     {
                         return new ControllerFunctionCompleted(function, payload);
                     }

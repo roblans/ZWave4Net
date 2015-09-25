@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using ZWave.Communication;
+using ZWave.Channel;
 
 namespace ZWave.Controller.CommandClasses
 {

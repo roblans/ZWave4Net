@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZWave.Communication
+namespace ZWave.Channel
 {
     public class CommunicationException : System.Exception
     {

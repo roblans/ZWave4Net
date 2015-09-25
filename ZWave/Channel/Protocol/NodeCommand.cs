@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZWave.Communication.Protocol
+namespace ZWave.Channel.Protocol
 {
     class NodeCommand : Message
     {
@@ -14,7 +14,7 @@ namespace ZWave.Communication.Protocol
         public readonly byte CallbackID;
 
         public NodeCommand(byte nodeID, Command command)
-            : base(FrameHeader.SOF, MessageType.Request, Communication.Function.SendData)
+            : base(FrameHeader.SOF, MessageType.Request, Channel.Function.SendData)
         {
             if ((NodeID = nodeID) == 0)
                 throw new ArgumentOutOfRangeException(nameof(NodeID), nodeID, "NodeID can not be 0");

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZWave.Controller;
 using ZWave.Controller.CommandClasses;
-using ZWave.Communication;
+using ZWave.Channel;
 
 namespace ZWaveDriverSample
 {

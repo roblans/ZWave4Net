@@ -4,7 +4,7 @@
 using Windows.Devices.SerialCommunication;
 #endif
 
-namespace ZWave.Communication
+namespace ZWave.Channel
 {
 #if WINDOWS_UWP
     public class SerialPort : ISerialPort

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ZWave.Controller.CommandClasses;
-using ZWave.Communication;
+using ZWave.Channel;
 
 namespace ZWave.Controller
 {

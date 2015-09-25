@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZWave.Communication
+namespace ZWave.Channel
 {
     public enum CommandClass : byte
     {

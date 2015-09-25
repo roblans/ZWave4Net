@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ZWave.Communication
+namespace ZWave.Channel
 {
     public interface ISerialPort
     {

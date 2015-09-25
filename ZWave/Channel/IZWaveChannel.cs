@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ZWave.Communication
+namespace ZWave.Channel
 {
     public interface IZWaveChannel
     {

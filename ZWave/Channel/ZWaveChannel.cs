@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ZWave.Communication.Protocol;
+using ZWave.Channel.Protocol;
 
-namespace ZWave.Communication
+namespace ZWave.Channel
 {
     public class ZWaveChannel : IZWaveChannel
     {

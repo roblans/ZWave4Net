@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZWave.Communication.Protocol
+namespace ZWave.Channel.Protocol
 {
     class NodeCommandCompleted : Message
     {
@@ -14,7 +14,7 @@ namespace ZWave.Communication.Protocol
         public readonly byte UnknownByte2;
 
         public NodeCommandCompleted(byte[] payload) : 
-            base(FrameHeader.SOF, MessageType.Request, Communication.Function.SendData)
+            base(FrameHeader.SOF, MessageType.Request, Channel.Function.SendData)
         {
             CallbackID = payload[0];
             TransmissionState = (TransmissionState)payload[1];

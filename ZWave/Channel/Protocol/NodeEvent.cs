@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZWave.Communication.Protocol
+namespace ZWave.Channel.Protocol
 {
     class NodeEvent : Message
     {
@@ -13,7 +13,7 @@ namespace ZWave.Communication.Protocol
         public readonly Command Command;
 
         public NodeEvent(byte[] payload)
-            : base(FrameHeader.SOF, MessageType.Response, Communication.Function.ApplicationCommandHandler)
+            : base(FrameHeader.SOF, MessageType.Response, Channel.Function.ApplicationCommandHandler)
         {
             ReceiveStatus = (ReceiveStatus)payload[0];
             NodeID = payload[1];
