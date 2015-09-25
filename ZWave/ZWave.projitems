@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Communication\ISerialPort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\IZWaveChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\NodeEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Communication\PayloadConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\Protocol\ControllerFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\Protocol\ControllerFunctionCompleted.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Communication\Protocol\Exceptions.cs" />
@@ -67,6 +66,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controller\Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\NodeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\NodeProtocolInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controller\PayloadConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\ZWaveController.cs" />
   </ItemGroup>

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZWave.Communication
+namespace ZWave.Controller
 {
     public static class PayloadConverter
     {
@@ -42,7 +42,7 @@ namespace ZWave.Communication
             return BitConverter.GetBytes(value).Reverse().ToArray();
         }
 
-        public static float ParseSensorValue(byte[] payload, out byte scale)
+        public static float ToSensorValue(byte[] payload, out byte scale)
         {
             // http://www.google.nl/url?q=http://www.cooperindustries.com/content/dam/public/wiringdevices/products/documents/technical_specifications/aspirerf_adtechguide_100713.pdf&sa=U&ved=0CBwQFjAAOApqFQoTCN-G7K7djcgCFeZr2wod5eILEA&usg=AFQjCNGzaMFiMosWoKLG-Wvo1A2p5QDbTw
             // http://www.google.nl/url?q=http://svn.linuxmce.org/trac/browser/trunk/src/ZWave/ZWApi.cpp%3Frev%3D27702&sa=U&ved=0CCYQFjAEOBRqFQoTCKboxvHkjcgCFYkH2wodxRoB0w&usg=AFQjCNFg3uMoEuAIX6R61kDS-5Q9C-F-GA

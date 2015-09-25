@@ -16,7 +16,7 @@ namespace ZWave.Controller.CommandClasses
         internal MeterReport(Node node, byte[] payload) : base(node)
         {
             Type = (MeterType)(payload[0]);
-            Value = PayloadConverter.ParseSensorValue(payload.Skip(1).ToArray(), out Scale);
+            Value = PayloadConverter.ToSensorValue(payload.Skip(1).ToArray(), out Scale);
             Unit = GetUnit(Type, Scale);
         }
 
