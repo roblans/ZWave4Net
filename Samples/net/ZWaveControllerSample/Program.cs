@@ -13,7 +13,6 @@ namespace ZWaveDriverSample
     {
         static void Main(string[] args)
         {
-
             var portName = System.IO.Ports.SerialPort.GetPortNames().First();
 
             var controller = new ZWaveController(portName);
@@ -136,6 +135,10 @@ namespace ZWaveDriverSample
             var meterReport = await meter.Get();
             Console.WriteLine($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
 
+            var configuration = wallPlug.GetCommandClass<Configuration>();
+            var configurationReport = await configuration.Get(47);
+            Console.WriteLine($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
+                
             var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
             var switchBinaryReport = await switchBinary.Get();
             Console.WriteLine($"SwitchBinaryReport report of Node {switchBinaryReport.Node:D3} is [{switchBinaryReport}]");
@@ -173,6 +176,10 @@ namespace ZWaveDriverSample
             var wakeUp = motionSensor.GetCommandClass<WakeUp>();
             var wakeUpReport = await wakeUp.GetInterval();
             Console.WriteLine($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+
+            var configuration = motionSensor.GetCommandClass<Configuration>();
+            var configurationReport = await configuration.Get(9);
+            Console.WriteLine($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
 
             Console.ReadLine();
         }

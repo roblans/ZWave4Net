@@ -11,6 +11,7 @@ namespace ZWave.Channel
         SensorBinary = 0x30,
         SensorMultiLevel = 0x31,
         Meter = 0x32,
+        Configuration = 0x70,
         Alarm = 0x71,
         ManufacturerSpecific = 0x72,
         Battery = 0x80,

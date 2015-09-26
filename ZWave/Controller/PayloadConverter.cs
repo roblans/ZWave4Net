@@ -42,6 +42,21 @@ namespace ZWave.Controller
             return BitConverter.GetBytes(value).Reverse().ToArray();
         }
 
+        public static byte[] GetBytes(short value)
+        {
+            return BitConverter.GetBytes(value).Reverse().ToArray();
+        }
+
+        public static byte[] GetBytes(int value)
+        {
+            return BitConverter.GetBytes(value).Reverse().ToArray();
+        }
+
+        public static byte[] GetBytes(long value)
+        {
+            return BitConverter.GetBytes(value).Reverse().ToArray();
+        }
+
         public static float ToSensorValue(byte[] payload, out byte scale)
         {
             // http://www.google.nl/url?q=http://www.cooperindustries.com/content/dam/public/wiringdevices/products/documents/technical_specifications/aspirerf_adtechguide_100713.pdf&sa=U&ved=0CBwQFjAAOApqFQoTCN-G7K7djcgCFeZr2wod5eILEA&usg=AFQjCNGzaMFiMosWoKLG-Wvo1A2p5QDbTw
