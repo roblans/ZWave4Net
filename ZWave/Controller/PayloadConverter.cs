@@ -67,11 +67,31 @@ namespace ZWave.Controller
             scale = (byte)((payload[0] & 0x18) >> 3);
             var size = (byte)(payload[0] & 0x07);
 
-            var values = payload.Skip(1).ToArray();
-            var bytes = Enumerable.Repeat((byte)((values[0] & 0x80) == 0x80 ? 0xFF : 0x00), sizeof(ulong) - size).Concat(values).ToArray();
-            var value = ToInt64(bytes, 0);
+            switch (size)
+            {
+                case sizeof(sbyte):
+                {
+                    var value = (sbyte)payload[1];
+                    return (float)(value / Math.Pow(10, precision));
+                }
+                case sizeof(short):
+                {
+                    var value = ToInt16(payload, 1);
+                    return (float)(value / Math.Pow(10, precision));
+                }
+                case sizeof(int):
+                {
+                    var value = ToInt32(payload, 1);
+                    return (float)(value / Math.Pow(10, precision));
+                }
+                case sizeof(long):
+                {
+                    var value = ToInt64(payload, 1);
+                    return (float)(value / Math.Pow(10, precision));
+                }
+            }
 
-            return (float)(value / Math.Pow(10, precision));
+            return 0;
         }
     }
 }
