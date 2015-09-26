@@ -13,12 +13,15 @@ Supported Z-Wave command classes:
 - SwitchBinary
 - SensorBinary
 - SensorMultiLevel
+- Meter
+- Configuration
 - Alarm
 - ManufacturerSpecific
 - Battery
 - WakeUp
 - Association
+- Version
 - SensorAlarm
-- Meter
+
 
 
