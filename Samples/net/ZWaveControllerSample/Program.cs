@@ -192,9 +192,9 @@ namespace ZWaveDriverSample
             LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
 
             var configuration = motionSensor.GetCommandClass<Configuration>();
-            var configurationReport = await configuration.Get(9);
+            var configurationReport = await configuration.Get(64);
             LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
-
+            await configuration.Set(64, (long)TimeSpan.FromMinutes(1).TotalSeconds);
             Console.ReadLine();
         }
     }

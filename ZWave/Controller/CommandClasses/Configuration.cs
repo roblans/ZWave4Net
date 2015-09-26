@@ -48,10 +48,22 @@ namespace ZWave.Controller.CommandClasses
             var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report);
             var size = response[1];
 
-            // adjust payload to correct size
-            var values = PayloadConverter.GetBytes(value);
-            values = values.Skip(values.Length - size).Take(size).ToArray();
-
+            var values = default(byte[]);
+            switch(size)
+            {
+                case sizeof(sbyte):
+                    values = PayloadConverter.GetBytes((sbyte)value);
+                    break;
+                case sizeof(short):
+                    values = PayloadConverter.GetBytes((short)value);
+                    break;
+                case sizeof(int):
+                    values = PayloadConverter.GetBytes((int)value);
+                    break;
+                case sizeof(long):
+                    values = PayloadConverter.GetBytes((long)value);
+                    break;
+            }
             await Channel.Send(Node, new Command(Class, command.Set, new[] { parameter, (byte)values.Length }.Concat(values).ToArray()));
         }
     }
