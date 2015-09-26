@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ZWave.Controller;
 using ZWave.Controller.CommandClasses;
 using ZWave.Channel;
+using System.IO;
 
 namespace ZWaveDriverSample
 {
@@ -27,12 +28,12 @@ namespace ZWaveDriverSample
             {
                 foreach (var inner in ex.InnerExceptions)
                 {
-                    Console.WriteLine($"{inner.Message}");
+                    LogMessage($"{inner.Message}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{ex.Message}");
+                LogMessage($"{ex.Message}");
             }
             finally
             {
@@ -41,22 +42,35 @@ namespace ZWaveDriverSample
             }
         }
 
+        private static void LogMessage(string message)
+        {
+            var text = $"{DateTime.Now.TimeOfDay} {message}";
+
+            Console.WriteLine(text);
+            lock(typeof(File))
+            {
+                if (Directory.Exists(@"D:\Temp"))
+                {
+                    File.AppendAllText(@"D:\Temp\ZWave.log", text + Environment.NewLine);
+                }
+            }
+        }
+
         static private async Task Run(ZWaveController controller)
         {
-            Console.WriteLine($"Version: {await controller.GetVersion()}");
-            Console.WriteLine($"HomeID: {await controller.GetHomeID():X}");
+            LogMessage($"Version: {await controller.GetVersion()}");
+            LogMessage($"HomeID: {await controller.GetHomeID():X}");
 
             var controllerID = await controller.GetContollerID();
-            Console.WriteLine($"ControllerID: {controllerID:D3}");
+            LogMessage($"ControllerID: {controllerID:D3}");
 
-            Console.WriteLine();
             var nodes = await controller.GetNodes();
             foreach (var node in nodes)
             {
                 var protocolInfo = await node.GetNodeProtocolInfo();
 
                 // dump node
-                Console.WriteLine($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
+                LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
 
                 // subcribe to changes
                 Subscribe(node);
@@ -74,28 +88,28 @@ namespace ZWaveDriverSample
         private static void Subscribe(Node node)
         {
             var basic = node.GetCommandClass<Basic>();
-            basic.Changed += (_, e) => Console.WriteLine($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            basic.Changed += (_, e) => LogMessage($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var sensorMultiLevel = node.GetCommandClass<SensorMultiLevel>();
-            sensorMultiLevel.Changed += (_, e) => Console.WriteLine($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            sensorMultiLevel.Changed += (_, e) => LogMessage($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var meter = node.GetCommandClass<Meter>();
-            meter.Changed += (_, e) => Console.WriteLine($"Meter report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            meter.Changed += (_, e) => LogMessage($"Meter report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var alarm = node.GetCommandClass<Alarm>();
-            alarm.Changed += (_, e) => Console.WriteLine($"Alarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            alarm.Changed += (_, e) => LogMessage($"Alarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var sensorBinary = node.GetCommandClass<SensorBinary>();
-            sensorBinary.Changed += (_, e) => Console.WriteLine($"SensorBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            sensorBinary.Changed += (_, e) => LogMessage($"SensorBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var sensorAlarm = node.GetCommandClass<SensorAlarm>();
-            sensorAlarm.Changed += (_, e) => Console.WriteLine($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            sensorAlarm.Changed += (_, e) => LogMessage($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var wakeUp = node.GetCommandClass<WakeUp>();
-            wakeUp.Notification += (_, e) => Console.WriteLine($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            wakeUp.Notification += (_, e) => LogMessage($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var switchBinary = node.GetCommandClass<SwitchBinary>();
-            switchBinary.Changed += (_, e) => Console.WriteLine($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
         }
 
         private static async Task RunWallplugTest(Node wallPlug)
@@ -108,40 +122,40 @@ namespace ZWaveDriverSample
             await association.Add(3, 1);
 
             var supportedCommandClasses = await wallPlug.GetSupportedCommandClasses();
-            Console.WriteLine($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
 
             var basic = wallPlug.GetCommandClass<Basic>();
             var basicReport = await basic.Get();
-            Console.WriteLine($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
+            LogMessage($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
             var version = wallPlug.GetCommandClass<ZWave.Controller.CommandClasses.Version>();
             var versionReport = await version.Get();
-            Console.WriteLine($"VersionReport report of Node {versionReport.Node:D3} is [{versionReport}]");
+            LogMessage($"VersionReport report of Node {versionReport.Node:D3} is [{versionReport}]");
 
             var commandClassVersionReport = await version.GetCommandClass(CommandClass.Meter);
-            Console.WriteLine($"CommandClassVersionReport report of Node {commandClassVersionReport.Node:D3} is [{commandClassVersionReport}]");
+            LogMessage($"CommandClassVersionReport report of Node {commandClassVersionReport.Node:D3} is [{commandClassVersionReport}]");
 
             var manufacturerSpecific = wallPlug.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
-            Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+            LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
             var sensorMultiLevel = wallPlug.GetCommandClass<SensorMultiLevel>();
             var sensorMultiLevelReport = await sensorMultiLevel.Get();
-            Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
+            LogMessage($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
 
             var meter = wallPlug.GetCommandClass<Meter>();
             var meterSupportedReport = await meter.GetSupported();
-            Console.WriteLine($"MeterSupportedReport report of Node {meterSupportedReport.Node:D3} is [{meterSupportedReport}]");
+            LogMessage($"MeterSupportedReport report of Node {meterSupportedReport.Node:D3} is [{meterSupportedReport}]");
             var meterReport = await meter.Get();
-            Console.WriteLine($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
+            LogMessage($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
 
             var configuration = wallPlug.GetCommandClass<Configuration>();
             var configurationReport = await configuration.Get(47);
-            Console.WriteLine($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
+            LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
                 
             var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
             var switchBinaryReport = await switchBinary.Get();
-            Console.WriteLine($"SwitchBinaryReport report of Node {switchBinaryReport.Node:D3} is [{switchBinaryReport}]");
+            LogMessage($"SwitchBinaryReport report of Node {switchBinaryReport.Node:D3} is [{switchBinaryReport}]");
 
             await switchBinary.Set((byte)(switchBinaryReport.Value == 0x00 ? 0xFF : 0x00));
 
@@ -150,7 +164,7 @@ namespace ZWaveDriverSample
 
         private static async Task RunMotionSensorTest(Node motionSensor)
         {
-            Console.WriteLine("Please wakeup the motion sensor.");
+            LogMessage("Please wakeup the motion sensor.");
             Console.ReadLine();
 
             var association = motionSensor.GetCommandClass<Association>();
@@ -159,27 +173,27 @@ namespace ZWaveDriverSample
             await association.Add(3, 1);
 
             var supportedCommandClasses = await motionSensor.GetSupportedCommandClasses();
-            Console.WriteLine($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
 
             var manufacturerSpecific = motionSensor.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
-            Console.WriteLine($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+            LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
             var battery = motionSensor.GetCommandClass<Battery>();
             var batteryReport = await battery.Get();
-            Console.WriteLine($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
+            LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
             var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
             var sensorMultiLevelReport = await sensorMultiLevel.Get();
-            Console.WriteLine($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
+            LogMessage($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
 
             var wakeUp = motionSensor.GetCommandClass<WakeUp>();
             var wakeUpReport = await wakeUp.GetInterval();
-            Console.WriteLine($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+            LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
 
             var configuration = motionSensor.GetCommandClass<Configuration>();
             var configurationReport = await configuration.Get(9);
-            Console.WriteLine($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
+            LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
 
             Console.ReadLine();
         }

@@ -51,7 +51,11 @@ namespace ZWave.Controller
             var reports = new List<VersionCommandClassReport>();
             foreach(var commandClass in Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
             {
-                reports.Add(await version.GetCommandClass(commandClass));
+                var report = await version.GetCommandClass(commandClass);
+                if (report.Version == 0)
+                    continue;
+
+                reports.Add(report);
             }
             return reports.ToArray();
         }
