@@ -22,6 +22,34 @@ Supported Z-Wave command classes:
 - Association
 - Version
 - SensorAlarm
+ 
+Sample code 
 
+        public async Task TurnWallPlugOn()
+        {
+            // the nodeID of the wallplug
+            byte wallPlugNodeID = 3;
+
+            // create the controller
+            var controller = new ZWaveController("COM1");
+            
+            // open the controller
+            controller.Open();
+
+            // get the included nodes
+            var nodes = await controller.GetNodes();
+            
+            // get the wallplug
+            var wallPlug = nodes[wallPlugNodeID];
+            
+            // get the SwitchBinary commandclass
+            var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
+
+            // turn wallplug on
+            await switchBinary.Set(0xFF);
+
+            // close the controller
+            controller.Close();
+        }
 
 
