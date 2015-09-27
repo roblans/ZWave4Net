@@ -44,8 +44,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\MeterType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\SwitchBinaryReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\SwitchBinary.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\WakeUpNotificationReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\WakeUpReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\WakeUpIntervalReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\WakeUp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\SensorAlarm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controller\CommandClasses\SensorAlarmReport.cs" />

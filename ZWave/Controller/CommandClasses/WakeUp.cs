@@ -8,7 +8,7 @@ namespace ZWave.Controller.CommandClasses
 {
     public class WakeUp : CommandClassBase
     {
-        public event EventHandler<ReportEventArgs<WakeUpNotificationReport>> Notification;
+        public event EventHandler<ReportEventArgs<WakeUpReport>> Changed;
 
         enum command
         {
@@ -23,10 +23,10 @@ namespace ZWave.Controller.CommandClasses
         {
         }
 
-        public async Task<WakeUpReport> GetInterval()
+        public async Task<WakeUpIntervalReport> GetInterval()
         {
             var response = await Channel.Send(Node, new Command(Class, command.IntervalGet), command.IntervalReport);
-            return new WakeUpReport(Node, response);
+            return new WakeUpIntervalReport(Node, response);
         }
 
         public async Task SetInterval(TimeSpan interval, byte targetNodeID)
@@ -46,15 +46,15 @@ namespace ZWave.Controller.CommandClasses
 
             if (command.CommandID == Convert.ToByte(WakeUp.command.Notification))
             {
-                var report = new WakeUpNotificationReport(Node);
-                OnNotification(new ReportEventArgs<WakeUpNotificationReport>(report));
+                var report = new WakeUpReport(Node);
+                OnChanged(new ReportEventArgs<WakeUpReport>(report));
                 return;
             }
         }
 
-        protected virtual void OnNotification(ReportEventArgs<WakeUpNotificationReport> e)
+        protected virtual void OnChanged(ReportEventArgs<WakeUpReport> e)
         {
-            var handler = Notification;
+            var handler = Changed;
             if (handler != null)
             {
                 handler(this, e);

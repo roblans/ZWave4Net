@@ -106,7 +106,7 @@ namespace ZWaveDriverSample
             sensorAlarm.Changed += (_, e) => LogMessage($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var wakeUp = node.GetCommandClass<WakeUp>();
-            wakeUp.Notification += (_, e) => LogMessage($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            wakeUp.Changed += (_, e) => LogMessage($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var switchBinary = node.GetCommandClass<SwitchBinary>();
             switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
