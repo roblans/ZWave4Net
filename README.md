@@ -23,7 +23,7 @@ Supported Z-Wave command classes:
 - Version
 - SensorAlarm
  
-Sample code 
+FIBARO Wall Plug sample:
 
         public async Task TurnWallPlugOn()
         {
