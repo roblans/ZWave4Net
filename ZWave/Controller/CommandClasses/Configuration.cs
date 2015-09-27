@@ -52,7 +52,7 @@ namespace ZWave.Controller.CommandClasses
             switch(size)
             {
                 case sizeof(sbyte):
-                    values = PayloadConverter.GetBytes((sbyte)value);
+                    values = new[] { (byte)value };
                     break;
                 case sizeof(short):
                     values = PayloadConverter.GetBytes((short)value);

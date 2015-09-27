@@ -152,7 +152,8 @@ namespace ZWaveDriverSample
             var configuration = wallPlug.GetCommandClass<Configuration>();
             var configurationReport = await configuration.Get(47);
             LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
-                
+            await configuration.Set(61, 4);
+
             var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
             var switchBinaryReport = await switchBinary.Get();
             LogMessage($"SwitchBinaryReport report of Node {switchBinaryReport.Node:D3} is [{switchBinaryReport}]");
