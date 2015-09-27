@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZWave.Controller;
-using ZWave.Controller.CommandClasses;
-using ZWave.Channel;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using ZWave;
+using ZWave.CommandClasses;
 
 namespace ZWaveDriverSample
 {
@@ -128,11 +125,11 @@ namespace ZWaveDriverSample
             var basicReport = await basic.Get();
             LogMessage($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
 
-            var version = wallPlug.GetCommandClass<ZWave.Controller.CommandClasses.Version>();
+            var version = wallPlug.GetCommandClass<ZWave.CommandClasses.Version>();
             var versionReport = await version.Get();
             LogMessage($"VersionReport report of Node {versionReport.Node:D3} is [{versionReport}]");
 
-            var commandClassVersionReport = await version.GetCommandClass(CommandClass.Meter);
+            var commandClassVersionReport = await version.GetCommandClass(ZWave.Channel.CommandClass.Meter);
             LogMessage($"CommandClassVersionReport report of Node {commandClassVersionReport.Node:D3} is [{commandClassVersionReport}]");
 
             var manufacturerSpecific = wallPlug.GetCommandClass<ManufacturerSpecific>();
