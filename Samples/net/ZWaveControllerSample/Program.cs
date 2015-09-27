@@ -150,7 +150,7 @@ namespace ZWaveDriverSample
             LogMessage($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
 
             var configuration = wallPlug.GetCommandClass<Configuration>();
-            var configurationReport = await configuration.Get(47);
+            var configurationReport = await configuration.Get(61);
             LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
             await configuration.Set(61, 4);
 

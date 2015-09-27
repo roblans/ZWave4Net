@@ -14,21 +14,10 @@ namespace ZWave.Controller.CommandClasses
 
         internal AlarmReport(Node node, byte[] payload) : base(node)
         {
-            if (payload.Length < 4)
-            {
-                // V1
-                Type = (AlarmType)payload[0];
-                Level = payload[1];
-                Unknown = payload[2];
-            }
-            else
-            {
-                // V2
-                Level = payload[3];
-                Type = (AlarmType)payload[4];
-                Detail = (AlarmDetailType)payload[5];
-                Unknown = payload[6];
-            }
+            Type = (AlarmType)payload[0];
+            Level = payload[1];
+            Unknown = payload[2];
+            Detail = (AlarmDetailType)payload[5];
         }
 
         public override string ToString()
