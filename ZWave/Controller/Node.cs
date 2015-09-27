@@ -13,12 +13,12 @@ namespace ZWave.Controller
         private List<CommandClassBase> _commandClasses = new List<CommandClassBase>();
 
         public readonly byte NodeID;
-        public readonly ZWaveController Contoller;
+        public readonly ZWaveController Controller;
 
         public Node(byte nodeID, ZWaveController contoller)
         {
             NodeID = nodeID;
-            Contoller = contoller;
+            Controller = contoller;
 
             _commandClasses.Add(new Basic(this));
             _commandClasses.Add(new ManufacturerSpecific(this));
@@ -37,7 +37,7 @@ namespace ZWave.Controller
 
         protected ZWaveChannel Channel
         {
-            get { return Contoller.Channel; }
+            get { return Controller.Channel; }
         }
 
         public T GetCommandClass<T>()  where T : ICommandClass
