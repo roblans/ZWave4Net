@@ -25,6 +25,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWaveControllerSample", "Samples\net\ZWaveControllerSample\ZWaveControllerSample.csproj", "{0962D3F0-2EB6-4799-B81E-991606E9F19E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{80711F84-25FF-49FF-BDFA-A8F4E78F9C15}"
+	ProjectSection(SolutionItems) = preProject
+		Build\SetAssemblyVersion.ps1 = Build\SetAssemblyVersion.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		ZWave\ZWave.projitems*{96b37a40-4227-4063-8008-06bb65862806}*SharedItemsImports = 4
