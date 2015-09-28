@@ -1,54 +1,33 @@
-
 Param(
-    [string]$path=$pwd
+  [string]$pathToSearch = $env:TF_BUILD_SOURCESDIRECTORY,
+  [string]$buildNumber = $env:TF_BUILD_BUILDNUMBER,
+  [string]$searchFilter = "AssemblyInfo.*",
+  [regex]$pattern = "\d+\.\d+\.\d+\.\d+"
 )
-
-function Help {
-    "Sets the AssemblyVersion and AssemblyFileVersion of AssemblyInfo.cs files`n"
-    ".\SetAssemblyVersion.ps1 [VersionNumber] -path [SearchPath]`n"
-    "   [VersionNumber]     The version number to set, for example: 1.1.9301.0"
-    "   [SearchPath]        The path to search for AssemblyInfo files.`n"
-}
-function Update-SourceVersion
+ 
+try
 {
-    Param ([string]$Version)
-    $NewVersion = 'AssemblyVersion("' + $Version + '")';
-    $NewFileVersion = 'AssemblyFileVersion("' + $Version + '")';
-
-    foreach ($o in $input) 
-    {
-        Write-Host "Updating  '$($o.FullName)' -> $Version"
-    
-        $assemblyVersionPattern = 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-        $fileVersionPattern = 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)'
-        $assemblyVersion = 'AssemblyVersion("' + $version + '")';
-        $fileVersion = 'AssemblyFileVersion("' + $version + '")';
-        
-        (Get-Content $o.FullName) | ForEach-Object  { 
-           % {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
-           % {$_ -replace $fileVersionPattern, $fileVersion }
-        } | Out-File $o.FullName -encoding UTF8 -force
+    if ($buildNumber -match $pattern -ne $true) {
+        Write-Host "Could not extract a version from [$buildNumber] using pattern [$pattern]"
+        exit 1
+    } else {
+        $extractedBuildNumber = $Matches[0]
+        Write-Host "Using version $extractedBuildNumber"
+ 
+        gci -Path $pathToSearch -Filter $searchFilter -Recurse | %{
+            Write-Host "  -> Changing $($_.FullName)"
+         
+            # remove the read-only bit on the file
+            sp $_.FullName IsReadOnly $false
+ 
+            # run the regex replace
+            (gc $_.FullName) | % { $_ -replace $pattern, $extractedBuildNumber } | sc $_.FullName
+        }
+ 
+        Write-Host "Done!"
     }
 }
-function Update-AllAssemblyInfoFiles ( $version )
-{
-    Write-Host "Searching '$path'"
-   foreach ($file in "AssemblyInfo.cs", "AssemblyInfo.vb" ) 
-   {
-        get-childitem $path -recurse |? {$_.Name -eq $file} | Update-SourceVersion $version ;
-   }
+catch {
+    Write-Host $_
+    exit 1
 }
-
-# validate arguments 
-if ($args -ne $null) {
-    $version = $args[0]
-    if (($version -eq '/?') -or ($version -notmatch "[0-9]+(\.([0-9]+|\*)){1,3}")) {
-        Help
-        exit 1;
-    }
-} else {
-    Help
-    exit 1;
-}
-
-Update-AllAssemblyInfoFiles $version

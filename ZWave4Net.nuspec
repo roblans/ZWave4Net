@@ -10,5 +10,6 @@
   </metadata>
   <files>
     <file src="ZWave.net45\bin\NuGet\ZWave.dll" target="lib\net45" />
+    <file src="ZWave.portable-net45+win8\bin\NuGet\ZWave.dll" target="lib\portable-net45+win8" />
   </files>
 </package>
