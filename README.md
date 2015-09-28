@@ -7,6 +7,8 @@ Supported Targets:
 - Universal Windows: uap10.0
 - Portable Class Library: net45 + win8
 
+NuGet package: https://www.nuget.org/packages/ZWave4Net/
+
 Supported Z-Wave command classes:
 
 - Basic
