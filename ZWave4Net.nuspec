@@ -4,6 +4,7 @@
     <id>ZWave4Net</id>
     <title>ZWave4Net</title>
     <description>ZWave4Net</description>
+    <version>1.0.0.0</version>
     <authors>Rob Lans</authors>
     <copyright></copyright> 
   </metadata>
