@@ -1,6 +1,6 @@
 Param(
-  [string]$pathToSearch = $env:TF_BUILD_SOURCESDIRECTORY,
-  [string]$buildNumber = $env:TF_BUILD_BUILDNUMBER,
+  [string]$pathToSearch = $env:BUILD_SOURCESDIRECTORY,
+  [string]$buildNumber = $env:BUILD_BUILDNUMBER,
   [string]$searchFilter = "AssemblyInfo.*",
   [regex]$pattern = "\d+\.\d+\.\d+\.\d+"
 )
