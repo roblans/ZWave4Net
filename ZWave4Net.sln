@@ -28,7 +28,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{80711F84-25FF-49FF-BDFA-A8F4E78F9C15}"
 	ProjectSection(SolutionItems) = preProject
 		Build\SetAssemblyVersion.ps1 = Build\SetAssemblyVersion.ps1
-		Build\ZWave4Net.nuspec = Build\ZWave4Net.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9ABD590B-95E9-4945-9594-9A5F178AF307}"
+	ProjectSection(SolutionItems) = preProject
+		ZWave4Net.nuspec = ZWave4Net.nuspec
 	EndProjectSection
 EndProject
 Global
