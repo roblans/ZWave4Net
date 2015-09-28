@@ -9,52 +9,122 @@ namespace ZWave
     {
         public static ushort ToUInt16(byte[] value, int startIndex = 0)
         {
-            return BitConverter.ToUInt16(value.Skip(startIndex).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.ToUInt16(value.Skip(startIndex).Take(sizeof(UInt16)).Reverse().ToArray(), 0);
+            }
+            else
+            {
+                return BitConverter.ToUInt16(value, startIndex);
+            }
         }
 
         public static short ToInt16(byte[] value, int startIndex = 0)
         {
-            return BitConverter.ToInt16(value.Skip(startIndex).Take(sizeof(Int16)).Reverse().ToArray(), 0);
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.ToInt16(value.Skip(startIndex).Take(sizeof(Int16)).Reverse().ToArray(), 0);
+            }
+            else
+            {
+                return BitConverter.ToInt16(value, startIndex);
+            }
         }
 
         public static uint ToUInt32(byte[] value, int startIndex = 0)
         {
-            return BitConverter.ToUInt32(value.Skip(startIndex).Take(sizeof(UInt32)).Reverse().ToArray(), 0);
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.ToUInt32(value.Skip(startIndex).Take(sizeof(UInt32)).Reverse().ToArray(), 0);
+            }
+            else
+            {
+                return BitConverter.ToUInt32(value, startIndex);
+            }
         }
 
         public static int ToInt32(byte[] value, int startIndex = 0)
         {
-            return BitConverter.ToInt32(value.Skip(startIndex).Take(sizeof(Int32)).Reverse().ToArray(), 0);
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.ToInt32(value.Skip(startIndex).Take(sizeof(Int32)).Reverse().ToArray(), 0);
+            }
+            else
+            {
+                return BitConverter.ToInt32(value, startIndex);
+            }
         }
 
         public static ulong ToUInt64(byte[] value, int startIndex = 0)
         {
-            return BitConverter.ToUInt64(value.Skip(startIndex).Take(sizeof(UInt64)).Reverse().ToArray(), 0);
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.ToUInt64(value.Skip(startIndex).Take(sizeof(UInt64)).Reverse().ToArray(), 0);
+            }
+            else
+            {
+                return BitConverter.ToUInt64(value, startIndex);
+            }
         }
 
         public static long ToInt64(byte[] value, int startIndex = 0)
         {
-            return BitConverter.ToInt64(value.Skip(startIndex).Take(sizeof(Int64)).Reverse().ToArray(), 0);
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.ToInt64(value.Skip(startIndex).Take(sizeof(Int64)).Reverse().ToArray(), 0);
+            }
+            else
+            {
+                return BitConverter.ToInt64(value, startIndex);
+            }
         }
 
         public static byte[] GetBytes(uint value)
         {
-            return BitConverter.GetBytes(value).Reverse().ToArray();
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.GetBytes(value).Reverse().ToArray();
+            }
+            else
+            {
+                return BitConverter.GetBytes(value);
+            }
         }
 
         public static byte[] GetBytes(short value)
         {
-            return BitConverter.GetBytes(value).Reverse().ToArray();
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.GetBytes(value).Reverse().ToArray();
+            }
+            else
+            {
+                return BitConverter.GetBytes(value);
+            }
         }
 
         public static byte[] GetBytes(int value)
         {
-            return BitConverter.GetBytes(value).Reverse().ToArray();
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.GetBytes(value).Reverse().ToArray();
+            }
+            else
+            {
+                return BitConverter.GetBytes(value);
+            }
         }
 
         public static byte[] GetBytes(long value)
         {
-            return BitConverter.GetBytes(value).Reverse().ToArray();
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.GetBytes(value).Reverse().ToArray();
+            }
+            else
+            {
+                return BitConverter.GetBytes(value);
+            }
         }
 
         public static float ToSensorValue(byte[] payload, out byte scale)
