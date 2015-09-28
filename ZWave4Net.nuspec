@@ -3,10 +3,11 @@
   <metadata>
     <id>ZWave4Net</id>
     <title>ZWave4Net</title>
-    <description>ZWave4Net</description>
+    <description>ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick</description>
     <version>1.0.0.0</version>
     <authors>Rob Lans</authors>
-    <copyright></copyright> 
+    <copyright>© 2015 Rob Lans</copyright>
+    <projectUrl>https://github.com/roblans/ZWave4Net</projectUrl>
   </metadata>
   <files>
     <file src="ZWave.net45\bin\NuGet\ZWave.dll" target="lib\net45" />
