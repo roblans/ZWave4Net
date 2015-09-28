@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ZWave.net45")]
-[assembly: AssemblyCopyright("Copyright © 2015")]
+[assembly: AssemblyCopyright("© 2015 Rob Lans")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
