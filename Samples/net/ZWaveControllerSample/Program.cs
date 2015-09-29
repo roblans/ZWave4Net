@@ -155,7 +155,7 @@ namespace ZWaveDriverSample
             var switchBinaryReport = await switchBinary.Get();
             LogMessage($"SwitchBinaryReport report of Node {switchBinaryReport.Node:D3} is [{switchBinaryReport}]");
 
-            await switchBinary.Set((byte)(switchBinaryReport.Value == 0x00 ? 0xFF : 0x00));
+            await switchBinary.Set(!switchBinaryReport.Value);
 
             Console.ReadLine();
         }

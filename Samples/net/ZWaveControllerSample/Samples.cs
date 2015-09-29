@@ -31,7 +31,7 @@ namespace ZWaveDriverSample
             var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
 
             // turn wallplug on
-            await switchBinary.Set(0xFF);
+            await switchBinary.Set(true);
 
             // close the controller
             controller.Close();

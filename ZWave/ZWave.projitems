@@ -70,6 +70,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpIntervalReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\WallPlug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\ShockSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeCollection.cs" />

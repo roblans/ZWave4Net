@@ -8,11 +8,11 @@ namespace ZWave.CommandClasses
 {
     public class SwitchBinaryReport : NodeReport
     {
-        public readonly byte Value;
+        public readonly bool Value;
 
         internal SwitchBinaryReport(Node node, byte[] payload) : base(node)
         {
-            Value = payload[0];
+            Value = payload[0] == 0xFF;
         }
 
         public override string ToString()

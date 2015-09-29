@@ -27,9 +27,9 @@ namespace ZWave.CommandClasses
             return new SwitchBinaryReport(Node, response);
         }
 
-        public async Task Set(byte value)
+        public async Task Set(bool value)
         {
-            await Channel.Send(Node, new Command(Class, command.Set, value));
+            await Channel.Send(Node, new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00));
         }
 
         protected internal override void HandleEvent(Command command)
