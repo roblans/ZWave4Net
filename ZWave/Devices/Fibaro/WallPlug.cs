@@ -48,14 +48,24 @@ namespace ZWave.Devices.Fibaro
             return (await Node.GetCommandClass<SensorMultiLevel>().Get()).Value;
         }
 
-        public async Task SetLedRingColor(LedRingColorOff colorOff)
+        public async Task<LedRingColorOff> GetLedRingColorOff()
         {
-            await Node.GetCommandClass<Configuration>().Set(61, Convert.ToByte(colorOff));
+            return (LedRingColorOff)(await Node.GetCommandClass<Configuration>().Get(61)).Value;
         }
 
-        public async Task SetLedRingColor(LedRingColorOn colorOn)
+        public async Task SetLedRingColorOff(LedRingColorOff colorOff)
         {
-            await Node.GetCommandClass<Configuration>().Set(62, Convert.ToByte(colorOn));
+            await Node.GetCommandClass<Configuration>().Set(61, (byte)colorOff);
+        }
+
+        public async Task SetLedRingColorOn(LedRingColorOn colorOn)
+        {
+            await Node.GetCommandClass<Configuration>().Set(62, (byte)colorOn);
+        }
+
+        public async Task<LedRingColorOn> GetLedRingColorOn()
+        {
+            return (LedRingColorOn)(await Node.GetCommandClass<Configuration>().Get(62)).Value;
         }
 
         public async Task SwitchOn()
