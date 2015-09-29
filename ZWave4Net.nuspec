@@ -3,11 +3,18 @@
   <metadata>
     <id>ZWave4Net</id>
     <title>ZWave4Net</title>
-    <description>ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick</description>
+    <description>
+      ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick. It uses an event-driven, non-blocking model that makes it lightweight and efficient.
+      This package is compatible with the following .net platforms:
+      - Managed Framework: net45
+      - Portable Class Library: net45 + win8
+    </description>
+    <summary>ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick</summary>
     <version>1.0.0.0</version>
     <authors>Rob Lans</authors>
     <copyright>© 2015 Rob Lans</copyright>
     <projectUrl>https://github.com/roblans/ZWave4Net</projectUrl>
+    <tags>zwave z-wave home automation Aeotec Aeon</tags>
   </metadata>
   <files>
     <file src="ZWave.net45\bin\NuGet\ZWave.dll" target="lib\net45" />
