@@ -8,6 +8,8 @@ namespace ZWave.Devices.Fibaro
 {
     public class WallPlug : Device
     {
+        public event EventHandler<EnergyConsumptionEventArgs> EnergyConsumptionChanged;
+        public event EventHandler<PowerLoadEventArgs> PowerLoadChanged;
         public event EventHandler<EventArgs> SwitchedOn;
         public event EventHandler<EventArgs> SwitchedOff;
 
@@ -15,6 +17,18 @@ namespace ZWave.Devices.Fibaro
             : base(node)
         {
             Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary_Changed;
+            Node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
+            Node.GetCommandClass<Meter>().Changed += Meter_Changed;
+        }
+
+        private void Meter_Changed(object sender, ReportEventArgs<MeterReport> e)
+        {
+            OnEnergyConsumptionChanged(new EnergyConsumptionEventArgs(e.Report.Value));
+        }
+
+        private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
+        {
+            OnPowerLoadChanged(new PowerLoadEventArgs(e.Report.Value));
         }
 
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
@@ -27,6 +41,21 @@ namespace ZWave.Devices.Fibaro
             {
                 OnSwitchedOff(EventArgs.Empty);
             }
+        }
+
+        public async Task<float> GetPowerLoad()
+        {
+            return (await Node.GetCommandClass<SensorMultiLevel>().Get()).Value;
+        }
+
+        public async Task SetLedRingColor(LedRingColorOff colorOff)
+        {
+            await Node.GetCommandClass<Configuration>().Set(61, Convert.ToByte(colorOff));
+        }
+
+        public async Task SetLedRingColor(LedRingColorOn colorOn)
+        {
+            await Node.GetCommandClass<Configuration>().Set(62, Convert.ToByte(colorOn));
         }
 
         public async Task SwitchOn()
@@ -49,5 +78,14 @@ namespace ZWave.Devices.Fibaro
             SwitchedOff?.Invoke(this, e);
         }
 
+        protected virtual void OnPowerLoadChanged(PowerLoadEventArgs e)
+        {
+            PowerLoadChanged?.Invoke(this, e);
+        }
+
+        protected virtual void OnEnergyConsumptionChanged(EnergyConsumptionEventArgs e)
+        {
+            EnergyConsumptionChanged?.Invoke(this, e);
+        }
     }
 }

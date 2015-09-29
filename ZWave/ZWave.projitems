@@ -71,6 +71,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpIntervalReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\LedRingColorOff.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\LedRingColorOn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\EnergyConsumptionEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\PowerLoadEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\WallPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\ShockSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
