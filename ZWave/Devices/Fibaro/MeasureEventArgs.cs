@@ -4,11 +4,11 @@ using System.Text;
 
 namespace ZWave.Devices.Fibaro
 {
-    public class EnergyConsumptionEventArgs : EventArgs
+    public class MeasureEventArgs : EventArgs
     {
         public readonly float Value;
 
-        public EnergyConsumptionEventArgs(float value)
+        public MeasureEventArgs(float value)
         {
             Value = value;
         }
