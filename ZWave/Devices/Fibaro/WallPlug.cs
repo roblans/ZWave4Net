@@ -43,29 +43,38 @@ namespace ZWave.Devices.Fibaro
             }
         }
 
-        public async Task<float> GetPowerLoad()
+        public async Task<Measure> GetPowerLoad()
         {
-            return (await Node.GetCommandClass<SensorMultiLevel>().Get()).Value;
+            var value = (await Node.GetCommandClass<SensorMultiLevel>().Get()).Value;
+            return new Measure(value, Unit.Watt);
         }
 
-        public async Task<LedRingColorOff> GetLedRingColorOff()
+        public async Task<Measure> GetEnergyConsumption()
         {
-            return (LedRingColorOff)(await Node.GetCommandClass<Configuration>().Get(61)).Value;
-        }
-
-        public async Task SetLedRingColorOff(LedRingColorOff colorOff)
-        {
-            await Node.GetCommandClass<Configuration>().Set(61, (byte)colorOff);
+            var value = (await Node.GetCommandClass<Meter>().Get()).Value;
+            return new Measure(value, Unit.KiloWattHour);
         }
 
         public async Task SetLedRingColorOn(LedRingColorOn colorOn)
         {
-            await Node.GetCommandClass<Configuration>().Set(62, (byte)colorOn);
+            await Node.GetCommandClass<Configuration>().Set(61, Convert.ToByte(colorOn));
         }
 
         public async Task<LedRingColorOn> GetLedRingColorOn()
         {
-            return (LedRingColorOn)(await Node.GetCommandClass<Configuration>().Get(62)).Value;
+            var value = (await Node.GetCommandClass<Configuration>().Get(61)).Value;
+            return (LedRingColorOn)Enum.ToObject(typeof(LedRingColorOn), value);
+        }
+
+        public async Task<LedRingColorOff> GetLedRingColorOff()
+        {
+            var value = (await Node.GetCommandClass<Configuration>().Get(62)).Value;
+            return (LedRingColorOff)Enum.ToObject(typeof(LedRingColorOn), value);
+        }
+
+        public async Task SetLedRingColorOff(LedRingColorOff colorOff)
+        {
+            await Node.GetCommandClass<Configuration>().Set(62, Convert.ToByte(colorOff));
         }
 
         public async Task SwitchOn()
