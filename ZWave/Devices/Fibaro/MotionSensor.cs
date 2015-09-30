@@ -27,11 +27,11 @@ namespace ZWave.Devices.Fibaro
         {
             if (e.Report.Type == SensorType.Temperature)
             {
-                OnTemperatureChanged(new MeasureEventArgs(e.Report.Value));
+                OnTemperatureChanged(new MeasureEventArgs(e.Report.Value, "°C"));
             }
             if (e.Report.Type == SensorType.Luminance)
             {
-                OnTemperatureChanged(new MeasureEventArgs(e.Report.Value));
+                OnTemperatureChanged(new MeasureEventArgs(e.Report.Value, "lux"));
             }
         }
 

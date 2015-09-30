@@ -23,12 +23,12 @@ namespace ZWave.Devices.Fibaro
 
         private void Meter_Changed(object sender, ReportEventArgs<MeterReport> e)
         {
-            OnEnergyConsumptionChanged(new MeasureEventArgs(e.Report.Value));
+            OnEnergyConsumptionChanged(new MeasureEventArgs(e.Report.Value, "kWh"));
         }
 
         private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
         {
-            OnPowerLoadChanged(new MeasureEventArgs(e.Report.Value));
+            OnPowerLoadChanged(new MeasureEventArgs(e.Report.Value, "W"));
         }
 
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
@@ -107,5 +107,33 @@ namespace ZWave.Devices.Fibaro
         {
             EnergyConsumptionChanged?.Invoke(this, e);
         }
+
+        public enum LedRingColorOn : byte
+        {
+            PowerLoadStep = 0x00,
+            PowerLoadContinously = 0x01,
+            White = 0x02,
+            Red = 0x03,
+            Green = 0x04,
+            Blue = 0x05,
+            Yellow = 0x06,
+            Cyan = 0x07,
+            Magenta = 0x08,
+            Off = 0x09,
+        }
+
+        public enum LedRingColorOff : byte
+        {
+            NoChange = 0x00,
+            White = 0x01,
+            Red = 0x02,
+            Green = 0x03,
+            Blue = 0x04,
+            Yellow = 0x05,
+            Cyan = 0x06,
+            Magenta = 0x07,
+            Off = 0x08,
+        }
+
     }
 }
