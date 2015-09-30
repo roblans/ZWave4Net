@@ -51,12 +51,12 @@ namespace ZWave.Devices.Fibaro
 
         public async Task AddAssociation(AssociationGroup group, Node node)
         {
-            await Node.GetCommandClass<Association>().Add((byte)group, node.NodeID);
+            await Node.GetCommandClass<Association>().Add(Convert.ToByte(group), node.NodeID);
         }
 
         public async Task RemoveAssociation(AssociationGroup group, Node node)
         {
-            await Node.GetCommandClass<Association>().Remove((byte)group, node.NodeID);
+            await Node.GetCommandClass<Association>().Remove(Convert.ToByte(group), node.NodeID);
         }
 
         protected virtual void OnMotionDetected(EventArgs e)
