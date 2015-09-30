@@ -97,4 +97,12 @@ namespace ZWave
             return await (_getNodes ?? (_getNodes = DiscoverNodes()));
         }
     }
+
+    public static partial class Extentions
+    {
+        public async static Task<Node> GetControllerNode(this ZWaveController controller)
+        {
+            return (await controller.GetNodes())[await controller.GetControllerID()];
+        }
+    }
 }
