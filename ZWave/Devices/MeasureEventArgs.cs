@@ -7,12 +7,17 @@ namespace ZWave.Devices
     public class MeasureEventArgs : EventArgs
     {
         public readonly float Value;
-        public readonly string Unit;
+        public readonly string Symbol;
 
-        public MeasureEventArgs(float value, string unit)
+        public MeasureEventArgs(float value, string symbol)
         {
             Value = value;
-            Unit = unit;
+            Symbol = symbol;
+        }
+
+        public override string ToString()
+        {
+            return $"{Value} {Symbol}";
         }
     }
 }
