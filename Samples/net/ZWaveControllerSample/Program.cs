@@ -58,7 +58,7 @@ namespace ZWaveDriverSample
             LogMessage($"Version: {await controller.GetVersion()}");
             LogMessage($"HomeID: {await controller.GetHomeID():X}");
 
-            var controllerID = await controller.GetContollerID();
+            var controllerID = await controller.GetControllerID();
             LogMessage($"ControllerID: {controllerID:D3}");
 
             var nodes = await controller.GetNodes();

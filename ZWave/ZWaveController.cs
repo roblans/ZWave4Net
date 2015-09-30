@@ -65,7 +65,7 @@ namespace ZWave
             return PayloadConverter.ToUInt32(response);
         }
 
-        public async Task<byte> GetContollerID()
+        public async Task<byte> GetControllerID()
         {
             var response = await Channel.Send(Function.MemoryGetId);
             return response[4];
