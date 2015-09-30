@@ -23,12 +23,12 @@ namespace ZWave.Devices.Fibaro
 
         private void Meter_Changed(object sender, ReportEventArgs<MeterReport> e)
         {
-            OnEnergyConsumptionChanged(new MeasureEventArgs(e.Report.Value, "kWh"));
+            OnEnergyConsumptionChanged(new MeasureEventArgs(new Measure(e.Report.Value, Unit.KiloWattHour)));
         }
 
         private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
         {
-            OnPowerLoadChanged(new MeasureEventArgs(e.Report.Value, "W"));
+            OnPowerLoadChanged(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Watt)));
         }
 
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
