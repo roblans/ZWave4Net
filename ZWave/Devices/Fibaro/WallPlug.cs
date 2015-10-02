@@ -98,8 +98,13 @@ namespace ZWave.Devices.Fibaro
 
         public async Task<TimeSpan> GetMeasureInterval()
         {
-            var value = (await Node.GetCommandClass<Configuration>().Get(47)).Value;
-            return TimeSpan.FromSeconds(0);
+            var value = (ushort)(await Node.GetCommandClass<Configuration>().Get(47)).Value;
+            return TimeSpan.FromSeconds(value);
+        }
+
+        public async Task SetMeasureInterval(TimeSpan value)
+        {
+            await Node.GetCommandClass<Configuration>().Set(47, (ushort)value.TotalSeconds);
         }
 
         protected virtual void OnSwitchedOn(EventArgs e)

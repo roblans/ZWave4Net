@@ -7,6 +7,16 @@ namespace ZWave
 {
     public static class PayloadConverter
     {
+        public static byte ToUInt8(byte[] value, int startIndex = 0)
+        {
+            return value.Skip(startIndex).First();
+        }
+
+        public static sbyte ToInt8(byte[] value, int startIndex = 0)
+        {
+            return unchecked((sbyte)value.Skip(startIndex).First());
+        }
+
         public static ushort ToUInt16(byte[] value, int startIndex = 0)
         {
             if (BitConverter.IsLittleEndian)
@@ -79,7 +89,18 @@ namespace ZWave
             }
         }
 
-        public static byte[] GetBytes(uint value)
+
+        public static byte[] GetBytes(sbyte value)
+        {
+            return new byte[] { unchecked((byte)value) };
+        }
+
+        public static byte[] GetBytes(byte value)
+        {
+            return new byte[] { value };
+        }
+
+        public static byte[] GetBytes(short value)
         {
             if (BitConverter.IsLittleEndian)
             {
@@ -91,7 +112,7 @@ namespace ZWave
             }
         }
 
-        public static byte[] GetBytes(short value)
+        public static byte[] GetBytes(ushort value)
         {
             if (BitConverter.IsLittleEndian)
             {
@@ -115,7 +136,31 @@ namespace ZWave
             }
         }
 
+        public static byte[] GetBytes(uint value)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.GetBytes(value).Reverse().ToArray();
+            }
+            else
+            {
+                return BitConverter.GetBytes(value);
+            }
+        }
+
         public static byte[] GetBytes(long value)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                return BitConverter.GetBytes(value).Reverse().ToArray();
+            }
+            else
+            {
+                return BitConverter.GetBytes(value);
+            }
+        }
+
+        public static byte[] GetBytes(ulong value)
         {
             if (BitConverter.IsLittleEndian)
             {
