@@ -74,6 +74,34 @@ namespace ZWave.Devices.Fibaro
             await Node.GetCommandClass<Association>().Remove((byte)group, node.NodeID);
         }
 
+        public async Task SetLedRingColorOn(LedRingColorOn colorOn)
+        {
+            await Node.GetCommandClass<Configuration>().Set(61, Convert.ToByte(colorOn));
+        }
+
+        public async Task<LedRingColorOn> GetLedRingColorOn()
+        {
+            var value = (await Node.GetCommandClass<Configuration>().Get(61)).Value;
+            return (LedRingColorOn)Enum.ToObject(typeof(LedRingColorOn), value);
+        }
+
+        public async Task<LedRingColorOff> GetLedRingColorOff()
+        {
+            var value = (await Node.GetCommandClass<Configuration>().Get(62)).Value;
+            return (LedRingColorOff)Enum.ToObject(typeof(LedRingColorOn), value);
+        }
+
+        public async Task SetLedRingColorOff(LedRingColorOff colorOff)
+        {
+            await Node.GetCommandClass<Configuration>().Set(62, Convert.ToByte(colorOff));
+        }
+
+        public async Task<TimeSpan> GetMeasureInterval()
+        {
+            var value = (await Node.GetCommandClass<Configuration>().Get(47)).Value;
+            return TimeSpan.FromSeconds(0);
+        }
+
         protected virtual void OnSwitchedOn(EventArgs e)
         {
             SwitchedOn?.Invoke(this, e);
