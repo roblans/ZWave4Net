@@ -12,8 +12,8 @@ namespace ZWave.Devices.Fibaro
         public event EventHandler<EventArgs> MotionCancelled;
         public event EventHandler<EventArgs> TamperDetected;
         public event EventHandler<EventArgs> TamperCancelled;
-        public event EventHandler<MeasureEventArgs> TemperatureChanged;
-        public event EventHandler<MeasureEventArgs> LuminanceChanged;
+        public event EventHandler<MeasureEventArgs> TemperatureMeasured;
+        public event EventHandler<MeasureEventArgs> LuminanceMeasured;
 
         public MotionSensor(Node node)
             : base(node)
@@ -27,11 +27,11 @@ namespace ZWave.Devices.Fibaro
         {
             if (e.Report.Type == SensorType.Temperature)
             {
-                OnTemperatureChanged(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
+                OnTemperatureMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
             }
             if (e.Report.Type == SensorType.Luminance)
             {
-                OnTemperatureChanged(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Lux)));
+                OnLuminanceMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Lux)));
             }
         }
 
@@ -69,14 +69,14 @@ namespace ZWave.Devices.Fibaro
             MotionCancelled?.Invoke(this, e);
         }
 
-        protected virtual void OnTemperatureChanged(MeasureEventArgs e)
+        protected virtual void OnTemperatureMeasured(MeasureEventArgs e)
         {
-            TemperatureChanged?.Invoke(this, e);
+            TemperatureMeasured?.Invoke(this, e);
         }
 
-        protected virtual void OnLuminanceChanged(MeasureEventArgs e)
+        protected virtual void OnLuminanceMeasured(MeasureEventArgs e)
         {
-            LuminanceChanged?.Invoke(this, e);
+            LuminanceMeasured?.Invoke(this, e);
         }
 
         private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)

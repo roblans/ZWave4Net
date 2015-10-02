@@ -8,8 +8,8 @@ namespace ZWave.Devices.Fibaro
 {
     public class WallPlug : Device
     {
-        public event EventHandler<MeasureEventArgs> EnergyConsumptionChanged;
-        public event EventHandler<MeasureEventArgs> PowerLoadChanged;
+        public event EventHandler<MeasureEventArgs> EnergyConsumptionMeasured;
+        public event EventHandler<MeasureEventArgs> PowerLoadMeasured;
         public event EventHandler<EventArgs> SwitchedOn;
         public event EventHandler<EventArgs> SwitchedOff;
 
@@ -23,12 +23,12 @@ namespace ZWave.Devices.Fibaro
 
         private void Meter_Changed(object sender, ReportEventArgs<MeterReport> e)
         {
-            OnEnergyConsumptionChanged(new MeasureEventArgs(new Measure(e.Report.Value, Unit.KiloWattHour)));
+            OnEnergyConsumptionMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.KiloWattHour)));
         }
 
         private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
         {
-            OnPowerLoadChanged(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Watt)));
+            OnPowerLoadMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Watt)));
         }
 
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
@@ -54,29 +54,6 @@ namespace ZWave.Devices.Fibaro
             var value = (await Node.GetCommandClass<Meter>().Get()).Value;
             return new Measure(value, Unit.KiloWattHour);
         }
-
-        public async Task SetLedRingColorOn(LedRingColorOn colorOn)
-        {
-            await Node.GetCommandClass<Configuration>().Set(61, Convert.ToByte(colorOn));
-        }
-
-        public async Task<LedRingColorOn> GetLedRingColorOn()
-        {
-            var value = (await Node.GetCommandClass<Configuration>().Get(61)).Value;
-            return (LedRingColorOn)Enum.ToObject(typeof(LedRingColorOn), value);
-        }
-
-        public async Task<LedRingColorOff> GetLedRingColorOff()
-        {
-            var value = (await Node.GetCommandClass<Configuration>().Get(62)).Value;
-            return (LedRingColorOff)Enum.ToObject(typeof(LedRingColorOn), value);
-        }
-
-        public async Task SetLedRingColorOff(LedRingColorOff colorOff)
-        {
-            await Node.GetCommandClass<Configuration>().Set(62, Convert.ToByte(colorOff));
-        }
-
         public async Task SwitchOn()
         {
             await Node.GetCommandClass<SwitchBinary>().Set(true);
@@ -107,14 +84,14 @@ namespace ZWave.Devices.Fibaro
             SwitchedOff?.Invoke(this, e);
         }
 
-        protected virtual void OnPowerLoadChanged(MeasureEventArgs e)
+        protected virtual void OnPowerLoadMeasured(MeasureEventArgs e)
         {
-            PowerLoadChanged?.Invoke(this, e);
+            PowerLoadMeasured?.Invoke(this, e);
         }
 
-        protected virtual void OnEnergyConsumptionChanged(MeasureEventArgs e)
+        protected virtual void OnEnergyConsumptionMeasured(MeasureEventArgs e)
         {
-            EnergyConsumptionChanged?.Invoke(this, e);
+            EnergyConsumptionMeasured?.Invoke(this, e);
         }
 
         public enum LedRingColorOn : byte
