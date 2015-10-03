@@ -87,6 +87,8 @@ namespace ZWave.CommandClasses
                 case 8:
                     values = signed ? PayloadConverter.GetBytes((long)value) : PayloadConverter.GetBytes((ulong)value);
                     break;
+                default:
+                    throw new NotSupportedException($"Size:{size} is not supported");
             }
             await Channel.Send(Node, new Command(Class, command.Set, new[] { parameter, (byte)values.Length }.Concat(values).ToArray()));
         }
