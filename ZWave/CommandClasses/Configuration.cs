@@ -26,7 +26,47 @@ namespace ZWave.CommandClasses
             return new ConfigurationReport(Node, response);
         }
 
+        public async Task Set(byte parameter, sbyte value)
+        {
+            await Set(parameter, value, true);
+        }
+
+        public async Task Set(byte parameter, byte value)
+        {
+            await Set(parameter, value, false);
+        }
+
+        public async Task Set(byte parameter, short value)
+        {
+            await Set(parameter, value, true);
+        }
+
+        public async Task Set(byte parameter, ushort value)
+        {
+            await Set(parameter, value, false);
+        }
+
+        public async Task Set(byte parameter, int value)
+        {
+            await Set(parameter, value, true);
+        }
+
+        public async Task Set(byte parameter, uint value)
+        {
+            await Set(parameter, value, false);
+        }
+
         public async Task Set(byte parameter, long value)
+        {
+            await Set(parameter, value, true);
+        }
+
+        public async Task Set(byte parameter, ulong value)
+        {
+            await Set(parameter, value, false);
+        }
+
+        private async Task Set(byte parameter, object value, bool signed)
         {
             // extra roundtrip to get the correct size of the parameter
             var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report);
@@ -36,44 +76,16 @@ namespace ZWave.CommandClasses
             switch(size)
             {
                 case 1:
-                    if (value >= 0)
-                    {
-                        values = PayloadConverter.GetBytes((byte)value);
-                    }
-                    else
-                    {
-                        values = PayloadConverter.GetBytes((sbyte)value);
-                    }
+                    values = signed ? PayloadConverter.GetBytes((sbyte)value) : PayloadConverter.GetBytes((byte)value);
                     break;
                 case 2:
-                    if (value >= 0)
-                    {
-                        values = PayloadConverter.GetBytes((ushort)value);
-                    }
-                    else
-                    {
-                        values = PayloadConverter.GetBytes((short)value);
-                    }
+                    values = signed ? PayloadConverter.GetBytes((short)value) : PayloadConverter.GetBytes((ushort)value);
                     break;
                 case 4:
-                    if (value >= 0)
-                    {
-                        values = PayloadConverter.GetBytes((uint)value);
-                    }
-                    else
-                    {
-                        values = PayloadConverter.GetBytes((int)value);
-                    }
+                    values = signed ? PayloadConverter.GetBytes((int)value) : PayloadConverter.GetBytes((uint)value);
                     break;
                 case 8:
-                    if (value >= 0)
-                    {
-                        values = PayloadConverter.GetBytes((ulong)value);
-                    }
-                    else
-                    {
-                        values = PayloadConverter.GetBytes(value);
-                    }
+                    values = signed ? PayloadConverter.GetBytes((long)value) : PayloadConverter.GetBytes((ulong)value);
                     break;
             }
             await Channel.Send(Node, new Command(Class, command.Set, new[] { parameter, (byte)values.Length }.Concat(values).ToArray()));
