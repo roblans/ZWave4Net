@@ -70,11 +70,6 @@ namespace ZWave.Devices.Fibaro
             return (await Node.GetCommandClass<SwitchBinary>().Get()).Value;
         }
 
-        public async Task<bool> IsSwitchOff()
-        {
-            return !(await Node.GetCommandClass<SwitchBinary>().Get()).Value;
-        }
-
         public async Task AddAssociation(AssociationGroup group, Node node)
         {
             await Node.GetCommandClass<Association>().Add((byte)group, node.NodeID);
