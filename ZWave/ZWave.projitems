@@ -75,6 +75,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\AssociationGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\DoorSensor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\SmokeSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\MotionSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\BinarySensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\MultiSwitch.cs" />
