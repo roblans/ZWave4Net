@@ -54,6 +54,7 @@ namespace ZWave.Devices.Fibaro
             var value = (await Node.GetCommandClass<Meter>().Get()).Value;
             return new Measure(value, Unit.KiloWattHour);
         }
+
         public async Task SwitchOn()
         {
             await Node.GetCommandClass<SwitchBinary>().Set(true);
@@ -62,6 +63,16 @@ namespace ZWave.Devices.Fibaro
         public async Task SwitchOff()
         {
             await Node.GetCommandClass<SwitchBinary>().Set(false);
+        }
+
+        public async Task<bool> IsSwitchOn()
+        {
+            return (await Node.GetCommandClass<SwitchBinary>().Get()).Value;
+        }
+
+        public async Task<bool> IsSwitchOff()
+        {
+            return !(await Node.GetCommandClass<SwitchBinary>().Get()).Value;
         }
 
         public async Task AddAssociation(AssociationGroup group, Node node)
