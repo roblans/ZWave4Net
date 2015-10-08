@@ -18,8 +18,14 @@ namespace ZWave.Channel.Protocol
         {
             CallbackID = payload[0];
             TransmissionState = (TransmissionState)payload[1];
-            UnknownByte1 = payload[2];
-            UnknownByte2 = payload[3];
+            if (payload.Length > 2)
+            {
+                UnknownByte1 = payload[2];
+            }
+            if (payload.Length > 3)
+            {
+                UnknownByte2 = payload[3];
+            }
         }
 
         public override string ToString()

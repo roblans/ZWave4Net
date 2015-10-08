@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ZWave.CommandClasses;
+using ZWave.Devices.Fibaro;
 
 namespace ZWave.Devices.PhilioTech
 {
