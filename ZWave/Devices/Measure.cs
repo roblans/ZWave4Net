@@ -29,6 +29,14 @@ namespace ZWave.Devices
                     return "lux";
                 case Unit.KiloWattHour:
                     return "kWh";
+                case Unit.Humidity:
+                    return "%";
+                case Unit.Ultraviolet:
+                    return "?"; // ToDo
+                case Unit.SeismicIntensity:
+                    return "?"; // ToDo
+                case Unit.Smoke:
+                    return "?"; // ToDo
             }
             return null;
         }
@@ -45,5 +53,9 @@ namespace ZWave.Devices
         Watt,
         Lux,
         KiloWattHour,
+        Humidity,
+        Ultraviolet,
+        SeismicIntensity,
+        Smoke
     }
 }
