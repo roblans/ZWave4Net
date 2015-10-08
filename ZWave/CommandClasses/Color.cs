@@ -19,9 +19,9 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task Set(byte white, byte red, byte green, byte blue)
+        public async Task Set(byte warmWhite, byte coldWhite, byte red, byte green, byte blue)
         {
-            await Channel.Send(Node, new Command(Class, command.Set, 0x00, 0x00, 0x01, white, 0x02, red, 0x03, green, 0x04, blue));
+            await Channel.Send(Node, new Command(Class, command.Set, 0x00, warmWhite, 0x01, coldWhite, 0x02, red, 0x03, green, 0x04, blue));
         }
 
         public async Task<ColorReport> Get()
