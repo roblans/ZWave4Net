@@ -7,13 +7,13 @@ using ZWave.Devices.Fibaro;
 
 namespace ZWave.Devices.Zipato
 {
-    public class Rgbw : Device
+    public class RgbwLightBulb : Device
     {
 
         public event EventHandler<EventArgs> SwitchedOn;
         public event EventHandler<EventArgs> SwitchedOff;
 
-        public Rgbw(Node node)
+        public RgbwLightBulb(Node node)
             : base(node)
         {
 
@@ -21,12 +21,12 @@ namespace ZWave.Devices.Zipato
 
         public async Task SwitchOn()
         {
-            throw new NotImplementedException();
+            await Node.GetCommandClass<Basic>().Set(0xFF);
         }
 
         public async Task SwitchOff()
         {
-            throw new NotImplementedException();
+            await Node.GetCommandClass<Basic>().Set(0x00);
         }
 
         public async Task AddAssociation(AssociationGroup group, Node node)
@@ -39,9 +39,16 @@ namespace ZWave.Devices.Zipato
             await Node.GetCommandClass<Association>().Remove((byte)group, node.NodeID);
         }
 
-        public async Task SetColor(byte red, byte green, byte blue, byte white)
+        public async Task SetColor(byte warmWhite, byte coldWhite, byte red, byte green, byte blue)
         {
-            throw new NotImplementedException();
+            var components = new List<ColorComponent>();
+            components.Add(new ColorComponent(0, warmWhite));
+            components.Add(new ColorComponent(1, coldWhite));
+            components.Add(new ColorComponent(2, red));
+            components.Add(new ColorComponent(3, green));
+            components.Add(new ColorComponent(4, blue));
+
+            await Node.GetCommandClass<Color>().Set(components.ToArray());
         }
 
         protected virtual void OnSwitchedOn(EventArgs e)
