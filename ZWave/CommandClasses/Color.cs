@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,14 +20,17 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task Set(byte warmWhite, byte coldWhite, byte red, byte green, byte blue)
+        public async Task Set(ColorComponent[] components)
         {
-            await Channel.Send(Node, new Command(Class, command.Set, 0x00, warmWhite, 0x01, coldWhite, 0x02, red, 0x03, green, 0x04, blue));
+            var payload = new List<byte>();
+            payload.Add((byte)components.Length);
+            payload.AddRange(components.SelectMany(element => element.ToBytes()));
+            await Channel.Send(Node, new Command(Class, command.Set, payload.ToArray()));
         }
 
-        public async Task<ColorReport> Get()
+        public async Task<ColorReport> Get(byte componentID)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Channel.Send(Node, new Command(Class, command.Get, componentID), command.Report);
             return new ColorReport(Node, response);
         }
     }

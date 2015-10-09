@@ -43,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Battery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\BatteryReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Color.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ColorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ColorReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CommandClassBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Configuration.cs" />
