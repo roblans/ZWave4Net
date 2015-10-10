@@ -11,10 +11,10 @@ namespace ZWaveDriverSample
     {
         static void Main(string[] args)
         {
-            var portName = System.IO.Ports.SerialPort.GetPortNames().First();
+            var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
-            //controller.Channel.Log = Console.Out;
+            controller.Channel.Log = Console.Out;
 
             controller.Open();
             try
@@ -74,12 +74,16 @@ namespace ZWaveDriverSample
             }
 
             // NodeID of the fibaro wall plug
-            byte wallPlugID = 6;
+            byte wallPlugID = 7;
             await RunWallplugTest(nodes[wallPlugID]);
 
             // NodeID of the fibaro motionsensor
-            byte motionSensorID = 5;
-            await RunMotionSensorTest(nodes[motionSensorID]);
+            byte multiSensorID = 9;
+            await RunMultiSensor6Test(nodes[multiSensorID]);
+
+            // NodeID of the fibaro motionsensor
+            byte motionSensorID = 8;
+            await RunGarageDoorSensorTest(nodes[motionSensorID]);
         }
 
         private static void Subscribe(Node node)
@@ -149,7 +153,6 @@ namespace ZWaveDriverSample
             var configuration = wallPlug.GetCommandClass<Configuration>();
             var configurationReport = await configuration.Get(61);
             LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
-            await configuration.Set(61, 4);
 
             var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
             var switchBinaryReport = await switchBinary.Get();
@@ -160,9 +163,9 @@ namespace ZWaveDriverSample
             Console.ReadLine();
         }
 
-        private static async Task RunMotionSensorTest(Node motionSensor)
+        private static async Task RunGarageDoorSensorTest(Node motionSensor)
         {
-            LogMessage("Please wakeup the motion sensor.");
+            LogMessage("Please wakeup the Garage door sensor.");
             Console.ReadLine();
 
             var association = motionSensor.GetCommandClass<Association>();
@@ -181,18 +184,50 @@ namespace ZWaveDriverSample
             var batteryReport = await battery.Get();
             LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
-            var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
-            var sensorMultiLevelReport = await sensorMultiLevel.Get();
-            LogMessage($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
-
             var wakeUp = motionSensor.GetCommandClass<WakeUp>();
             var wakeUpReport = await wakeUp.GetInterval();
             LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
 
+            Console.ReadLine();
+        }
+
+        private static async Task RunMultiSensor6Test(Node motionSensor)
+        {
+            LogMessage("Please wakeup the multisensor.");
+            Console.ReadLine();
+
+            var association = motionSensor.GetCommandClass<Association>();
+            await association.Add(1, 1);
+            await association.Add(2, 1);
+            await association.Add(3, 1);
+
+            var supportedCommandClasses = await motionSensor.GetSupportedCommandClasses();
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+
+            var manufacturerSpecific = motionSensor.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+            LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+
+            var battery = motionSensor.GetCommandClass<Battery>();
+            var batteryReport = await battery.Get();
+            LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
+
+            var wakeUp = motionSensor.GetCommandClass<WakeUp>();
+            await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 0xFF);
+            var wakeUpReport = await wakeUp.GetInterval();
+            LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+
             var configuration = motionSensor.GetCommandClass<Configuration>();
-            var configurationReport = await configuration.Get(64);
-            LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
-            await configuration.Set(64, (long)TimeSpan.FromMinutes(15).TotalSeconds);
+            await configuration.Set(111, (uint)300);
+            var configurationReport = await configuration.Get(111);
+            LogMessage($"configurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
+
+            configurationReport = await configuration.Get(101);
+            LogMessage($"configurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
+
+            var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
+            var sensorMultiLevelReport = await sensorMultiLevel.Get();
+            LogMessage($"sensorMultiLevelReport report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
             Console.ReadLine();
         }
     }
