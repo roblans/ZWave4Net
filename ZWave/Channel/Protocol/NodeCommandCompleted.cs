@@ -10,21 +10,17 @@ namespace ZWave.Channel.Protocol
     {
         public readonly byte CallbackID;
         public readonly TransmissionState TransmissionState;
-        public readonly byte UnknownByte1;
-        public readonly byte UnknownByte2;
 
         public NodeCommandCompleted(byte[] payload) : 
             base(FrameHeader.SOF, MessageType.Request, Channel.Function.SendData)
         {
             CallbackID = payload[0];
             TransmissionState = (TransmissionState)payload[1];
-            UnknownByte1 = payload[2];
-            UnknownByte2 = payload[3];
         }
 
         public override string ToString()
         {
-            return string.Concat(base.ToString(), " ", $"CallbackID:{CallbackID}, {TransmissionState}, {UnknownByte1}?, {UnknownByte2}?");
+            return string.Concat(base.ToString(), " ", $"CallbackID:{CallbackID}, {TransmissionState}");
         }
     }
 }
