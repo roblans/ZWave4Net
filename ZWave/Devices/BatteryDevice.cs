@@ -41,5 +41,10 @@ namespace ZWave.Devices
             await Node.GetCommandClass<WakeUp>().SetInterval(value, 0xFF);
         }
 
+        public async Task<Measure> GetBatteryLevel()
+        {
+            var value = (await Node.GetCommandClass<Battery>().Get()).Value;
+            return new Measure(value, Unit.Percentage);
+        }
     }
 }

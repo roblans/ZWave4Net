@@ -32,11 +32,13 @@ namespace ZWave.Devices
                 case Unit.Humidity:
                     return "%";
                 case Unit.Ultraviolet:
-                    return "?"; // ToDo
+                    return "";
                 case Unit.SeismicIntensity:
                     return "?"; // ToDo
                 case Unit.Smoke:
                     return "?"; // ToDo
+                case Unit.Percentage:
+                    return "%";
             }
             return null;
         }
@@ -56,6 +58,7 @@ namespace ZWave.Devices
         Humidity,
         Ultraviolet,
         SeismicIntensity,
-        Smoke
+        Smoke,
+        Percentage,
     }
 }
