@@ -6,7 +6,7 @@ using ZWave.CommandClasses;
 
 namespace ZWave.Devices.Fibaro
 {
-    public class MotionSensor : Device
+    public class MotionSensor : BatteryDevice
     {
         public event EventHandler<EventArgs> MotionDetected;
         public event EventHandler<EventArgs> MotionCancelled;

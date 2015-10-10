@@ -6,14 +6,14 @@ using ZWave.CommandClasses;
 
 namespace ZWave.Devices.Vision
 {
-    public class ShockSensor : BatteryDevice
+    public class GarageDoorDetector : BatteryDevice
     {
-        public event EventHandler<EventArgs> ShockDetected;
-        public event EventHandler<EventArgs> ShockCancelled;
+        public event EventHandler<EventArgs> DoorOpened;
+        public event EventHandler<EventArgs> DoorClosed;
         public event EventHandler<EventArgs> TamperDetected;
         public event EventHandler<EventArgs> TamperCancelled;
 
-        public ShockSensor(Node node)
+        public GarageDoorDetector(Node node)
             : base(node)
         {
             node.GetCommandClass<Basic>().Changed += Basic_Changed;
@@ -24,24 +24,24 @@ namespace ZWave.Devices.Vision
         {
             if (e.Report.Value == 0x00)
             {
-                OnShockCancelled(EventArgs.Empty);
+                OnDoorClosed(EventArgs.Empty);
                 return;
             }
             if (e.Report.Value == 0xFF)
             {
-                OnShockDetected(EventArgs.Empty);
+                OnDoorOpened(EventArgs.Empty);
                 return;
             }
         }
 
-        protected virtual void OnShockDetected(EventArgs e)
+        protected virtual void OnDoorOpened(EventArgs e)
         {
-            ShockDetected?.Invoke(this, e);
+            DoorOpened?.Invoke(this, e);
         }
 
-        protected virtual void OnShockCancelled(EventArgs e)
+        protected virtual void OnDoorClosed(EventArgs e)
         {
-            ShockCancelled?.Invoke(this, e);
+            DoorClosed?.Invoke(this, e);
         }
 
         private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
@@ -69,6 +69,16 @@ namespace ZWave.Devices.Vision
         protected virtual void OnTamperCancelled(EventArgs e)
         {
             TamperCancelled?.Invoke(this, e);
+        }
+
+        public async Task<bool> IsDoorOpen()
+        {
+            return (await Node.GetCommandClass<Basic>().Get()).Value == 0xFF;
+        }
+
+        public async Task<bool> IsDoorClosed()
+        {
+            return (await Node.GetCommandClass<Basic>().Get()).Value == 0x00;
         }
     }
 }

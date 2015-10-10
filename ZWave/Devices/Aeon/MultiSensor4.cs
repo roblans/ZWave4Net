@@ -7,7 +7,7 @@ using ZWave.Devices.Fibaro;
 
 namespace ZWave.Devices.Aeon
 {
-    public class MultiSensor4 : Device
+    public class MultiSensor4 : BatteryDevice
     {
         public event EventHandler<EventArgs> MotionDetected;
         public event EventHandler<EventArgs> MotionCancelled;

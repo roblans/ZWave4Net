@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZWave.Devices.Fibaro
+namespace ZWave.Devices
 {
     public enum AssociationGroup : byte
     {
