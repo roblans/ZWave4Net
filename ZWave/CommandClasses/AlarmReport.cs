@@ -16,8 +16,14 @@ namespace ZWave.CommandClasses
         {
             Type = (AlarmType)payload[0];
             Level = payload[1];
-            Unknown = payload[2];
-            Detail = (AlarmDetailType)payload[5];
+            if (payload.Length > 2)
+            {
+                Unknown = payload[2];
+            }
+            if (payload.Length > 5)
+            {
+                Detail = (AlarmDetailType)payload[5];
+            }
         }
 
         public override string ToString()
