@@ -36,7 +36,7 @@ namespace ZWave.Devices
             return (await Node.GetCommandClass<WakeUp>().GetInterval()).Interval;
         }
 
-        public async void SetWakeUpInterval(TimeSpan value)
+        public async Task SetWakeUpInterval(TimeSpan value)
         {
             await Node.GetCommandClass<WakeUp>().SetInterval(value, 0xFF);
         }
@@ -45,6 +45,11 @@ namespace ZWave.Devices
         {
             var value = (await Node.GetCommandClass<Battery>().Get()).Value;
             return new Measure(value, Unit.Percentage);
+        }
+
+        public async Task Sleep()
+        {
+            await Node.GetCommandClass<WakeUp>().NoMoreInformation();
         }
     }
 }
