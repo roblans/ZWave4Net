@@ -74,16 +74,16 @@ namespace ZWaveDriverSample
             }
 
             // NodeID of the fibaro wall plug
-            byte wallPlugID = 7;
-            await RunWallplugTest(nodes[wallPlugID]);
+            //byte wallPlugID = 7;
+            //await RunWallplugTest(nodes[wallPlugID]);
 
             // NodeID of the fibaro motionsensor
             byte multiSensorID = 9;
             await RunMultiSensor6Test(nodes[multiSensorID]);
 
             // NodeID of the fibaro motionsensor
-            byte motionSensorID = 8;
-            await RunGarageDoorSensorTest(nodes[motionSensorID]);
+            //byte motionSensorID = 8;
+            //await RunGarageDoorSensorTest(nodes[motionSensorID]);
         }
 
         private static void Subscribe(Node node)

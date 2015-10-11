@@ -237,12 +237,20 @@ namespace ZWave.Channel
                     }
                     catch (CanResponseException)
                     {
-                        LogMessage($"CAN received. Retrying (attempt: {attempt})");
-
                         if (attempt++ > 3)
                             throw;
+
+                        LogMessage($"CAN received. Retrying (attempt: {attempt})");
+                        await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
                     }
-                    await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
+                    catch (TimeoutException)
+                    {
+                        if (attempt++ > 3)
+                            throw;
+
+                        LogMessage($"Timeout. Retrying (attempt: {attempt})");
+                        await Task.Delay(TimeSpan.FromSeconds(1000)).ConfigureAwait(false);
+                    }
                 }
             }
             finally
