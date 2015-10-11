@@ -130,7 +130,7 @@ namespace ZWave.Channel
             }
         }
 
-        private void OnNodeEventReceived(NodeEvent nodeEvent)
+        private async void OnNodeEventReceived(NodeEvent nodeEvent)
         {
             if (nodeEvent == null)
                 throw new ArgumentNullException(nameof(nodeEvent));
@@ -138,7 +138,17 @@ namespace ZWave.Channel
             var handler = NodeEventReceived;
             if (handler != null)
             {
-                handler(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command));
+                try
+                {
+                    await Task.Factory.StartNew(() =>
+                    {
+                        handler(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command));
+                    });
+                }
+                catch(Exception ex)
+                {
+                    LogMessage(ex.Message);
+                }
             }
         }
 
@@ -249,7 +259,7 @@ namespace ZWave.Channel
                             throw;
 
                         LogMessage($"Timeout. Retrying (attempt: {attempt})");
-                        await Task.Delay(TimeSpan.FromSeconds(1000)).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
                     }
                 }
             }

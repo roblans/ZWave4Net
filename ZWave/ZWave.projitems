@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Command.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\CommandClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Exceptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\Extentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Function.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\ISerialPort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\IZWaveChannel.cs" />
