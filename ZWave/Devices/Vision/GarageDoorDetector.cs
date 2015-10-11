@@ -59,6 +59,19 @@ namespace ZWave.Devices.Vision
                     return;
                 }
             }
+            if (e.Report.Type == AlarmType.Burglar)
+            {
+                if (e.Report.Level == 0x00)
+                {
+                    OnDoorClosed(EventArgs.Empty);
+                    return;
+                }
+                if (e.Report.Level == 0xFF)
+                {
+                    OnDoorOpened(EventArgs.Empty);
+                    return;
+                }
+            }
         }
 
         protected virtual void OnTamperDetected(EventArgs e)

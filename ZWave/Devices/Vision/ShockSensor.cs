@@ -59,6 +59,19 @@ namespace ZWave.Devices.Vision
                     return;
                 }
             }
+            if (e.Report.Type == AlarmType.Burglar)
+            {
+                if (e.Report.Level == 0x00)
+                {
+                    OnShockCancelled(EventArgs.Empty);
+                    return;
+                }
+                if (e.Report.Level == 0xFF)
+                {
+                    OnShockDetected(EventArgs.Empty);
+                    return;
+                }
+            }
         }
 
         protected virtual void OnTamperDetected(EventArgs e)
