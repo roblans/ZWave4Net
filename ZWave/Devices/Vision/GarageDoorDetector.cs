@@ -86,12 +86,24 @@ namespace ZWave.Devices.Vision
 
         public async Task<bool> IsDoorOpen()
         {
-            return (await Node.GetCommandClass<Basic>().Get()).Value == 0xFF;
+            var basic = await Node.GetCommandClass<Basic>().Get();
+            if (basic.Value == 0xFF)
+            {
+                return true;
+            }
+
+            var alarm = (await Node.GetCommandClass<Alarm>().Get());
+            if (alarm.Type == AlarmType.Burglar && alarm.Level == 0xFF)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<bool> IsDoorClosed()
         {
-            return (await Node.GetCommandClass<Basic>().Get()).Value == 0x00;
+            return !(await IsDoorOpen());
         }
     }
 }
