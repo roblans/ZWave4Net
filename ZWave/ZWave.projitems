@@ -57,6 +57,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MeterReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MeterSupportedReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MeterType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\NodeReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ReportEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorAlarm.cs" />

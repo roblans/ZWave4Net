@@ -33,6 +33,7 @@ namespace ZWave
             _commandClasses.Add(new CommandClasses.Version(this));
             _commandClasses.Add(new Configuration(this));
             _commandClasses.Add(new Color(this));
+            _commandClasses.Add(new MultiChannel(this));
         }
 
         protected ZWaveChannel Channel
