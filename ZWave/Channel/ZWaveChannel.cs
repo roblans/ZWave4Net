@@ -174,25 +174,6 @@ namespace ZWave.Channel
             LogMessage($"Transmitted: {message}");
         }
 
-        private async Task<Message> Receive()
-        {
-            var result = await Task.Run((Func<Message>)(() =>
-            {
-                var message = default(Message);
-                _responseQueue.TryTake(out message, ResponseTimeout);
-                return message;
-            })).ConfigureAwait(false);
-
-            if (result == null)
-                throw new TimeoutException();
-            if (result == Message.NAK)
-                throw new NakResponseException();
-            if (result == Message.CAN)
-                throw new CanResponseException();
-
-            return result;
-        }
-
         private async Task<Message> WaitForResponse(Func<Message, bool> predicate)
         {
             if (predicate == null)
