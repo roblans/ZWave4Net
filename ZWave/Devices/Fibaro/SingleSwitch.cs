@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +8,8 @@ namespace ZWave.Devices.Fibaro
 {
     public class SingleSwitch : Device
     {
-        public event AsyncEventHandler<EventArgs> SwitchedOn;
-        public event AsyncEventHandler<EventArgs> SwitchedOff;
+        public event EventHandler<EventArgs> SwitchedOn;
+        public event EventHandler<EventArgs> SwitchedOff;
 
         public SingleSwitch(Node node)
             : base(node)
@@ -19,15 +18,15 @@ namespace ZWave.Devices.Fibaro
         }
 
 
-        private async Task SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
             {
-                await OnSwitchedOn(EventArgs.Empty);
+                OnSwitchedOn(EventArgs.Empty);
             }
             else
             {
-                await OnSwitchedOff(EventArgs.Empty);
+                OnSwitchedOff(EventArgs.Empty);
             }
         }
 
@@ -52,14 +51,14 @@ namespace ZWave.Devices.Fibaro
         }
 
 
-        protected virtual async Task OnSwitchedOn(EventArgs e)
+        protected virtual void OnSwitchedOn(EventArgs e)
         {
-            await SwitchedOn?.Invoke(this, e);
+            SwitchedOn?.Invoke(this, e);
         }
 
-        protected virtual async Task OnSwitchedOff(EventArgs e)
+        protected virtual void OnSwitchedOff(EventArgs e)
         {
-            await SwitchedOff?.Invoke(this, e);
+            SwitchedOff?.Invoke(this, e);
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace ZWave.Channel
@@ -13,6 +12,6 @@ namespace ZWave.Channel
         Task Send(byte nodeID, Command command);
         Task<byte[]> Send(byte nodeID, Command command, byte responseCommandID);
 
-        event AsyncEventHandler<NodeEventArgs> NodeEventReceived;
+        event EventHandler<NodeEventArgs> NodeEventReceived;
     }
 }

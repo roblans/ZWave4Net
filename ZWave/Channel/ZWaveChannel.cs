@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +25,7 @@ namespace ZWave.Channel
         public TextWriter Log;
         public TimeSpan ReceiveTimeout = TimeSpan.FromSeconds(2);
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
-        public event AsyncEventHandler<NodeEventArgs> NodeEventReceived;
+        public event EventHandler<NodeEventArgs> NodeEventReceived;
 
         public ZWaveChannel(ISerialPort port)
         {
@@ -152,11 +151,17 @@ namespace ZWave.Channel
             var handler = NodeEventReceived;
             if (handler != null)
             {
-                await handler.Invoke(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command));
-                //await handler.InvokeAsync(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command), (invocation, exception) =>
-                //{
-                //    LogMessage(exception.ToString());
-                //});
+                try
+                {
+                    await Task.Factory.StartNew(() =>
+                    {
+                        handler(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command));
+                    });
+                }
+                catch(Exception ex)
+                {
+                    LogMessage(ex.Message);
+                }
             }
         }
 
@@ -273,7 +278,7 @@ namespace ZWave.Channel
                 }).ConfigureAwait(false);
 
                 return ((ControllerFunctionCompleted)response).Payload;
-            });
+            }).OnError(HandleException);
         }
 
         public Task Send(byte nodeID, Command command)
@@ -294,7 +299,7 @@ namespace ZWave.Channel
                 }).ConfigureAwait(false);
 
                 return null;
-            });
+            }).OnError(HandleException);
         }
 
         public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID)
@@ -308,15 +313,14 @@ namespace ZWave.Channel
             {
                 var completionSource = new TaskCompletionSource<Command>();
 
-                AsyncEventHandler<NodeEventArgs> onNodeEventReceived = async (_, e) =>
+                EventHandler<NodeEventArgs> onNodeEventReceived = (_, e) =>
                 {
                     if (e.NodeID == nodeID && e.Command.ClassID == command.ClassID && e.Command.CommandID == responseCommandID)
                     {
                         // BugFix: 
                         // http://stackoverflow.com/questions/19481964/calling-taskcompletionsource-setresult-in-a-non-blocking-manner
-                        completionSource.SetResult(e.Command);
+                        Task.Run(() => completionSource.SetResult(e.Command));
                     }
-                    await Task.FromResult<object>(null);
                 };
 
                 var request = new NodeCommand(nodeID, command);
@@ -350,7 +354,7 @@ namespace ZWave.Channel
                 {
                     NodeEventReceived -= onNodeEventReceived;
                 }
-            });
+            }).OnError(HandleException);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace ZWaveDriverSample
             var sensorAlarm = motionSensor.GetCommandClass<SensorAlarm>();
 
             // subscribe to alarm event
-            sensorAlarm.Changed += async (s, e) => Console.WriteLine("Alarm");
+            sensorAlarm.Changed += (s, e) => Console.WriteLine("Alarm");
 
             // wait
             Console.ReadLine();

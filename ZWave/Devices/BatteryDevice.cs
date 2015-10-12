@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ namespace ZWave.Devices
 {
     public class BatteryDevice : Device
     {
-        public event AsyncEventHandler<EventArgs> WakeUp;
+        public event EventHandler<EventArgs> WakeUp;
 
         public BatteryDevice(Node node)
             : base(node)
@@ -18,18 +17,18 @@ namespace ZWave.Devices
 
         }
 
-        private async Task WakeUp_Changed(object sender, ReportEventArgs<WakeUpReport> e)
+        private void WakeUp_Changed(object sender, ReportEventArgs<WakeUpReport> e)
         {
             if (e.Report.Awake)
             {
-                await OnWakeUp(EventArgs.Empty);
+                OnWakeUp(EventArgs.Empty);
                 return;
             }
         }
 
-        protected virtual async Task OnWakeUp(EventArgs e)
+        protected virtual void OnWakeUp(EventArgs e)
         {
-            await WakeUp?.Invoke(this, e);
+            WakeUp?.Invoke(this, e);
         }
 
         public async Task<TimeSpan> GetWakeUpInterval()

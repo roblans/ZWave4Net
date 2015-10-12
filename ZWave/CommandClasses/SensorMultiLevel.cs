@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ namespace ZWave.CommandClasses
 {
     public class SensorMultiLevel : CommandClassBase
     {
-        public event AsyncEventHandler<ReportEventArgs<SensorMultiLevelReport>> Changed;
+        public event EventHandler<ReportEventArgs<SensorMultiLevelReport>> Changed;
 
         enum command
         {
@@ -29,20 +28,20 @@ namespace ZWave.CommandClasses
             return new SensorMultiLevelReport(Node, response);
         }
 
-        protected internal override async Task HandleEvent(Command command)
+        protected internal override void HandleEvent(Command command)
         {
-            await base.HandleEvent(command);
+            base.HandleEvent(command);
 
             var report = new SensorMultiLevelReport(Node, command.Payload);
-            await OnChanged(new ReportEventArgs<SensorMultiLevelReport>(report));
+            OnChanged(new ReportEventArgs<SensorMultiLevelReport>(report));
         }
 
-        protected virtual async Task OnChanged(ReportEventArgs<SensorMultiLevelReport> e)
+        protected virtual void OnChanged(ReportEventArgs<SensorMultiLevelReport> e)
         {
             var handler = Changed;
             if (handler != null)
             {
-                await handler.Invoke(this, e);
+                handler(this, e);
             }
         }
 

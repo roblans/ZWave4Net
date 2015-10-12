@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ namespace ZWave.CommandClasses
 {
     public class SensorBinary : CommandClassBase
     {
-        public event AsyncEventHandler<ReportEventArgs<SensorBinaryReport>> Changed;
+        public event EventHandler<ReportEventArgs<SensorBinaryReport>> Changed;
 
         enum command
         {
@@ -27,20 +26,20 @@ namespace ZWave.CommandClasses
             return new SensorBinaryReport(Node, response);
         }
 
-        protected internal override async Task HandleEvent(Command command)
+        protected internal override void HandleEvent(Command command)
         {
-            await base.HandleEvent(command);
+            base.HandleEvent(command);
 
             var report = new SensorBinaryReport(Node, command.Payload);
-            await OnChanged(new ReportEventArgs<SensorBinaryReport>(report));
+            OnChanged(new ReportEventArgs<SensorBinaryReport>(report));
         }
 
-        protected virtual async Task OnChanged(ReportEventArgs<SensorBinaryReport> e)
+        protected virtual void OnChanged(ReportEventArgs<SensorBinaryReport> e)
         {
             var handler = Changed;
             if (handler != null)
             {
-                await handler.Invoke(this, e);
+                handler(this, e);
             }
         }
 

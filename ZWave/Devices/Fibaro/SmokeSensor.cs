@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +8,8 @@ namespace ZWave.Devices.Fibaro
 {
     public class SmokeSensor : Device
     {
-        public event AsyncEventHandler<MeasureEventArgs> TemperatureMeasured;
-        public event AsyncEventHandler<MeasureEventArgs> SmokeMeasured;
+        public event EventHandler<MeasureEventArgs> TemperatureMeasured;
+        public event EventHandler<MeasureEventArgs> SmokeMeasured;
 
         public SmokeSensor(Node node)
             : base(node)
@@ -19,19 +18,19 @@ namespace ZWave.Devices.Fibaro
             node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
         }
 
-        private async Task SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
+        private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
         {
             if (e.Report.Type == SensorType.Temperature)
             {
-                await OnTemperatureMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
+                OnTemperatureMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
             }
             if (e.Report.Type == SensorType.CO2) // Todo: Check
             {
-                await OnSmokeMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Smoke)));
+                OnSmokeMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Smoke)));
             }
         }
 
-        private async Task Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
+        private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
             if (e.Report.Value == 0x00)
             {
@@ -55,14 +54,14 @@ namespace ZWave.Devices.Fibaro
             await Node.GetCommandClass<Association>().Remove(Convert.ToByte(group), node.NodeID);
         }
 
-        protected virtual async Task OnTemperatureMeasured(MeasureEventArgs e)
+        protected virtual void OnTemperatureMeasured(MeasureEventArgs e)
         {
-            await TemperatureMeasured?.Invoke(this, e);
+            TemperatureMeasured?.Invoke(this, e);
         }
 
-        protected virtual async Task OnSmokeMeasured(MeasureEventArgs e)
+        protected virtual void OnSmokeMeasured(MeasureEventArgs e)
         {
-            await SmokeMeasured?.Invoke(this, e);
+            SmokeMeasured?.Invoke(this, e);
         }
         
     }

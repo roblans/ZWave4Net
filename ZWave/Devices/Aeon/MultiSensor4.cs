@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +9,11 @@ namespace ZWave.Devices.Aeon
 {
     public class MultiSensor4 : BatteryDevice
     {
-        public event AsyncEventHandler<EventArgs> MotionDetected;
-        public event AsyncEventHandler<EventArgs> MotionCancelled;
-        public event AsyncEventHandler<MeasureEventArgs> TemperatureMeasured;
-        public event AsyncEventHandler<MeasureEventArgs> LuminanceMeasured;
-        public event AsyncEventHandler<MeasureEventArgs> HumidityMeasured;
+        public event EventHandler<EventArgs> MotionDetected;
+        public event EventHandler<EventArgs> MotionCancelled;
+        public event EventHandler<MeasureEventArgs> TemperatureMeasured;
+        public event EventHandler<MeasureEventArgs> LuminanceMeasured;
+        public event EventHandler<MeasureEventArgs> HumidityMeasured;
 
         public MultiSensor4(Node node)
             : base(node)
@@ -23,32 +22,32 @@ namespace ZWave.Devices.Aeon
             node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
         }
 
-        private async Task SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
+        private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
         {
             if (e.Report.Type == SensorType.Temperature)
             {
-                await OnTemperatureMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
+                OnTemperatureMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
             }
             if (e.Report.Type == SensorType.Luminance)
             {
-                await OnLuminanceMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Lux)));
+                OnLuminanceMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Lux)));
             }
             if (e.Report.Type == SensorType.RelativeHumidity)
             {
-                await OnHumidityMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Humidity)));
+                OnHumidityMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Humidity)));
             }
         }
 
-        private async Task Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
+        private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
             if (e.Report.Value == 0x00)
             {
-                await OnMotionCancelled(EventArgs.Empty);
+                OnMotionCancelled(EventArgs.Empty);
                 return;
             }
             if (e.Report.Value == 0xFF)
             {
-                await OnMotionDetected(EventArgs.Empty);
+                OnMotionDetected(EventArgs.Empty);
                 return;
             }
         }
@@ -63,29 +62,29 @@ namespace ZWave.Devices.Aeon
             await Node.GetCommandClass<Association>().Remove(Convert.ToByte(group), node.NodeID);
         }
 
-        protected virtual async Task OnMotionDetected(EventArgs e)
+        protected virtual void OnMotionDetected(EventArgs e)
         {
-            await MotionDetected?.Invoke(this, e);
+            MotionDetected?.Invoke(this, e);
         }
 
-        protected virtual async Task OnMotionCancelled(EventArgs e)
+        protected virtual void OnMotionCancelled(EventArgs e)
         {
-            await MotionCancelled?.Invoke(this, e);
+            MotionCancelled?.Invoke(this, e);
         }
 
-        protected virtual async Task OnTemperatureMeasured(MeasureEventArgs e)
+        protected virtual void OnTemperatureMeasured(MeasureEventArgs e)
         {
-            await TemperatureMeasured?.Invoke(this, e);
+            TemperatureMeasured?.Invoke(this, e);
         }
 
-        protected virtual async Task OnLuminanceMeasured(MeasureEventArgs e)
+        protected virtual void OnLuminanceMeasured(MeasureEventArgs e)
         {
-            await LuminanceMeasured?.Invoke(this, e);
+            LuminanceMeasured?.Invoke(this, e);
         }
 
-        protected virtual async Task OnHumidityMeasured(MeasureEventArgs e)
+        protected virtual void OnHumidityMeasured(MeasureEventArgs e)
         {
-            await HumidityMeasured?.Invoke(this, e);
+            HumidityMeasured?.Invoke(this, e);
         }
     }
 }

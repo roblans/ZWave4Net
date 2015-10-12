@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using ZWave.Channel;
 
 namespace ZWave.CommandClasses
@@ -22,7 +21,7 @@ namespace ZWave.CommandClasses
             get { return Node.Controller.Channel; }
         }
 
-        internal async protected virtual Task HandleEvent(Command command)
+        internal protected virtual void HandleEvent(Command command)
         {
         }
     }

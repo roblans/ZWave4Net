@@ -36,13 +36,13 @@ namespace ZWave
             Channel.Open();
         }
 
-        private async Task Channel_NodeEventReceived(object sender, NodeEventArgs e)
+        private async void Channel_NodeEventReceived(object sender, NodeEventArgs e)
         {
             var nodes = await GetNodes();
             var target = nodes[e.NodeID];
             if (target != null)
             {
-                await target.HandleEvent(e.Command);
+                target.HandleEvent(e.Command);
             }
         }
 

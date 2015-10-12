@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ namespace ZWave.Devices.Vision
     public class Thermostat : Device
     {
 
-        public event AsyncEventHandler<MeasureEventArgs> TemperatureMeasured;
+        public event EventHandler<MeasureEventArgs> TemperatureMeasured;
 
         public Thermostat(Node node)
             : base(node)
@@ -18,11 +17,11 @@ namespace ZWave.Devices.Vision
             node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
         }
 
-        private async Task SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
+        private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
         {
             if (e.Report.Type == SensorType.Temperature)
             {
-                await OnTemperatureMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
+                OnTemperatureMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Celsius)));
             }
         }
 
@@ -31,9 +30,9 @@ namespace ZWave.Devices.Vision
             throw new NotImplementedException();
         }
 
-        protected virtual async Task OnTemperatureMeasured(MeasureEventArgs e)
+        protected virtual void OnTemperatureMeasured(MeasureEventArgs e)
         {
-            await TemperatureMeasured?.Invoke(this, e);
+            TemperatureMeasured?.Invoke(this, e);
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +8,10 @@ namespace ZWave.Devices.Vision
 {
     public class GarageDoorDetector : BatteryDevice
     {
-        public event AsyncEventHandler<EventArgs> DoorOpened;
-        public event AsyncEventHandler<EventArgs> DoorClosed;
-        public event AsyncEventHandler<EventArgs> TamperDetected;
-        public event AsyncEventHandler<EventArgs> TamperCancelled;
+        public event EventHandler<EventArgs> DoorOpened;
+        public event EventHandler<EventArgs> DoorClosed;
+        public event EventHandler<EventArgs> TamperDetected;
+        public event EventHandler<EventArgs> TamperCancelled;
 
         public GarageDoorDetector(Node node)
             : base(node)
@@ -21,42 +20,42 @@ namespace ZWave.Devices.Vision
             node.GetCommandClass<Alarm>().Changed += Alarm_Changed;
         }
 
-        private async Task Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
+        private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
             if (e.Report.Value == 0x00)
             {
-                await OnDoorClosed(EventArgs.Empty);
+                OnDoorClosed(EventArgs.Empty);
                 return;
             }
             if (e.Report.Value == 0xFF)
             {
-                await OnDoorOpened(EventArgs.Empty);
+                OnDoorOpened(EventArgs.Empty);
                 return;
             }
         }
 
-        protected virtual async Task OnDoorOpened(EventArgs e)
+        protected virtual void OnDoorOpened(EventArgs e)
         {
-            await DoorOpened?.Invoke(this, e);
+            DoorOpened?.Invoke(this, e);
         }
 
-        protected virtual async Task OnDoorClosed(EventArgs e)
+        protected virtual void OnDoorClosed(EventArgs e)
         {
-            await DoorClosed?.Invoke(this, e);
+            DoorClosed?.Invoke(this, e);
         }
 
-        private async Task Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
+        private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
         {
             if (e.Report.Detail == AlarmDetailType.TamperingProductCoveringRemoved)
             {
                 if (e.Report.Level == 0x00)
                 {
-                    await OnTamperCancelled(EventArgs.Empty);
+                    OnTamperCancelled(EventArgs.Empty);
                     return;
                 }
                 if (e.Report.Level == 0xFF)
                 {
-                    await OnTamperDetected(EventArgs.Empty);
+                    OnTamperDetected(EventArgs.Empty);
                     return;
                 }
             }
@@ -64,25 +63,25 @@ namespace ZWave.Devices.Vision
             {
                 if (e.Report.Level == 0x00)
                 {
-                    await OnDoorClosed(EventArgs.Empty);
+                    OnDoorClosed(EventArgs.Empty);
                     return;
                 }
                 if (e.Report.Level == 0xFF)
                 {
-                    await OnDoorOpened(EventArgs.Empty);
+                    OnDoorOpened(EventArgs.Empty);
                     return;
                 }
             }
         }
 
-        protected virtual async Task OnTamperDetected(EventArgs e)
+        protected virtual void OnTamperDetected(EventArgs e)
         {
-            await TamperDetected?.Invoke(this, e);
+            TamperDetected?.Invoke(this, e);
         }
 
-        protected virtual async Task OnTamperCancelled(EventArgs e)
+        protected virtual void OnTamperCancelled(EventArgs e)
         {
-            await TamperCancelled?.Invoke(this, e);
+            TamperCancelled?.Invoke(this, e);
         }
 
         public async Task<bool> IsDoorOpen()

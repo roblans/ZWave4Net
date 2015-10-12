@@ -71,12 +71,12 @@ namespace ZWave
             return $"{NodeID:D3}";
         }
 
-        internal async Task HandleEvent(Command command)
+        internal void HandleEvent(Command command)
         {
             var target = _commandClasses.FirstOrDefault(element => Convert.ToByte(element.Class) == command.ClassID);
             if (target != null)
             {
-                await target.HandleEvent(command);
+                target.HandleEvent(command);
             }
         }
     }

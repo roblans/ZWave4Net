@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ namespace ZWave.CommandClasses
 {
     public class SwitchBinary : CommandClassBase
     {
-        public event AsyncEventHandler<ReportEventArgs<SwitchBinaryReport>> Changed;
+        public event EventHandler<ReportEventArgs<SwitchBinaryReport>> Changed;
 
         enum command
         {
@@ -33,20 +32,20 @@ namespace ZWave.CommandClasses
             await Channel.Send(Node, new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00));
         }
 
-        protected internal override async Task HandleEvent(Command command)
+        protected internal override void HandleEvent(Command command)
         {
-            await base.HandleEvent(command);
+            base.HandleEvent(command);
 
             var report = new SwitchBinaryReport(Node, command.Payload);
-            await OnChanged(new ReportEventArgs<SwitchBinaryReport>(report));
+            OnChanged(new ReportEventArgs<SwitchBinaryReport>(report));
         }
 
-        protected virtual async Task OnChanged(ReportEventArgs<SwitchBinaryReport> e)
+        protected virtual void OnChanged(ReportEventArgs<SwitchBinaryReport> e)
         {
             var handler = Changed;
             if (handler != null)
             {
-                await handler.Invoke(this, e);
+                handler(this, e);
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using Framework.Threading.Tasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +8,10 @@ namespace ZWave.Devices.Fibaro
 {
     public class WallPlug : Device
     {
-        public event AsyncEventHandler<MeasureEventArgs> EnergyConsumptionMeasured;
-        public event AsyncEventHandler<MeasureEventArgs> PowerLoadMeasured;
-        public event AsyncEventHandler<EventArgs> SwitchedOn;
-        public event AsyncEventHandler<EventArgs> SwitchedOff;
+        public event EventHandler<MeasureEventArgs> EnergyConsumptionMeasured;
+        public event EventHandler<MeasureEventArgs> PowerLoadMeasured;
+        public event EventHandler<EventArgs> SwitchedOn;
+        public event EventHandler<EventArgs> SwitchedOff;
 
         public WallPlug(Node node)
             : base(node)
@@ -22,25 +21,25 @@ namespace ZWave.Devices.Fibaro
             Node.GetCommandClass<Meter>().Changed += Meter_Changed;
         }
 
-        private async Task Meter_Changed(object sender, ReportEventArgs<MeterReport> e)
+        private void Meter_Changed(object sender, ReportEventArgs<MeterReport> e)
         {
-            await OnEnergyConsumptionMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.KiloWattHour)));
+            OnEnergyConsumptionMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.KiloWattHour)));
         }
 
-        private async Task SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
+        private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
         {
-            await OnPowerLoadMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Watt)));
+            OnPowerLoadMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Watt)));
         }
 
-        private async Task SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
             {
-                await OnSwitchedOn(EventArgs.Empty);
+                OnSwitchedOn(EventArgs.Empty);
             }
             else
             {
-                await OnSwitchedOff(EventArgs.Empty);
+                OnSwitchedOff(EventArgs.Empty);
             }
         }
 
@@ -114,24 +113,24 @@ namespace ZWave.Devices.Fibaro
             await Node.GetCommandClass<Configuration>().Set(47, (ushort)value.TotalSeconds);
         }
 
-        protected virtual async Task OnSwitchedOn(EventArgs e)
+        protected virtual void OnSwitchedOn(EventArgs e)
         {
-            await SwitchedOn?.Invoke(this, e);
+            SwitchedOn?.Invoke(this, e);
         }
 
-        protected virtual async Task OnSwitchedOff(EventArgs e)
+        protected virtual void OnSwitchedOff(EventArgs e)
         {
-            await SwitchedOff?.Invoke(this, e);
+            SwitchedOff?.Invoke(this, e);
         }
 
-        protected virtual async Task OnPowerLoadMeasured(MeasureEventArgs e)
+        protected virtual void OnPowerLoadMeasured(MeasureEventArgs e)
         {
-            await PowerLoadMeasured?.Invoke(this, e);
+            PowerLoadMeasured?.Invoke(this, e);
         }
 
-        protected virtual async Task OnEnergyConsumptionMeasured(MeasureEventArgs e)
+        protected virtual void OnEnergyConsumptionMeasured(MeasureEventArgs e)
         {
-            await EnergyConsumptionMeasured?.Invoke(this, e);
+            EnergyConsumptionMeasured?.Invoke(this, e);
         }
 
         public enum LedRingColorOn : byte
