@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,10 @@ namespace ZWave.Devices.Fibaro
     public class BinarySensor : Device
     {
 
-        public event EventHandler<EventArgs> SwitchedOn1;
-        public event EventHandler<EventArgs> SwitchedOff1;
-        public event EventHandler<EventArgs> SwitchedOn2;
-        public event EventHandler<EventArgs> SwitchedOff2;
+        public event AsyncEventHandler<EventArgs> SwitchedOn1;
+        public event AsyncEventHandler<EventArgs> SwitchedOff1;
+        public event AsyncEventHandler<EventArgs> SwitchedOn2;
+        public event AsyncEventHandler<EventArgs> SwitchedOff2;
 
         public BinarySensor(Node node)
             : base(node)
@@ -22,26 +23,27 @@ namespace ZWave.Devices.Fibaro
         }
 
 
-        private void SwitchBinary1_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private async Task SwitchBinary1_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
             {
-                OnSwitchedOn1(EventArgs.Empty);
+                await OnSwitchedOn1(EventArgs.Empty);
             }
             else
             {
-                OnSwitchedOff1(EventArgs.Empty);
+                await OnSwitchedOff1(EventArgs.Empty);
             }
         }
-        private void SwitchBinary2_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+
+        private async Task SwitchBinary2_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
             {
-                OnSwitchedOn2(EventArgs.Empty);
+                await OnSwitchedOn2(EventArgs.Empty);
             }
             else
             {
-                OnSwitchedOff2(EventArgs.Empty);
+                await OnSwitchedOff2(EventArgs.Empty);
             }
         }
         
@@ -57,24 +59,24 @@ namespace ZWave.Devices.Fibaro
         }
 
 
-        protected virtual void OnSwitchedOn1(EventArgs e)
+        protected virtual async Task OnSwitchedOn1(EventArgs e)
         {
-            SwitchedOn1?.Invoke(this, e);
+            await SwitchedOn1?.Invoke(this, e);
         }
 
-        protected virtual void OnSwitchedOff1(EventArgs e)
+        protected virtual async Task OnSwitchedOff1(EventArgs e)
         {
-            SwitchedOff1?.Invoke(this, e);
+            await SwitchedOff1?.Invoke(this, e);
         }
 
-        protected virtual void OnSwitchedOn2(EventArgs e)
+        protected virtual async Task OnSwitchedOn2(EventArgs e)
         {
-            SwitchedOn2?.Invoke(this, e);
+            await SwitchedOn2?.Invoke(this, e);
         }
 
-        protected virtual void OnSwitchedOff2(EventArgs e)
+        protected virtual async Task OnSwitchedOff2(EventArgs e)
         {
-            SwitchedOff2?.Invoke(this, e);
+            await SwitchedOff2?.Invoke(this, e);
         }
 
     }

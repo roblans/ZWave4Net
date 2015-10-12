@@ -21,7 +21,11 @@ namespace ZWaveChannelSample
             // channel.Log = Console.Out;
 
             // subcribe to node events
-            channel.NodeEventReceived += (sender, e) => Console.WriteLine($"Event: NodeID:{e.NodeID:D3} Command:[{e.Command}]");
+            channel.NodeEventReceived += async (sender, e) =>
+            {
+                Console.WriteLine($"Event: NodeID:{e.NodeID:D3} Command:[{e.Command}]");
+                await Task.FromResult<object>(null);
+            };
 
             // open channel
             channel.Open();

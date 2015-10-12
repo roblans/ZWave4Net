@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace ZWave.CommandClasses
 {
     public class Meter : CommandClassBase
     {
-        public event EventHandler<ReportEventArgs<MeterReport>> Changed;
+        public event AsyncEventHandler<ReportEventArgs<MeterReport>> Changed;
 
         enum command
         {
@@ -37,23 +38,23 @@ namespace ZWave.CommandClasses
             return new MeterSupportedReport(Node, response);
         }
 
-        protected internal override void HandleEvent(Command command)
+        protected internal override async Task HandleEvent(Command command)
         {
-            base.HandleEvent(command);
+            await base.HandleEvent(command);
 
             if (command.CommandID == Convert.ToByte(Meter.command.Report))
             {
                 var report = new MeterReport(Node, command.Payload);
-                OnChanged(new ReportEventArgs<MeterReport>(report));
+                await OnChanged(new ReportEventArgs<MeterReport>(report));
             }
         }
 
-        protected virtual void OnChanged(ReportEventArgs<MeterReport> e)
+        protected virtual async Task OnChanged(ReportEventArgs<MeterReport> e)
         {
             var handler = Changed;
             if (handler != null)
             {
-                handler(this, e);
+                await handler.Invoke(this, e);
             }
         }
 

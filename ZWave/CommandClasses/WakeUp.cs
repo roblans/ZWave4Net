@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ namespace ZWave.CommandClasses
 {
     public class WakeUp : CommandClassBase
     {
-        public event EventHandler<ReportEventArgs<WakeUpReport>> Changed;
+        public event AsyncEventHandler<ReportEventArgs<WakeUpReport>> Changed;
 
         enum command
         {
@@ -40,24 +41,24 @@ namespace ZWave.CommandClasses
             await Channel.Send(Node, new Command(Class, command.NoMoreInformation));
         }
 
-        protected internal override void HandleEvent(Command command)
+        protected internal override async Task HandleEvent(Command command)
         {
-            base.HandleEvent(command);
+            await base.HandleEvent(command);
 
             if (command.CommandID == Convert.ToByte(WakeUp.command.Notification))
             {
                 var report = new WakeUpReport(Node);
-                OnChanged(new ReportEventArgs<WakeUpReport>(report));
+                await OnChanged(new ReportEventArgs<WakeUpReport>(report));
                 return;
             }
         }
 
-        protected virtual void OnChanged(ReportEventArgs<WakeUpReport> e)
+        protected virtual async Task OnChanged(ReportEventArgs<WakeUpReport> e)
         {
             var handler = Changed;
             if (handler != null)
             {
-                handler(this, e);
+                await handler.Invoke(this, e);
             }
         }
     }

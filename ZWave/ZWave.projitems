@@ -95,6 +95,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\GarageDoorDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\ShockSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Zipato\RgbwLightBulb.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Threading\Tasks\AsyncEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeCollection.cs" />

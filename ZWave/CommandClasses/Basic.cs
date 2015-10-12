@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace ZWave.CommandClasses
             Report = 0x03
         }
 
-        public event EventHandler<ReportEventArgs<BasicReport>> Changed;
+        public event AsyncEventHandler<ReportEventArgs<BasicReport>> Changed;
 
         public Basic(Node node) : base(node, CommandClass.Basic)
         {
@@ -32,20 +33,20 @@ namespace ZWave.CommandClasses
             await Channel.Send(Node, new Command(Class, command.Set, value));
         }
 
-        protected internal override void HandleEvent(Command command)
+        protected internal override async Task HandleEvent(Command command)
         {
-            base.HandleEvent(command);
+            await base.HandleEvent(command);
 
             var report = new BasicReport(Node, command.Payload);
-            OnChanged(new ReportEventArgs<BasicReport>(report));
+            await OnChanged(new ReportEventArgs<BasicReport>(report));
         }
 
-        protected virtual void OnChanged(ReportEventArgs<BasicReport> e)
+        protected virtual async Task OnChanged(ReportEventArgs<BasicReport> e)
         {
             var handler = Changed;
             if (handler != null)
             {
-                handler(this, e);
+                await handler.Invoke(this, e);
             }
         }
     }

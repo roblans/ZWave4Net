@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Framework.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,8 @@ namespace ZWave.Devices.Fortrezz
     public class BinarySwitch : Device
     {
 
-        public event EventHandler<EventArgs> SwitchedOn;
-        public event EventHandler<EventArgs> SwitchedOff;
+        public event AsyncEventHandler<EventArgs> SwitchedOn;
+        public event AsyncEventHandler<EventArgs> SwitchedOff;
 
         public BinarySwitch(Node node)
             : base(node)
@@ -20,15 +21,15 @@ namespace ZWave.Devices.Fortrezz
         }
 
 
-        private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private async Task SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
             {
-                OnSwitchedOn(EventArgs.Empty);
+                await OnSwitchedOn(EventArgs.Empty);
             }
             else
             {
-                OnSwitchedOff(EventArgs.Empty);
+                await OnSwitchedOff(EventArgs.Empty);
             }
         }
 
@@ -43,14 +44,14 @@ namespace ZWave.Devices.Fortrezz
         }
 
 
-        protected virtual void OnSwitchedOn(EventArgs e)
+        protected virtual async Task OnSwitchedOn(EventArgs e)
         {
-            SwitchedOn?.Invoke(this, e);
+            await SwitchedOn?.Invoke(this, e);
         }
 
-        protected virtual void OnSwitchedOff(EventArgs e)
+        protected virtual async Task OnSwitchedOff(EventArgs e)
         {
-            SwitchedOff?.Invoke(this, e);
+            await SwitchedOff?.Invoke(this, e);
         }
         
     }

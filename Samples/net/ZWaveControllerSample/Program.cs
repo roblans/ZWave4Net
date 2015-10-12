@@ -14,7 +14,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
-            controller.Channel.Log = Console.Out;
+            //controller.Channel.Log = Console.Out;
 
             controller.Open();
             try
@@ -89,28 +89,28 @@ namespace ZWaveDriverSample
         private static void Subscribe(Node node)
         {
             var basic = node.GetCommandClass<Basic>();
-            basic.Changed += (_, e) => LogMessage($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            basic.Changed += async (_, e) => LogMessage($"Basic report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var sensorMultiLevel = node.GetCommandClass<SensorMultiLevel>();
-            sensorMultiLevel.Changed += (_, e) => LogMessage($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            sensorMultiLevel.Changed += async (_, e) => LogMessage($"SensorMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var meter = node.GetCommandClass<Meter>();
-            meter.Changed += (_, e) => LogMessage($"Meter report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            meter.Changed += async (_, e) => LogMessage($"Meter report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var alarm = node.GetCommandClass<Alarm>();
-            alarm.Changed += (_, e) => LogMessage($"Alarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            alarm.Changed += async (_, e) => LogMessage($"Alarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var sensorBinary = node.GetCommandClass<SensorBinary>();
-            sensorBinary.Changed += (_, e) => LogMessage($"SensorBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            sensorBinary.Changed += async (_, e) => LogMessage($"SensorBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var sensorAlarm = node.GetCommandClass<SensorAlarm>();
-            sensorAlarm.Changed += (_, e) => LogMessage($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            sensorAlarm.Changed += async (_, e) => LogMessage($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var wakeUp = node.GetCommandClass<WakeUp>();
-            wakeUp.Changed += (_, e) => LogMessage($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            wakeUp.Changed += async (_, e) => LogMessage($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var switchBinary = node.GetCommandClass<SwitchBinary>();
-            switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            switchBinary.Changed += async (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
         }
 
         private static async Task RunWallplugTest(Node wallPlug)
@@ -188,6 +188,7 @@ namespace ZWaveDriverSample
             var wakeUpReport = await wakeUp.GetInterval();
             LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
 
+
             Console.ReadLine();
         }
 
@@ -228,6 +229,10 @@ namespace ZWaveDriverSample
             var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
             var sensorMultiLevelReport = await sensorMultiLevel.Get();
             LogMessage($"sensorMultiLevelReport report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
+
+            var meter = motionSensor.GetCommandClass<Meter>();
+            var meterReport = await meter.Get();
+
             Console.ReadLine();
         }
     }
