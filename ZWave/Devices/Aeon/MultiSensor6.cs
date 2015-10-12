@@ -27,7 +27,7 @@ namespace ZWave.Devices.Aeon
 
         private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
         {
-            if (e.Report.Type == AlarmType.General)
+            if (e.Report.Type == AlarmType.General && e.Report.Detail == AlarmDetailType.TamperingProductCoveringRemoved)
             {
                 OnVibrationDetected(EventArgs.Empty);
             }
