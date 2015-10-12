@@ -12,32 +12,32 @@ namespace ZWave.Channel
         private readonly object _command;
         public readonly byte[] Payload;
 
-        public Command(byte classID, byte commandID, params byte[] payload)
+        private Command(object @class, object command, params byte[] payload)
         {
-            _class = Enum.ToObject(typeof(CommandClass), classID);
-            _command = commandID;
+            _class = @class;
+            _command = command;
             Payload = payload;
+        }
+
+        public Command(byte classID, byte commandID, params byte[] payload)
+            : this((object)classID, (object)commandID, payload)
+        {
         }
 
         public Command(CommandClass @class, byte commandID, params byte[] payload)
+            : this((object)@class, (object)commandID, payload)
         {
-            _class = @class;
-            _command = commandID;
-            Payload = payload;
         }
 
         public Command(byte classID, Enum command, params byte[] payload)
+            : this((object)classID, (object)command, payload)
         {
-            _class = Enum.ToObject(typeof(CommandClass), classID);
-            _command = command;
-            Payload = payload;
         }
 
         public Command(CommandClass @class, Enum command, params byte[] payload)
+            : this((object)@class, (object)command, payload)
         {
-            _class = @class;
-            _command = command;
-            Payload = payload;
+
         }
 
         public byte ClassID
