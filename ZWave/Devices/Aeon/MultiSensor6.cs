@@ -15,13 +15,22 @@ namespace ZWave.Devices.Aeon
         public event EventHandler<MeasureEventArgs> LuminanceMeasured;
         public event EventHandler<MeasureEventArgs> HumidityMeasured;
         public event EventHandler<MeasureEventArgs> UltravioletMeasured;
-        public event EventHandler<MeasureEventArgs> SeismicIntensityMeasured; // ToDo: Check
+        public event EventHandler<EventArgs> VibrationDetected;
 
         public MultiSensor6(Node node)
             : base(node)
         {
             node.GetCommandClass<Basic>().Changed += Basic_Changed;
             node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
+            node.GetCommandClass<Alarm>().Changed += Alarm_Changed;
+        }
+
+        private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
+        {
+            if (e.Report.Type == AlarmType.General)
+            {
+                OnVibrationDetected(EventArgs.Empty);
+            }
         }
 
         private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
@@ -41,10 +50,6 @@ namespace ZWave.Devices.Aeon
             if (e.Report.Type == SensorType.Ultraviolet)
             {
                 OnUltravioletMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.Ultraviolet)));
-            }
-            if (e.Report.Type == SensorType.SeismicIntensity) // ToDo: Check
-            {
-                OnSeismicIntensityMeasured(new MeasureEventArgs(new Measure(e.Report.Value, Unit.SeismicIntensity)));
             }
         }
 
@@ -102,9 +107,9 @@ namespace ZWave.Devices.Aeon
             UltravioletMeasured?.Invoke(this, e);
         }
 
-        protected virtual void OnSeismicIntensityMeasured(MeasureEventArgs e)
+        protected virtual void OnVibrationDetected(EventArgs e)
         {
-            SeismicIntensityMeasured?.Invoke(this, e);
+            VibrationDetected?.Invoke(this, e);
         }
     }
 }
