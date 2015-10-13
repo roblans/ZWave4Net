@@ -14,7 +14,7 @@ namespace ZWave
         private string _version;
         private uint? _homeID;
         private byte? _nodeID;
-        public readonly IZWaveChannel Channel;
+        public readonly ZWaveChannel Channel;
 
         private ZWaveController(ZWaveChannel channel)
         {

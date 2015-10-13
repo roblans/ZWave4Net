@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Extentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Function.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\ISerialPort.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Channel\IZWaveChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\NodeEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunctionCompleted.cs" />

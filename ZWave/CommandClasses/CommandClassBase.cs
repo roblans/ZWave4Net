@@ -16,7 +16,7 @@ namespace ZWave.CommandClasses
             Class = @class;
         }
 
-        protected IZWaveChannel Channel
+        protected ZWaveChannel Channel
         {
             get { return Node.Controller.Channel; }
         }
