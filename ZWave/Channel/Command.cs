@@ -52,7 +52,8 @@ namespace ZWave.Channel
 
         public override string ToString()
         {
-            return $"Class:{_class:X}, Command:{_command}, Payload:{BitConverter.ToString(Payload)}";
+            var classText = Enum.IsDefined(typeof(CommandClass), _class) ? $"{_class}" : $"{_class:X}";
+            return $"Class:{classText}, Command:{_command}, Payload:{BitConverter.ToString(Payload)}";
         }
 
         public byte[] ToBytes()
