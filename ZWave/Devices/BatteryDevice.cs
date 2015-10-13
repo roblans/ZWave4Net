@@ -44,7 +44,8 @@ namespace ZWave.Devices
 
         public async Task SetWakeUpInterval(TimeSpan value)
         {
-            await Node.GetCommandClass<WakeUp>().SetInterval(value, 0xFF);
+            var controllerNodeID = await Node.Controller.GetNodeID();
+            await Node.GetCommandClass<WakeUp>().SetInterval(value, controllerNodeID);
         }
 
         public async Task<Measure> GetBatteryLevel()
