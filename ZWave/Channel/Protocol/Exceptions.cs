@@ -40,4 +40,11 @@ namespace ZWave.Channel.Protocol
         public UnknownFrameException(string message) : base(message) { }
         public UnknownFrameException(string message, System.Exception inner) : base(message, inner) { }
     }
+
+    public class NoNakResponseException : ProtocolException
+    {
+        public NoNakResponseException() { }
+        public NoNakResponseException(string message) : base(message) { }
+        public NoNakResponseException(string message, System.Exception inner) : base(message, inner) { }
+    }
 }

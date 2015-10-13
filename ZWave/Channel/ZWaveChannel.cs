@@ -194,6 +194,8 @@ namespace ZWave.Channel
                     throw new NakResponseException();
                 if (result == Message.CAN)
                     throw new CanResponseException();
+                if (result is NodeCommandCompleted && ((NodeCommandCompleted)result).TransmissionState == TransmissionState.NoAck)
+                    throw new NoNakResponseException();
 
                 if (predicate(result))
                 {
@@ -248,9 +250,18 @@ namespace ZWave.Channel
 
                         await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
                     }
+                    catch(NoNakResponseException)
+                    {
+                        if (attempt++ >= 3)
+                            throw;
+
+                        LogMessage($"NoNak received. Retrying (attempt: {attempt})");
+
+                        await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
+                    }
                     catch (TimeoutException)
                     {
-                        if (attempt++ >= 0)
+                        if (attempt++ >= 3)
                             throw;
 
                         LogMessage($"Timeout. Retrying (attempt: {attempt})");
