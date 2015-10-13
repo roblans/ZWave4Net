@@ -26,7 +26,7 @@ namespace ZWave.Channel.Protocol
 
         public override string ToString()
         {
-            return string.Concat(base.ToString(), " ", $"NodeID:{NodeID}, Command:[{Command}], CallbackID:{CallbackID}");
+            return string.Concat(base.ToString(), " ", $"NodeID:{NodeID:D3}, Command:[{Command}], CallbackID:{CallbackID}");
         }
 
         private static byte GetNextCallbackID()

@@ -22,7 +22,7 @@ namespace ZWave.Channel.Protocol
 
         public override string ToString()
         {
-            return string.Concat(base.ToString(), " ", $"{ReceiveStatus}, NodeID:{NodeID}, Command:[{Command}]");
+            return string.Concat(base.ToString(), " ", $"{ReceiveStatus}, NodeID:{NodeID:D3}, Command:[{Command}]");
         }
     }
 }
