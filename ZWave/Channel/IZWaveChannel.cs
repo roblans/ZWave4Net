@@ -1,10 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ZWave.Channel
 {
     public interface IZWaveChannel
     {
+        TextWriter Log { get; set; }
+
         void Open();
         void Close();
 

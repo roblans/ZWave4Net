@@ -22,7 +22,7 @@ namespace ZWave.Channel
         private readonly BlockingCollection<Message> _responseQueue = new BlockingCollection<Message>();
 
         public readonly ISerialPort Port;
-        public TextWriter Log;
+        public TextWriter Log { get; set; }
         public TimeSpan ReceiveTimeout = TimeSpan.FromSeconds(2);
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
         public event EventHandler<NodeEventArgs> NodeEventReceived;

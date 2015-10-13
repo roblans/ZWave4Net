@@ -35,7 +35,7 @@ namespace ZWave
             _commandClasses.Add(new MultiChannel(this));
         }
 
-        protected ZWaveChannel Channel
+        protected IZWaveChannel Channel
         {
             get { return Controller.Channel; }
         }
