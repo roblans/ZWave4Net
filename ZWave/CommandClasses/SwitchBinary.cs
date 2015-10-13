@@ -10,7 +10,7 @@ namespace ZWave.CommandClasses
     {
         public event EventHandler<ReportEventArgs<SwitchBinaryReport>> Changed;
 
-        enum command
+        public enum command
         {
             Set = 0x01,
             Get = 0x02,

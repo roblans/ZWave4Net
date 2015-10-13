@@ -8,6 +8,7 @@ namespace ZWave.Devices
 {
     public class BatteryDevice : Device
     {
+        private byte? _controllerID;
         public event EventHandler<EventArgs> WakeUp;
 
         public BatteryDevice(Node node)
@@ -15,6 +16,11 @@ namespace ZWave.Devices
         {
             node.GetCommandClass<WakeUp>().Changed += WakeUp_Changed;
 
+        }
+
+        private async Task<byte> GetControllerID()
+        {
+            return (_controllerID ?? (_controllerID = await Node.Controller.GetControllerID())).Value;
         }
 
         private void WakeUp_Changed(object sender, ReportEventArgs<WakeUpReport> e)
@@ -38,7 +44,8 @@ namespace ZWave.Devices
 
         public async Task SetWakeUpInterval(TimeSpan value)
         {
-            await Node.GetCommandClass<WakeUp>().SetInterval(value, 0xFF);
+            var controllerNodeID = await GetControllerID();
+            await Node.GetCommandClass<WakeUp>().SetInterval(value, controllerNodeID);
         }
 
         public async Task<Measure> GetBatteryLevel()
