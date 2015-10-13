@@ -49,7 +49,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CommandClassBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Configuration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ConfigurationReport.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Extentions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ICommandClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ManufacturerSpecific.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ManufacturerSpecificReport.cs" />
