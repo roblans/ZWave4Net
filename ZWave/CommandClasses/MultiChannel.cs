@@ -8,7 +8,6 @@ namespace ZWave.CommandClasses
 {
     public class MultiChannel : CommandClassBase
     {
-        private byte? _controllerID; 
         enum command
         {
             // version 2 only
@@ -21,14 +20,9 @@ namespace ZWave.CommandClasses
         {
         }
 
-        private async Task<byte> GetControllerID()
-        {
-            return (_controllerID ?? (_controllerID = await Node.Controller.GetControllerID())).Value;
-        }
-
         public async Task BinarySwitchSet(byte endPointID, bool value)
         {
-            var controllerID = await GetControllerID();
+            var controllerID = await Node.Controller.GetNodeID();
             await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointID, Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Set), value ? (byte)0xFF : (byte)0x00));
         }
 

@@ -20,7 +20,7 @@ namespace ZWave.Devices
 
         private async Task<byte> GetControllerID()
         {
-            return (_controllerID ?? (_controllerID = await Node.Controller.GetControllerID())).Value;
+            return (_controllerID ?? (_controllerID = await Node.Controller.GetNodeID())).Value;
         }
 
         private void WakeUp_Changed(object sender, ReportEventArgs<WakeUpReport> e)

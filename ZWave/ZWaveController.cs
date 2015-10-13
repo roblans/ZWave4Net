@@ -11,6 +11,9 @@ namespace ZWave
     public class ZWaveController
     {
         private Task<NodeCollection> _getNodes;
+        private string _version;
+        private uint? _homeID;
+        private byte? _nodeID;
         public readonly ZWaveChannel Channel;
 
         private ZWaveController(ZWaveChannel channel)
@@ -54,21 +57,33 @@ namespace ZWave
 
         public async Task<string> GetVersion()
         {
-            var response = await Channel.Send(Function.GetVersion);
-            var data = response.TakeWhile(element => element != 0).ToArray();
-            return Encoding.UTF8.GetString(data, 0, data.Length);
+            if (_version == null)
+            {
+                var response = await Channel.Send(Function.GetVersion);
+                var data = response.TakeWhile(element => element != 0).ToArray();
+                _version = Encoding.UTF8.GetString(data, 0, data.Length);
+            }
+            return _version;
         }
 
         public async Task<uint> GetHomeID()
         {
-            var response = await Channel.Send(Function.MemoryGetId);
-            return PayloadConverter.ToUInt32(response);
+            if (_homeID == null)
+            {
+                var response = await Channel.Send(Function.MemoryGetId);
+                _homeID = PayloadConverter.ToUInt32(response);
+            }
+            return _homeID.Value;
         }
 
-        public async Task<byte> GetControllerID()
+        public async Task<byte> GetNodeID()
         {
-            var response = await Channel.Send(Function.MemoryGetId);
-            return response[4];
+            if (_nodeID == null)
+            {
+                var response = await Channel.Send(Function.MemoryGetId);
+                _nodeID = response[4];
+            }
+            return _nodeID.Value;
         }
 
         public Task<NodeCollection> DiscoverNodes()
@@ -95,14 +110,6 @@ namespace ZWave
         public async Task<NodeCollection> GetNodes()
         {
             return await (_getNodes ?? (_getNodes = DiscoverNodes()));
-        }
-    }
-
-    public static partial class Extentions
-    {
-        public async static Task<Node> GetControllerNode(this ZWaveController controller)
-        {
-            return (await controller.GetNodes())[await controller.GetControllerID()];
         }
     }
 }
