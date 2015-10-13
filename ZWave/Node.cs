@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ZWave.CommandClasses;
@@ -30,7 +29,7 @@ namespace ZWave
             _commandClasses.Add(new WakeUp(this));
             _commandClasses.Add(new Meter(this));
             _commandClasses.Add(new SwitchBinary(this));
-            _commandClasses.Add(new CommandClasses.Version(this));
+            _commandClasses.Add(new Version(this));
             _commandClasses.Add(new Configuration(this));
             _commandClasses.Add(new Color(this));
             _commandClasses.Add(new MultiChannel(this));
@@ -50,7 +49,7 @@ namespace ZWave
         {
             var version = GetCommandClass<CommandClasses.Version>();
             var reports = new List<VersionCommandClassReport>();
-            foreach(var commandClass in Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
+            foreach(var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
             {
                 var report = await version.GetCommandClass(commandClass);
                 if (report.Version == 0)
@@ -74,7 +73,7 @@ namespace ZWave
 
         internal void HandleEvent(Command command)
         {
-            var target = _commandClasses.FirstOrDefault(element => Convert.ToByte(element.Class) == command.ClassID);
+            var target = _commandClasses.FirstOrDefault(element => System.Convert.ToByte(element.Class) == command.ClassID);
             if (target != null)
             {
                 target.HandleEvent(command);
