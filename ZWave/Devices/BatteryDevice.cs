@@ -9,7 +9,7 @@ namespace ZWave.Devices
     public class BatteryDevice : Device
     {
         private byte? _controllerID;
-        public event EventHandler<EventArgs> WakeUp;
+        public event EventHandler<WakeUpEventArgs> WakeUp;
 
         public BatteryDevice(Node node)
             : base(node)
@@ -27,12 +27,35 @@ namespace ZWave.Devices
         {
             if (e.Report.Awake)
             {
-                OnWakeUp(EventArgs.Empty);
+                OnAwaked();
                 return;
             }
         }
 
-        protected virtual void OnWakeUp(EventArgs e)
+        private void OnAwaked()
+        {
+            var eventArgs = new WakeUpEventArgs();
+            OnWakeUp(eventArgs);
+
+            Task.Run(async () =>
+            {
+                var timeout = Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.WhenAny(Task.WhenAll(eventArgs.WaitAll()), timeout);
+                if (!timeout.IsCompleted)
+                {
+                    try
+                    {
+                        await Sleep();
+                    }
+                    catch
+                    {
+                        // NOP, device already sleeping
+                    }
+                }
+            });
+        }
+
+        protected virtual void OnWakeUp(WakeUpEventArgs e)
         {
             WakeUp?.Invoke(this, e);
         }

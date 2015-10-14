@@ -71,8 +71,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\VersionCommandClassReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\VersionReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpIntervalReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Deferral.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor6.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor4.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\AssociationGroup.cs" />
