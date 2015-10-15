@@ -15,7 +15,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
-            controller.Channel.Log = Console.Out;
+            //controller.Channel.Log = Console.Out;
 
             controller.Open();
             try
@@ -77,6 +77,9 @@ namespace ZWaveDriverSample
             // NodeID of the fibaro wall plug
             //byte wallPlugID = 7;
             //await RunWallplugTest(nodes[wallPlugID]);
+
+            byte thermostatSensorID = 13;
+            await RunThermostatSensor6Test(nodes[thermostatSensorID]);
 
             // NodeID of the fibaro motionsensor
             byte multiSensorID = 9;
@@ -230,6 +233,28 @@ namespace ZWaveDriverSample
             var sensorMultiLevelReport = await sensorMultiLevel.Get();
             LogMessage($"sensorMultiLevelReport report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
             Console.ReadLine();
+        }
+
+        public static async Task RunThermostatSensor6Test(Node node)
+        {
+            LogMessage("Please wakeup the thermostat.");
+            Console.ReadLine();
+
+            var battery = node.GetCommandClass<Battery>();
+            var batteryReport = await battery.Get();
+            LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
+
+            var wakeUp = node.GetCommandClass<WakeUp>();
+            var wakeUpReport = await wakeUp.GetInterval();
+            await wakeUp.SetInterval(TimeSpan.FromSeconds(10), 1);
+            LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+
+            var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
+            var thermostatSetpointReport = await thermostatSetpoint.Get(ThermostatSetpointType.Heating);
+            LogMessage($"WakeUp report of Node {thermostatSetpointReport.Node:D3} is [{thermostatSetpointReport}]");
+
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
         }
     }
 }
