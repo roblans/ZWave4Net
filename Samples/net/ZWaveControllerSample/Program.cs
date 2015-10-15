@@ -75,8 +75,8 @@ namespace ZWaveDriverSample
             }
 
             // NodeID of the fibaro wall plug
-            //byte wallPlugID = 7;
-            //await RunWallplugTest(nodes[wallPlugID]);
+            byte wallPlugID = 6;
+            await RunWallplugTest(nodes[wallPlugID]);
 
             byte thermostatSensorID = 13;
             await RunThermostatSensor6Test(nodes[thermostatSensorID]);
