@@ -4,13 +4,13 @@ using System.Text;
 
 namespace ZWave.Devices
 {
-    public class Measure
+    public class Setpoint
     {
         public readonly float Value;
         public readonly Unit Unit;
         public readonly string Symbol;
 
-        public Measure(float value, Unit unit)
+        public Setpoint(float value, Unit unit)
         {
             Value = value;
             Unit = unit;

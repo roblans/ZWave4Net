@@ -82,6 +82,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor4.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\AssociationGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\BatteryDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Danfoss\RadiatorThermostat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\DoorSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\SmokeSensor.cs" />
@@ -93,9 +94,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\WallPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fortrezz\BinarySwitch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Measure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\SetpointEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\MeasureEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\PhilioTech\DoorSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Eurotronic\Thermostat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Setpoint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Unit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\GarageDoorDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\ShockSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Zipato\RgbwLightBulb.cs" />
