@@ -74,17 +74,15 @@ namespace ZWaveDriverSample
                 Subscribe(node);
             }
 
-            // NodeID of the fibaro wall plug
-            //byte wallPlugID = 7;
-            //await RunWallplugTest(nodes[wallPlugID]);
 
-            // NodeID of the fibaro motionsensor
-            byte multiSensorID = 9;
-            await RunMultiSensor6Test(nodes[multiSensorID]);
+            //await InitializeWallPlug(nodes[2]);
+            //await InitializeWallPlug(nodes[3]);
+            //await InitializeShockSensor(nodes[4]);
+            //await InitializeGarageDoorSensor(nodes[5]);
+            await InitializeThermostat(nodes[6]);
+            //await InitializeMultiSensor(nodes[7]);
 
-            // NodeID of the fibaro motionsensor
-            //byte motionSensorID = 8;
-            //await RunGarageDoorSensorTest(nodes[motionSensorID]);
+            Console.ReadLine();
         }
 
         private static void Subscribe(Node node)
@@ -112,87 +110,99 @@ namespace ZWaveDriverSample
 
             var switchBinary = node.GetCommandClass<SwitchBinary>();
             switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
+            thermostatSetpoint.Changed += async (_, e) =>
+            {
+                await thermostatSetpoint.Set();
+                LogMessage($"thermostatSetpoint report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+            };
         }
 
-        private static async Task RunWallplugTest(Node wallPlug)
+        private static async Task InitializeWallPlug(Node node)
         {
-            var association = wallPlug.GetCommandClass<Association>();
-
-            // associate group 1 - group 3 to controller node 
+            var association = node.GetCommandClass<Association>();
             await association.Add(1, 1);
             await association.Add(2, 1);
             await association.Add(3, 1);
 
-            var supportedCommandClasses = await wallPlug.GetSupportedCommandClasses();
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
             LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
 
-            var basic = wallPlug.GetCommandClass<Basic>();
-            var basicReport = await basic.Get();
-            LogMessage($"Basic report of Node {basicReport.Node:D3} is [{basicReport}]");
-
-            var version = wallPlug.GetCommandClass<ZWave.CommandClasses.Version>();
-            var versionReport = await version.Get();
-            LogMessage($"VersionReport report of Node {versionReport.Node:D3} is [{versionReport}]");
-
-            var commandClassVersionReport = await version.GetCommandClass(ZWave.Channel.CommandClass.Meter);
-            LogMessage($"CommandClassVersionReport report of Node {commandClassVersionReport.Node:D3} is [{commandClassVersionReport}]");
-
-            var manufacturerSpecific = wallPlug.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecific = node.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
             LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
-            var sensorMultiLevel = wallPlug.GetCommandClass<SensorMultiLevel>();
-            var sensorMultiLevelReport = await sensorMultiLevel.Get();
-            LogMessage($"SensorMultiLevel report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
+            var configuration = node.GetCommandClass<Configuration>();
+            await configuration.Set(61, (byte)2); // on => White
+            await configuration.Set(62, (byte)8); // off => None
+            await configuration.Set(47, (ushort)900); // measure interval 15 minutes
 
-            var meter = wallPlug.GetCommandClass<Meter>();
-            var meterSupportedReport = await meter.GetSupported();
-            LogMessage($"MeterSupportedReport report of Node {meterSupportedReport.Node:D3} is [{meterSupportedReport}]");
-            var meterReport = await meter.Get();
-            LogMessage($"MeterReport report of Node {meterReport.Node:D3} is [{meterReport}]");
-
-            var configuration = wallPlug.GetCommandClass<Configuration>();
-            var configurationReport = await configuration.Get(61);
-            LogMessage($"ConfigurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
-
-            var switchBinary = wallPlug.GetCommandClass<SwitchBinary>();
-            var switchBinaryReport = await switchBinary.Get();
-            LogMessage($"SwitchBinaryReport report of Node {switchBinaryReport.Node:D3} is [{switchBinaryReport}]");
-
-            await switchBinary.Set(!switchBinaryReport.Value);
+            var switchBinary = node.GetCommandClass<SwitchBinary>();
+            await switchBinary.Set(true);
 
             Console.ReadLine();
         }
 
-        private static async Task RunGarageDoorSensorTest(Node motionSensor)
+        private static async Task InitializeShockSensor(Node node)
         {
-            LogMessage("Please wakeup the Garage door sensor.");
+            LogMessage("Please wakeup the shock sensor.");
             Console.ReadLine();
 
-            var association = motionSensor.GetCommandClass<Association>();
+            var association = node.GetCommandClass<Association>();
             await association.Add(1, 1);
             await association.Add(2, 1);
             await association.Add(3, 1);
 
-            var supportedCommandClasses = await motionSensor.GetSupportedCommandClasses();
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
             LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
 
-            var manufacturerSpecific = motionSensor.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecific = node.GetCommandClass<ManufacturerSpecific>();
             var manufacturerSpecificReport = await manufacturerSpecific.Get();
             LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
 
-            var battery = motionSensor.GetCommandClass<Battery>();
+            var battery = node.GetCommandClass<Battery>();
             var batteryReport = await battery.Get();
             LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
-            var wakeUp = motionSensor.GetCommandClass<WakeUp>();
+            var wakeUp = node.GetCommandClass<WakeUp>();
+            await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 1);
             var wakeUpReport = await wakeUp.GetInterval();
             LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
 
             Console.ReadLine();
         }
 
-        private static async Task RunMultiSensor6Test(Node motionSensor)
+        private static async Task InitializeGarageDoorSensor(Node node)
+        {
+            LogMessage("Please wakeup the garagedoor sensor.");
+            Console.ReadLine();
+
+            var association = node.GetCommandClass<Association>();
+            await association.Add(1, 1);
+            await association.Add(2, 1);
+            await association.Add(3, 1);
+
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+
+            var manufacturerSpecific = node.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+            LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+
+            var battery = node.GetCommandClass<Battery>();
+            var batteryReport = await battery.Get();
+            LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
+
+            var wakeUp = node.GetCommandClass<WakeUp>();
+            await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 1);
+            var wakeUpReport = await wakeUp.GetInterval();
+            LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+
+            Console.ReadLine();
+        }
+
+        private static async Task InitializeMultiSensor(Node motionSensor)
         {
             LogMessage("Please wakeup the multisensor.");
             Console.ReadLine();
@@ -214,22 +224,37 @@ namespace ZWaveDriverSample
             LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
 
             var wakeUp = motionSensor.GetCommandClass<WakeUp>();
-            await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 0xFF);
+            await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 0x01);
             var wakeUpReport = await wakeUp.GetInterval();
             LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
 
             var configuration = motionSensor.GetCommandClass<Configuration>();
-            await configuration.Set(111, (uint)300);
-            var configurationReport = await configuration.Get(111);
-            LogMessage($"configurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
+            await configuration.Set(111, (uint)240); // minimum interval 240 seconds
 
-            configurationReport = await configuration.Get(101);
-            LogMessage($"configurationReport report of Node {configurationReport.Node:D3} is [{configurationReport}]");
-
-            var sensorMultiLevel = motionSensor.GetCommandClass<SensorMultiLevel>();
-            var sensorMultiLevelReport = await sensorMultiLevel.Get();
-            LogMessage($"sensorMultiLevelReport report of Node {sensorMultiLevelReport.Node:D3} is [{sensorMultiLevelReport}]");
             Console.ReadLine();
+        }
+
+        public static async Task InitializeThermostat(Node node)
+        {
+            LogMessage("Please wakeup the thermostat.");
+            Console.ReadLine();
+
+            var battery = node.GetCommandClass<Battery>();
+            var batteryReport = await battery.Get();
+            LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
+
+            var wakeUp = node.GetCommandClass<WakeUp>();
+            var wakeUpReport = await wakeUp.GetInterval();
+            await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 1);
+            LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+
+            var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
+            var thermostatSetpointReport = await thermostatSetpoint.Get(ThermostatSetpointType.Heating);
+            LogMessage($"SetpointReport report of Node {thermostatSetpointReport.Node:D3} is [{thermostatSetpointReport}]");
+            await thermostatSetpoint.Set();
+
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
         }
     }
 }
