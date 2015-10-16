@@ -31,8 +31,12 @@ namespace ZWave.CommandClasses
 
         public async Task Set(ThermostatSetpointType type, float value)
         {
-            var scale = 0; // °C;
-            var payload = new byte[] { Convert.ToByte(type) }.Concat(PayloadConverter.GetBytes(value, (byte)scale)).ToArray();
+            // °C;
+            var scale = 0;
+            // one decimal
+            var decimals = 1;
+
+            var payload = new byte[] { Convert.ToByte(type) }.Concat(PayloadConverter.GetBytes(value, (byte)decimals, (byte)scale)).ToArray();
             await Channel.Send(Node, new Command(Class, command.Set, payload));
         }
 

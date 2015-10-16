@@ -172,11 +172,58 @@ namespace ZWave
             }
         }
 
+        public static byte[] GetBytes(float value, byte decimals, byte scale)
+        {
+            var size = 0;
+            var bytes = default(byte[]);
+            var number = (long)Math.Round(value * Math.Pow(10, decimals));
+
+            if (number >= sbyte.MinValue && number <= sbyte.MaxValue)
+            {
+                size = sizeof(sbyte);
+                bytes = GetBytes((sbyte)number);
+            }
+            else if (number >= short.MinValue && number <= short.MaxValue)
+            {
+                size = sizeof(short);
+                bytes = GetBytes((short)number);
+            }
+            else if (number >= int.MinValue && number <= int.MaxValue)
+            {
+                size = sizeof(int);
+                bytes = GetBytes((int)number);
+            }
+            else
+            {
+                for (var i = decimals; i >= 0; i--)
+                {
+                    number = (long)Math.Round(value * Math.Pow(10, i));
+                    if (number >= int.MinValue && number <= int.MaxValue)
+                    {
+                        decimals = i;
+                        size = sizeof(int);
+                        bytes = GetBytes((int)number);
+                        break;
+                    }
+                }
+            }
+
+            if (bytes == null)
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Value can not be converted in a valid format.");
+
+            // create payload, patch first byte below
+            var payload = new byte[] { 0x00 }.Concat(bytes).ToArray();
+
+            // bits 7,6,5: precision, bits 4,3: scale, bits 2,1,0 : size
+            payload[0] |= (byte)((decimals & 0x0f) << 5);
+            payload[0] |= (byte)((scale & 0x03) << 3);
+            payload[0] |= (byte)((size & 0x0f));
+
+            return payload;
+        }
+
         public static float ToFloat(byte[] payload, out byte scale)
         {
-            // http://www.google.nl/url?q=http://www.cooperindustries.com/content/dam/public/wiringdevices/products/documents/technical_specifications/aspirerf_adtechguide_100713.pdf&sa=U&ved=0CBwQFjAAOApqFQoTCN-G7K7djcgCFeZr2wod5eILEA&usg=AFQjCNGzaMFiMosWoKLG-Wvo1A2p5QDbTw
-            // http://www.google.nl/url?q=http://svn.linuxmce.org/trac/browser/trunk/src/ZWave/ZWApi.cpp%3Frev%3D27702&sa=U&ved=0CCYQFjAEOBRqFQoTCKboxvHkjcgCFYkH2wodxRoB0w&usg=AFQjCNFg3uMoEuAIX6R61kDS-5Q9C-F-GA
-            // https://searchcode.com/codesearch/view/90040075/
             // bits 7,6,5: precision, bits 4,3: scale, bits 2,1,0 : size
             var precision = (byte)((payload[0] & 0xE0) >> 5);
             scale = (byte)((payload[0] & 0x18) >> 3);
@@ -185,52 +232,22 @@ namespace ZWave
             switch (size)
             {
                 case sizeof(sbyte):
-                {
-                    var value = (sbyte)payload[1];
-                    return (float)(value / Math.Pow(10, precision));
-                }
+                    {
+                        var value = (sbyte)payload[1];
+                        return (float)(value / Math.Pow(10, precision));
+                    }
                 case sizeof(short):
-                {
-                    var value = ToInt16(payload, 1);
-                    return (float)(value / Math.Pow(10, precision));
-                }
+                    {
+                        var value = ToInt16(payload, 1);
+                        return (float)(value / Math.Pow(10, precision));
+                    }
                 case sizeof(int):
-                {
-                    var value = ToInt32(payload, 1);
-                    return (float)(value / Math.Pow(10, precision));
-                }
-                case sizeof(long):
-                {
-                    var value = ToInt64(payload, 1);
-                    return (float)(value / Math.Pow(10, precision));
-                }
+                    {
+                        var value = ToInt32(payload, 1);
+                        return (float)(value / Math.Pow(10, precision));
+                    }
             }
-
             return 0;
-        }
-
-        public static byte[] GetBytes(float value, byte scale)
-        {
-            if (Math.Abs(value) > 10000)
-                throw new ArgumentOutOfRangeException("value", value, "Value must be smaller then 10000");
-
-            var size = sizeof(short);
-            var precision = 0;
-            while (Math.Abs(value) < 1000)
-            {
-                value *= 10;
-                if (++precision > 7)
-                {
-                    value = 0;
-                    precision = 0;
-                    break;
-                }
-            }
-            var payload = new byte[] { 0x00 }.Concat(GetBytes((short)value)).ToArray();
-            payload[0] |= (byte)(precision << 5);
-            payload[0] |= (byte)(scale << 3);
-            payload[0] |= (byte)(size);
-            return payload;
         }
     }
 }
