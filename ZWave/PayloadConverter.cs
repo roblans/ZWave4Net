@@ -172,7 +172,7 @@ namespace ZWave
             }
         }
 
-        public static float ToSensorValue(byte[] payload, out byte scale)
+        public static float ToFloat(byte[] payload, out byte scale)
         {
             // http://www.google.nl/url?q=http://www.cooperindustries.com/content/dam/public/wiringdevices/products/documents/technical_specifications/aspirerf_adtechguide_100713.pdf&sa=U&ved=0CBwQFjAAOApqFQoTCN-G7K7djcgCFeZr2wod5eILEA&usg=AFQjCNGzaMFiMosWoKLG-Wvo1A2p5QDbTw
             // http://www.google.nl/url?q=http://svn.linuxmce.org/trac/browser/trunk/src/ZWave/ZWApi.cpp%3Frev%3D27702&sa=U&ved=0CCYQFjAEOBRqFQoTCKboxvHkjcgCFYkH2wodxRoB0w&usg=AFQjCNFg3uMoEuAIX6R61kDS-5Q9C-F-GA
@@ -207,6 +207,30 @@ namespace ZWave
             }
 
             return 0;
+        }
+
+        public static byte[] GetBytes(float value, byte scale)
+        {
+            if (Math.Abs(value) > 10000)
+                throw new ArgumentOutOfRangeException("value", value, "Value must be smaller then 10000");
+
+            var size = sizeof(short);
+            var precision = 0;
+            while (Math.Abs(value) < 1000)
+            {
+                value *= 10;
+                if (++precision > 7)
+                {
+                    value = 0;
+                    precision = 0;
+                    break;
+                }
+            }
+            var payload = new byte[] { 0x00 }.Concat(GetBytes((short)value)).ToArray();
+            payload[0] |= (byte)(precision << 5);
+            payload[0] |= (byte)(scale << 3);
+            payload[0] |= (byte)(size);
+            return payload;
         }
     }
 }

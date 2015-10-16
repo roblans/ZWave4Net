@@ -16,7 +16,7 @@ namespace ZWave.CommandClasses
         internal SensorMultiLevelReport(Node node, byte[] payload) : base(node)
         {
             Type = (SensorType)payload[0];
-            Value = PayloadConverter.ToSensorValue(payload.Skip(1).ToArray(), out Scale);
+            Value = PayloadConverter.ToFloat(payload.Skip(1).ToArray(), out Scale);
             Unit = GetUnit(Type, Scale);
         }
 
