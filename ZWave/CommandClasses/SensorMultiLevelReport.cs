@@ -27,7 +27,7 @@ namespace ZWave.CommandClasses
 
             switch (type)
             {
-                case SensorType.Temperature: return(scale == 1 ? "F" : "C");
+                case SensorType.Temperature: return(scale == 1 ? "°F" : "°C");
                 case SensorType.General: return (scale == 1 ? "" : "%");
                 case SensorType.Luminance: return(scale == 1 ? "lux" : "%");
                 case SensorType.Power: return(scale == 1 ? "BTU/h" : "W");

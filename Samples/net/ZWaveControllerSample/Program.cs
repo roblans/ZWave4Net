@@ -112,11 +112,7 @@ namespace ZWaveDriverSample
             switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
-            thermostatSetpoint.Changed += async (_, e) =>
-            {
-                await thermostatSetpoint.Set();
-                LogMessage($"thermostatSetpoint report of Node {e.Report.Node:D3} changed to [{e.Report}]");
-            };
+            thermostatSetpoint.Changed += (_, e) => LogMessage($"thermostatSetpoint report of Node {e.Report.Node:D3} changed to [{e.Report}]");
         }
 
         private static async Task InitializeWallPlug(Node node)
@@ -251,7 +247,7 @@ namespace ZWaveDriverSample
             var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
             var thermostatSetpointReport = await thermostatSetpoint.Get(ThermostatSetpointType.Heating);
             LogMessage($"SetpointReport report of Node {thermostatSetpointReport.Node:D3} is [{thermostatSetpointReport}]");
-            await thermostatSetpoint.Set();
+            await thermostatSetpoint.Set(ThermostatSetpointType.Heating, 18.0F);
 
             var supportedCommandClasses = await node.GetSupportedCommandClasses();
             LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");

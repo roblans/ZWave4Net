@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,9 +29,11 @@ namespace ZWave.CommandClasses
             return new ThermostatSetpointReport(Node, response);
         }
 
-        public async Task Set()
+        public async Task Set(ThermostatSetpointType type, float value)
         {
-            await Channel.Send(Node, new Command(Class, command.Set, 1, 66, 8, 52));
+            var scale = 0; // °C;
+            var payload = new byte[] { Convert.ToByte(type) }.Concat(PayloadConverter.GetBytes(value, (byte)scale)).ToArray();
+            await Channel.Send(Node, new Command(Class, command.Set, payload));
         }
 
         protected internal override void HandleEvent(Command command)

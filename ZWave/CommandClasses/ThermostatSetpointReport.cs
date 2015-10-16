@@ -15,13 +15,13 @@ namespace ZWave.CommandClasses
         internal ThermostatSetpointReport(Node node, byte[] payload) : base(node)
         {
             Type = (ThermostatSetpointType)(payload[0] & 0x1F);
-            Value = PayloadConverter.ToSensorValue(payload.Skip(1).ToArray(), out Scale);
+            Value = PayloadConverter.ToFloat(payload.Skip(1).ToArray(), out Scale);
             Unit = GetUnit(Type, Scale);
         }
 
         public static string GetUnit(ThermostatSetpointType type, byte scale)
         {
-            return "°C";
+            return (scale == 1 ? "°F" : "°C");
         }
 
         public override string ToString()
