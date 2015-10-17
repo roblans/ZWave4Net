@@ -111,5 +111,22 @@ namespace ZWave
         {
             return await (_getNodes ?? (_getNodes = DiscoverNodes()));
         }
+
+        public async Task<Node[]> GetNeighbours(Node node)
+        {
+            var nodes = await GetNodes();
+            var results = new List<Node>();
+
+            var response = await Channel.Send(Function.GetRoutingTableLine, node.NodeID);
+            var bits = new BitArray(response);
+            for (byte i = 0; i < bits.Length; i++)
+            {
+                if (bits[i])
+                {
+                    results.Add(nodes[(byte)(i + 1)]);
+                }
+            }
+            return results.ToArray();
+        }
     }
 }

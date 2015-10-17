@@ -15,7 +15,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
-            controller.Channel.Log = Console.Out;
+            //controller.Channel.Log = Console.Out;
 
             controller.Open();
             try
@@ -66,9 +66,10 @@ namespace ZWaveDriverSample
             foreach (var node in nodes)
             {
                 var protocolInfo = await node.GetNodeProtocolInfo();
-
-                // dump node
                 LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
+
+                var neighbours = await controller.GetNeighbours(node);
+                LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
 
                 // subcribe to changes
                 Subscribe(node);
@@ -79,7 +80,7 @@ namespace ZWaveDriverSample
             //await InitializeWallPlug(nodes[3]);
             //await InitializeShockSensor(nodes[4]);
             //await InitializeGarageDoorSensor(nodes[5]);
-            await InitializeThermostat(nodes[6]);
+            //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[7]);
 
             Console.ReadLine();
