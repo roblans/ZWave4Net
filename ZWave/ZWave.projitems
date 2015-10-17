@@ -39,9 +39,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Association.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Basic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ClockReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\BasicReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Battery.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\BatteryReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Clock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Color.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ColorComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ColorReport.cs" />
@@ -82,6 +84,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor4.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\AssociationGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\BatteryDevice.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Clock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Danfoss\RadiatorThermostat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\DoorSensor.cs" />

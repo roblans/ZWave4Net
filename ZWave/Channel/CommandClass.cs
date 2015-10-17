@@ -18,6 +18,7 @@ namespace ZWave.Channel
         Alarm = 0x71,
         ManufacturerSpecific = 0x72,
         Battery = 0x80,
+        Clock = 0x81,
         WakeUp = 0x84,
         Association = 0x85,
         Version = 0x86,

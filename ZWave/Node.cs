@@ -34,6 +34,7 @@ namespace ZWave
             _commandClasses.Add(new Color(this));
             _commandClasses.Add(new MultiChannel(this));
             _commandClasses.Add(new ThermostatSetpoint(this));
+            _commandClasses.Add(new Clock(this));
         }
 
         protected ZWaveChannel Channel

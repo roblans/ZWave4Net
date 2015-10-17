@@ -247,10 +247,11 @@ namespace ZWaveDriverSample
             var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
             var thermostatSetpointReport = await thermostatSetpoint.Get(ThermostatSetpointType.Heating);
             LogMessage($"SetpointReport report of Node {thermostatSetpointReport.Node:D3} is [{thermostatSetpointReport}]");
-            await thermostatSetpoint.Set(ThermostatSetpointType.Heating, 18.0F);
+            //await thermostatSetpoint.Set(ThermostatSetpointType.Heating, 18.0F);
 
-            var supportedCommandClasses = await node.GetSupportedCommandClasses();
-            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+            var clock = node.GetCommandClass<Clock>();
+            var clockReport = await clock.Get();
+            LogMessage($"clockReport report of Node {clockReport.Node:D3} is [{clockReport}]");
         }
     }
 }
