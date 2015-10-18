@@ -15,6 +15,7 @@ namespace ZWave
         private uint? _homeID;
         private byte? _nodeID;
         public readonly ZWaveChannel Channel;
+        public event EventHandler<ErrorEventArgs> Error;
 
         private ZWaveController(ZWaveChannel channel)
         {
@@ -33,24 +34,43 @@ namespace ZWave
         }
 #endif
 
+        protected virtual void OnError(ErrorEventArgs e)
+        {
+            Error?.Invoke(this, e);
+        }
+
         public void Open()
         {
             Channel.NodeEventReceived += Channel_NodeEventReceived;
+            Channel.Error += Channel_Error;
             Channel.Open();
+        }
+
+        private void Channel_Error(object sender, ErrorEventArgs e)
+        {
+            OnError(e);
         }
 
         private async void Channel_NodeEventReceived(object sender, NodeEventArgs e)
         {
-            var nodes = await GetNodes();
-            var target = nodes[e.NodeID];
-            if (target != null)
+            try
             {
-                target.HandleEvent(e.Command);
+                var nodes = await GetNodes();
+                var target = nodes[e.NodeID];
+                if (target != null)
+                {
+                    target.HandleEvent(e.Command);
+                }
+            }
+            catch(Exception ex)
+            {
+                OnError(new ErrorEventArgs(ex));
             }
         }
 
         public void Close()
         {
+            Channel.Error -= Channel_Error;
             Channel.NodeEventReceived -= Channel_NodeEventReceived;
             Channel.Close();
         }
