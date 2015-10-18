@@ -65,10 +65,10 @@ namespace ZWaveDriverSample
             var nodes = await controller.GetNodes();
             foreach (var node in nodes)
             {
-                var protocolInfo = await node.GetNodeProtocolInfo();
+                var protocolInfo = await node.GetProtocolInfo();
                 LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
 
-                var neighbours = await controller.GetNeighbours(node);
+                var neighbours = await node.GetNeighbours();
                 LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
 
                 // subcribe to changes

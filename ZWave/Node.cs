@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ZWave.CommandClasses;
 using ZWave.Channel;
+using System.Collections;
 
 namespace ZWave
 {
@@ -62,10 +63,27 @@ namespace ZWave
             return reports.ToArray();
         }
 
-        public async Task<NodeProtocolInfo> GetNodeProtocolInfo()
+        public async Task<NodeProtocolInfo> GetProtocolInfo()
         {
             var response = await Channel.Send(Function.GetNodeProtocolInfo, NodeID);
             return NodeProtocolInfo.Parse(response);
+        }
+
+        public async Task<Node[]> GetNeighbours()
+        {
+            var nodes = await Controller.GetNodes();
+            var results = new List<Node>();
+
+            var response = await Channel.Send(Function.GetRoutingTableLine, NodeID);
+            var bits = new BitArray(response);
+            for (byte i = 0; i < bits.Length; i++)
+            {
+                if (bits[i])
+                {
+                    results.Add(nodes[(byte)(i + 1)]);
+                }
+            }
+            return results.ToArray();
         }
 
         public override string ToString()
