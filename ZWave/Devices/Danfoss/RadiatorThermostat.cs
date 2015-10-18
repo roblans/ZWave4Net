@@ -39,13 +39,13 @@ namespace ZWave.Devices.Danfoss
             SetPointChanged?.Invoke(this, e);
         }
 
-        public async Task<Clock> GetClock()
+        public async Task<ThermostatClock> GetClock()
         {
             var report = await Node.GetCommandClass<CommandClasses.Clock>().Get();
-            return new Clock(report.DayOfWeek, report.Hour, report.Minute);
+            return new ThermostatClock(report.DayOfWeek, report.Hour, report.Minute);
         }
 
-        public async Task SetClock(Clock value)
+        public async Task SetClock(ThermostatClock value)
         {
             await Node.GetCommandClass<CommandClasses.Clock>().Set(value.DayOfWeek, value.Hour, value.Minute);
         }

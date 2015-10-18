@@ -84,7 +84,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor4.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\AssociationGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\BatteryDevice.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Devices\Clock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\ThermostatClock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Danfoss\RadiatorThermostat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\DoorSensor.cs" />

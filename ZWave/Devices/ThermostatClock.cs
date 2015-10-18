@@ -4,20 +4,20 @@ using System.Text;
 
 namespace ZWave.Devices
 {
-    public class Clock
+    public class ThermostatClock
     {
         public readonly DayOfWeek DayOfWeek;
         public readonly byte Hour;
         public readonly byte Minute;
 
-        public Clock(DayOfWeek dayOfWeek, byte hour, byte minute)
+        public ThermostatClock(DayOfWeek dayOfWeek, byte hour, byte minute)
         {
             DayOfWeek = dayOfWeek;
             Hour = hour;
             Minute = minute;
         }
 
-        public Clock(DateTime date)
+        public ThermostatClock(DateTime date)
             : this(date.DayOfWeek, (byte)date.Hour, (byte)date.Minute)
         {
         }
