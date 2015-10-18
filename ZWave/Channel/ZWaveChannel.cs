@@ -143,7 +143,7 @@ namespace ZWave.Channel
             }
         }
 
-        private async void OnNodeEventReceived(NodeEvent nodeEvent)
+        private void OnNodeEventReceived(NodeEvent nodeEvent)
         {
             if (nodeEvent == null)
                 throw new ArgumentNullException(nameof(nodeEvent));
@@ -151,16 +151,16 @@ namespace ZWave.Channel
             var handler = NodeEventReceived;
             if (handler != null)
             {
-                try
+                foreach (var invocation in handler.GetInvocationList().Cast<EventHandler<NodeEventArgs>>())
                 {
-                    await Task.Factory.StartNew(() =>
+                    try
                     {
-                        handler(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command));
-                    });
-                }
-                catch(Exception ex)
-                {
-                    LogMessage(ex.ToString());
+                        invocation(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command));
+                    }
+                    catch (Exception ex)
+                    {
+                        LogMessage(ex.ToString());
+                    }
                 }
             }
         }
