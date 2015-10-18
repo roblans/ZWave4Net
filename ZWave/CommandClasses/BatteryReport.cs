@@ -8,15 +8,17 @@ namespace ZWave.CommandClasses
     public class BatteryReport : NodeReport
     {
         public readonly byte Value;
+        public readonly bool IsLow;
 
         internal BatteryReport(Node node, byte[] payload) : base(node)
         {
-            Value = payload[0] == 0xFF ? (byte)0x00 : payload[0];
+            IsLow = payload[0] == 0xFF;
+            Value = IsLow ? (byte)0x00 : payload[0];
         }
 
         public override string ToString()
         {
-            return $"Value:{Value}%";
+            return IsLow ? "Low" : $"Value:{Value}%";
         }
     }
 }
