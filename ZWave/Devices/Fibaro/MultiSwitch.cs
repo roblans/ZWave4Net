@@ -22,6 +22,7 @@ namespace ZWave.Devices.Fibaro
         }
 
 
+        // ToDo: other report!
         private void SwitchBinary1_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
@@ -47,22 +48,22 @@ namespace ZWave.Devices.Fibaro
 
         public async Task SwitchOn1()
         {
-            await Node.GetCommandClass<SwitchBinary>().Set(true);
+            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(1, true);
         }
 
         public async Task SwitchOff1()
         {
-            await Node.GetCommandClass<SwitchBinary>().Set(false);
+            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(1, false);
         }
 
         public async Task SwitchOn2()
         {
-            await Node.GetCommandClass<SwitchBinary>().Set(true);
+            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(2, true);
         }
 
         public async Task SwitchOff2()
         {
-            await Node.GetCommandClass<SwitchBinary>().Set(false);
+            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(2, false);
         }
 
         public async Task AddAssociation(AssociationGroup group, Node node)
