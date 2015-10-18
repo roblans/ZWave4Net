@@ -47,7 +47,7 @@ namespace ZWave.Devices.Danfoss
 
         public async Task SetClock(ThermostatClock value)
         {
-            await Node.GetCommandClass<CommandClasses.Clock>().Set(value.DayOfWeek, value.Hour, value.Minute);
+            await Node.GetCommandClass<Clock>().Set(value.DayOfWeek, value.Hour, value.Minute);
         }
     }
 }
