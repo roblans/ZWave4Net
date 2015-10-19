@@ -39,7 +39,7 @@ namespace ZWave.Channel.Protocol
             var payload = base.GetPayload();
             payload.Add(NodeID);
             payload.AddRange(Command.ToBytes());
-            payload.Add((byte)(TransmitOptions.Ack | TransmitOptions.AutoRoute | TransmitOptions.ForceRoute));
+            payload.Add((byte)(TransmitOptions.Ack | TransmitOptions.AutoRoute | TransmitOptions.Explore));
             payload.Add(CallbackID);
             return payload;
         }
