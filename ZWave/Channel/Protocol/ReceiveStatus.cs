@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace ZWave.Channel.Protocol
 {
+    [Flags()]
     enum ReceiveStatus : byte
     {
-        Single = 0x00,
+        None = 0x00,
         RoutedBusy = 0x01,
         LowPower = 0x02,
-        TypeBroad = 0x04,
-        TypeMulti = 0x08,
-        TypeMask = 0x0C,
+        TypeSingle = 0x04,
+        TypeBroad = 0x08,
+        TypeMulti = 0x10,
+        TypeExplore = 0x20,
         ForeignFrame = 0x40,
     };
 }
