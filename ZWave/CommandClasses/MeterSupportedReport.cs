@@ -16,7 +16,7 @@ namespace ZWave.CommandClasses
         internal MeterSupportedReport(Node node, byte[] payload) : base(node)
         {
             if (payload.Length < 2)
-                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+                throw new ReponseFormatException($"The response was not in the expected format. Payload{BitConverter.ToString(payload)}");
 
             CanReset = (payload[0] & 0x80) != 0;
             Type = (MeterType)Enum.ToObject(typeof(MeterType), payload[0] & 0x1F);

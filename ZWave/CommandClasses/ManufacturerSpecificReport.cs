@@ -17,7 +17,7 @@ namespace ZWave.CommandClasses
             if (payload == null)
                 throw new ArgumentNullException(nameof(payload));
             if (payload.Length < 6)
-                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+                throw new ReponseFormatException($"The response was not in the expected format. Payload{BitConverter.ToString(payload)}");
 
             ManufacturerID = PayloadConverter.ToUInt16(payload, 0);
             ProductType = PayloadConverter.ToUInt16(payload, 2);

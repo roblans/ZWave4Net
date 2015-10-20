@@ -19,7 +19,7 @@ namespace ZWave.CommandClasses
             if (payload == null)
                 throw new ArgumentNullException(nameof(payload));
             if (payload.Length < 3)
-                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+                throw new ReponseFormatException($"The response was not in the expected format. Payload{BitConverter.ToString(payload)}");
 
             Type = (SensorType)payload[0];
             Value = PayloadConverter.ToFloat(payload.Skip(1).ToArray(), out Scale);

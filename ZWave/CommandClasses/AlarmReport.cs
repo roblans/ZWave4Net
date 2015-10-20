@@ -19,7 +19,7 @@ namespace ZWave.CommandClasses
                 throw new ArgumentNullException(nameof(payload));
 
             if (payload.Length < 2)
-                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+                throw new ReponseFormatException($"The response was not in the expected format. Payload{BitConverter.ToString(payload)}");
 
             Type = (AlarmType)payload[0];
             Level = payload[1];

@@ -16,7 +16,7 @@ namespace ZWave.CommandClasses
             if (payload == null)
                 throw new ArgumentNullException(nameof(payload));
             if (payload.Length < 5)
-                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+                throw new ReponseFormatException($"The response was not in the expected format. Payload{BitConverter.ToString(payload)}");
 
             Library = payload[0].ToString("d");
             Protocol = payload[1].ToString("d") + "." + payload[2].ToString("d2");

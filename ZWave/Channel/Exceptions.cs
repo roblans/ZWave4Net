@@ -8,7 +8,7 @@ namespace ZWave.Channel
 {
     public class CommunicationException : System.Exception
     {
-        public CommunicationException() { }
+        public CommunicationException() : base("Communication error") { }
         public CommunicationException(string message) : base(message) { }
         public CommunicationException(string message, System.Exception inner) : base(message, inner) { }
     }
