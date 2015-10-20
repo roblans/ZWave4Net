@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ZWave.Channel;
+using ZWave.Channel.Protocol;
 
 namespace ZWave.CommandClasses
 {
@@ -14,6 +15,12 @@ namespace ZWave.CommandClasses
 
         internal AlarmReport(Node node, byte[] payload) : base(node)
         {
+            if (payload == null)
+                throw new ArgumentNullException(nameof(payload));
+
+            if (payload.Length < 2)
+                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+
             Type = (AlarmType)payload[0];
             Level = payload[1];
             if (payload.Length > 2)

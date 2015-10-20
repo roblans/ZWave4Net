@@ -14,6 +14,9 @@ namespace ZWave.CommandClasses
 
         internal WakeUpIntervalReport(Node node, byte[] payload) : base(node)
         {
+            if (payload == null)
+                throw new ArgumentNullException(nameof(payload));
+
             if (payload.Length >= 4)
             {
                 // 3 bytes for interval
@@ -32,7 +35,7 @@ namespace ZWave.CommandClasses
                 TargetNodeID = 0;
                 return;
             }
-            throw new ProtocolException($"Node:{node:D3}, Payload:{BitConverter.ToString(payload)}");
+            throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
         }
 
         public override string ToString()

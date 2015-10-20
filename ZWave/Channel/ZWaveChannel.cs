@@ -199,6 +199,8 @@ namespace ZWave.Channel
                     throw new NakResponseException();
                 if (result == Message.CAN)
                     throw new CanResponseException();
+                if (result is NodeCommandCompleted && ((NodeCommandCompleted)result).TransmissionState != TransmissionState.CompleteOk)
+                    throw new TransmissionException();
 
                 if (predicate(result))
                 {
@@ -252,6 +254,15 @@ namespace ZWave.Channel
                         LogMessage($"CAN received. Retrying (attempt: {attempt})");
 
                         await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
+                    }
+                    catch (TransmissionException)
+                    {
+                        if (attempt++ >= 3)
+                            throw;
+
+                        LogMessage($"Transmission failure. Retrying (attempt: {attempt})");
+
+                        await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
                     }
                     catch (TimeoutException)
                     {

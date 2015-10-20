@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZWave.Channel;
+using ZWave.Channel.Protocol;
 
 namespace ZWave.CommandClasses
 {
@@ -14,6 +15,9 @@ namespace ZWave.CommandClasses
 
         internal MeterSupportedReport(Node node, byte[] payload) : base(node)
         {
+            if (payload.Length < 2)
+                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+
             CanReset = (payload[0] & 0x80) != 0;
             Type = (MeterType)Enum.ToObject(typeof(MeterType), payload[0] & 0x1F);
 

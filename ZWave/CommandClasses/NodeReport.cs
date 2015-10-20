@@ -10,7 +10,8 @@ namespace ZWave.CommandClasses
 
         public NodeReport(Node node)
         {
-            Node = node;
+            if ((Node = node) == null)
+                throw new ArgumentNullException(nameof(node));
         }
     }
 }

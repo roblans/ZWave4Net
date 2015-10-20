@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZWave.Channel;
+using ZWave.Channel.Protocol;
 
 namespace ZWave.CommandClasses
 {
@@ -15,6 +16,11 @@ namespace ZWave.CommandClasses
 
         internal MeterReport(Node node, byte[] payload) : base(node)
         {
+            if (payload == null)
+                throw new ArgumentNullException(nameof(payload));
+            if (payload.Length < 3)
+                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+
             Type = (MeterType)(payload[0] & 0x1F);
             Value = PayloadConverter.ToFloat(payload.Skip(1).ToArray(), out Scale);
             Unit = GetUnit(Type, Scale);

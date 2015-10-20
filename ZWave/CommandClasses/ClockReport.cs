@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ZWave.Channel.Protocol;
 
 namespace ZWave.CommandClasses
 {
@@ -12,6 +13,11 @@ namespace ZWave.CommandClasses
 
         internal ClockReport(Node node, byte[] payload) : base(node)
         {
+            if (payload == null)
+                throw new ArgumentNullException(nameof(payload));
+            if (payload.Length < 2)
+                throw new ReponseFormatException($"Payload{BitConverter.ToString(payload)}");
+
             var day = (byte)(payload[0] >> 5);
             switch(day)
             {
