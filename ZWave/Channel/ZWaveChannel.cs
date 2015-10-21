@@ -200,7 +200,7 @@ namespace ZWave.Channel
                 if (result == Message.CAN)
                     throw new CanResponseException();
                 if (result is NodeCommandCompleted && ((NodeCommandCompleted)result).TransmissionState != TransmissionState.CompleteOk)
-                    throw new TransmissionException();
+                    throw new TransmissionException($"Transmission failure: {((NodeCommandCompleted)result).TransmissionState}.");
 
                 if (predicate(result))
                 {
