@@ -6,35 +6,28 @@ using System.Threading.Tasks;
 
 namespace ZWave.Channel.Protocol
 {
-    public class ProtocolException : CommunicationException
-    {
-        public ProtocolException() : base("Protocol error.") { }
-        public ProtocolException(string message) : base(message) { }
-        public ProtocolException(string message, Exception inner) : base(message, inner) { }
-    }
-
-    public class ChecksumException : ProtocolException
+    public class ChecksumException : CommunicationException
     {
         public ChecksumException() : base("Invalid checksum received.") { }
         public ChecksumException(string message) : base(message) { }
         public ChecksumException(string message, Exception inner) : base(message, inner) { }
     }
 
-    public class UnknownFrameException : ProtocolException
+    public class UnknownFrameException : CommunicationException
     {
         public UnknownFrameException() : base("Unknown frame received.") { }
         public UnknownFrameException(string message) : base(message) { }
         public UnknownFrameException(string message, Exception inner) : base(message, inner) { }
     }
 
-    public class TransmissionException : ProtocolException
+    public class TransmissionException : CommunicationException
     {
         public TransmissionException() : base("Transmission failure.") { }
         public TransmissionException(string message) : base(message) { }
         public TransmissionException(string message, System.Exception inner) : base(message, inner) { }
     }
 
-    public class ResponseException : ProtocolException
+    public class ResponseException : CommunicationException
     {
         public ResponseException() : base("Invalid response received.") { }
         public ResponseException(string message) : base(message) { }

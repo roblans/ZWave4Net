@@ -35,7 +35,7 @@ namespace ZWave.CommandClasses
                 TargetNodeID = 0;
                 return;
             }
-            throw new ReponseFormatException($"The response was not in the expected format. Payload{BitConverter.ToString(payload)}");
+            throw new ReponseFormatException($"The response was not in the expected format. {GetType().Name}: Payload: {BitConverter.ToString(payload)}");
         }
 
         public override string ToString()

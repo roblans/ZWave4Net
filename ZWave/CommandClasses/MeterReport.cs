@@ -19,7 +19,7 @@ namespace ZWave.CommandClasses
             if (payload == null)
                 throw new ArgumentNullException(nameof(payload));
             if (payload.Length < 3)
-                throw new ReponseFormatException($"The response was not in the expected format. Payload{BitConverter.ToString(payload)}");
+                throw new ReponseFormatException($"The response was not in the expected format. {GetType().Name}: Payload: {BitConverter.ToString(payload)}");
 
             Type = (MeterType)(payload[0] & 0x1F);
             Value = PayloadConverter.ToFloat(payload.Skip(1).ToArray(), out Scale);

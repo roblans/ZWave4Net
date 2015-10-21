@@ -231,7 +231,7 @@ namespace ZWave.Channel
             _transmitTask.Wait();
         }
 
-        private async Task<Byte[]> Exchange(Func<Task<Byte[]>> func)
+        private async Task<Byte[]> Exchange(Func<Task<Byte[]>> func, string message)
         {
             if (func == null)
                 throw new ArgumentNullException(nameof(func));
@@ -251,7 +251,7 @@ namespace ZWave.Channel
                         if (attempt++ >= 3)
                             throw;
 
-                        LogMessage($"CAN received. Retrying (attempt: {attempt})");
+                        LogMessage($"CAN received on: {message}. Retrying attempt: {attempt}");
 
                         await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
                     }
@@ -260,7 +260,7 @@ namespace ZWave.Channel
                         if (attempt++ >= 3)
                             throw;
 
-                        LogMessage($"Transmission failure. Retrying (attempt: {attempt})");
+                        LogMessage($"Transmission failure on: {message}. Retrying attempt: {attempt}");
 
                         await Task.Delay(TimeSpan.FromMilliseconds(500)).ConfigureAwait(false);
                     }
@@ -269,7 +269,7 @@ namespace ZWave.Channel
                         if (attempt++ >= 3)
                             throw;
 
-                        LogMessage($"Timeout. Retrying (attempt: {attempt})");
+                        LogMessage($"Timeout on: {message}. Retrying attempt: {attempt}");
 
                         await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
                     }
@@ -294,7 +294,7 @@ namespace ZWave.Channel
                 }).ConfigureAwait(false);
 
                 return ((ControllerFunctionCompleted)response).Payload;
-            });
+            }, $"{function} {(payload != null ? BitConverter.ToString(payload) : string.Empty)}");
         }
 
         public Task Send(byte nodeID, Command command)
@@ -315,7 +315,7 @@ namespace ZWave.Channel
                 }).ConfigureAwait(false);
 
                 return null;
-            });
+            }, $"{nodeID} {command}");
         }
 
         public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID)
@@ -370,7 +370,7 @@ namespace ZWave.Channel
                 {
                     NodeEventReceived -= onNodeEventReceived;
                 }
-            });
+            }, $"{nodeID} {command} {responseCommandID}");
         }
     }
 }
