@@ -15,6 +15,11 @@ namespace ZWave.Channel.Protocol
         public NodeEvent(byte[] payload)
             : base(FrameHeader.SOF, MessageType.Response, Channel.Function.ApplicationCommandHandler)
         {
+            if (payload == null)
+                throw new ArgumentNullException(nameof(payload));
+            if (payload.Length < 2)
+                throw new ReponseFormatException($"The response was not in the expected format. NodeEvent, payload: {BitConverter.ToString(payload)}");
+
             ReceiveStatus = ReceiveStatus.None;
 
             if ((payload[0] & 0x01) > 0)
