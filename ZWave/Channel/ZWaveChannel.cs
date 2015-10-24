@@ -47,6 +47,7 @@ namespace ZWave.Channel
 #endif
         protected virtual void OnError(ErrorEventArgs e)
         {
+            LogMessage($"Exception: {e.Error}");
             Error?.Invoke(this, e);
         }
 
@@ -113,12 +114,17 @@ namespace ZWave.Channel
                 {
                     // probably out of sync on the serial port
                     // ToDo: handle gracefully 
-                    LogMessage($"Exception: {ex}");
+                    OnError(new ErrorEventArgs(ex));
                 }
                 catch (IOException)
                 {
                     // port closed, we're done so return
                     return;
+                }
+                catch (Exception ex)
+                {
+                    // just raise error event. don't break reading of serial port
+                    OnError(new ErrorEventArgs(ex));
                 }
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZWave.Channel.Protocol;
 
 namespace ZWave.Channel
 {
@@ -71,6 +72,8 @@ namespace ZWave.Channel
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
+            if (data.Length < 3)
+                throw new ReponseFormatException($"The response was not in the expected format. Command, payload: {BitConverter.ToString(data)}");
 
             var length = data[0];
             var classID = data[1];
