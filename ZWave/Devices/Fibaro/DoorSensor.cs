@@ -18,7 +18,7 @@ namespace ZWave.Devices.Fibaro
         {
             node.GetCommandClass<Basic>().Changed += Basic_Changed;
             node.GetCommandClass<SensorBinary>().Changed += SensorBinary_Changed;
-            node.GetCommandClass<Alarm>().Changed += Alarm_Changed;
+            node.GetCommandClass<SensorAlarm>().Changed += SensorAlarm_Changed;
         }
 
         public async Task<bool> IsDoorOpen()
@@ -73,7 +73,7 @@ namespace ZWave.Devices.Fibaro
         }
         
 
-        private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
+        private void SensorAlarm_Changed(object sender, ReportEventArgs<SensorAlarmReport> e)
         {
             if (e.Report.Type == AlarmType.General)
             {
