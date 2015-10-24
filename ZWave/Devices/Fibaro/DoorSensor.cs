@@ -6,7 +6,7 @@ using ZWave.CommandClasses;
 
 namespace ZWave.Devices.Fibaro
 {
-    public class DoorSensor : Device
+    public class DoorSensor : BatteryDevice
     {
         public event EventHandler<EventArgs> TamperDetected;
         public event EventHandler<EventArgs> TamperCancelled;

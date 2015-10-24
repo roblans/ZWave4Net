@@ -15,7 +15,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
-            //controller.Channel.Log = Console.Out;
+            controller.Channel.Log = Console.Out;
 
             controller.Open();
             try
@@ -82,6 +82,7 @@ namespace ZWaveDriverSample
             //await InitializeGarageDoorSensor(nodes[5]);
             //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[7]);
+            await InitializeDoorWindowSensor(nodes[8]);
 
             Console.ReadLine();
         }
@@ -253,6 +254,35 @@ namespace ZWaveDriverSample
             var clock = node.GetCommandClass<Clock>();
             var clockReport = await clock.Get();
             LogMessage($"clockReport report of Node {clockReport.Node:D3} is [{clockReport}]");
+        }
+
+        private static async Task InitializeDoorWindowSensor(Node node)
+        {
+            LogMessage("Please wakeup the doorwindow sensor.");
+            Console.ReadLine();
+
+            var association = node.GetCommandClass<Association>();
+            await association.Add(1, 1);
+            await association.Add(2, 1);
+            await association.Add(3, 1);
+
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+
+            var manufacturerSpecific = node.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+            LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+
+            var battery = node.GetCommandClass<Battery>();
+            var batteryReport = await battery.Get();
+            LogMessage($"Battery report of Node {batteryReport.Node:D3} is [{batteryReport}]");
+
+            var wakeUp = node.GetCommandClass<WakeUp>();
+            await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 1);
+            var wakeUpReport = await wakeUp.GetInterval();
+            LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+
+            Console.ReadLine();
         }
     }
 }
