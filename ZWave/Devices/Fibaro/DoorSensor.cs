@@ -10,39 +10,55 @@ namespace ZWave.Devices.Fibaro
     {
         public event EventHandler<EventArgs> TamperDetected;
         public event EventHandler<EventArgs> TamperCancelled;
-        public event EventHandler<EventArgs> ContactOpen;
-        public event EventHandler<EventArgs> ContactClosed;
+        public event EventHandler<EventArgs> DoorOpened;
+        public event EventHandler<EventArgs> DoorClosed;
 
         public DoorSensor(Node node)
             : base(node)
         {
             node.GetCommandClass<Basic>().Changed += Basic_Changed;
-            node.GetCommandClass<SwitchBinary>().Changed += Contact_Changed;
+            node.GetCommandClass<SensorBinary>().Changed += SensorBinary_Changed;
             node.GetCommandClass<Alarm>().Changed += Alarm_Changed;
+        }
+
+        public async Task<bool> IsDoorOpen()
+        {
+            var basic = await Node.GetCommandClass<Basic>().Get();
+            if (basic.Value == 0xFF)
+            {
+                return true;
+            }
+
+            var alarm = (await Node.GetCommandClass<Alarm>().Get());
+            if (alarm.Type == AlarmType.General && alarm.Level == 0xFF)
+            {
+                return true;
+            }
+            return false;
         }
 
         private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
-            if (e.Report.Value == 0x00)
-            {
-                OnContactOpen(EventArgs.Empty);
-                return;
-            }
             if (e.Report.Value == 0xFF)
             {
-                OnContactClosed(EventArgs.Empty);
+                OnDoorOpened(EventArgs.Empty);
+                return;
+            }
+            if (e.Report.Value == 0x00)
+            {
+                OnDoorClosed(EventArgs.Empty);
                 return;
             }
         }
-        private void Contact_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private void SensorBinary_Changed(object sender, ReportEventArgs<SensorBinaryReport> e)
         {
             if (e.Report.Value)
             {
-                OnContactOpen(EventArgs.Empty);
+                OnDoorOpened(EventArgs.Empty);
             }
             else
             {
-                OnContactClosed(EventArgs.Empty);
+                OnDoorClosed(EventArgs.Empty);
             }
         }
 
@@ -74,14 +90,14 @@ namespace ZWave.Devices.Fibaro
             }
         }
 
-        protected virtual void OnContactOpen(EventArgs e)
+        protected virtual void OnDoorOpened(EventArgs e)
         {
-            ContactOpen?.Invoke(this, e);
+            DoorOpened?.Invoke(this, e);
         }
 
-        protected virtual void OnContactClosed(EventArgs e)
+        protected virtual void OnDoorClosed(EventArgs e)
         {
-            ContactClosed?.Invoke(this, e);
+            DoorClosed?.Invoke(this, e);
         }
 
         protected virtual void OnTamperDetected(EventArgs e)

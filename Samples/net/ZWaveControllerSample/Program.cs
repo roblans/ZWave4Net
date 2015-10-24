@@ -15,7 +15,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
-            controller.Channel.Log = Console.Out;
+            //controller.Channel.Log = Console.Out;
 
             controller.Open();
             try
@@ -82,7 +82,7 @@ namespace ZWaveDriverSample
             //await InitializeGarageDoorSensor(nodes[5]);
             //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[7]);
-            await InitializeDoorWindowSensor(nodes[8]);
+            await InitializeDoorSensor(nodes[8]);
 
             Console.ReadLine();
         }
@@ -256,9 +256,9 @@ namespace ZWaveDriverSample
             LogMessage($"clockReport report of Node {clockReport.Node:D3} is [{clockReport}]");
         }
 
-        private static async Task InitializeDoorWindowSensor(Node node)
+        private static async Task InitializeDoorSensor(Node node)
         {
-            LogMessage("Please wakeup the doorwindow sensor.");
+            LogMessage("Please wakeup the door sensor.");
             Console.ReadLine();
 
             var association = node.GetCommandClass<Association>();
@@ -281,6 +281,14 @@ namespace ZWaveDriverSample
             await wakeUp.SetInterval(TimeSpan.FromMinutes(15), 1);
             var wakeUpReport = await wakeUp.GetInterval();
             LogMessage($"WakeUp report of Node {wakeUpReport.Node:D3} is [{wakeUpReport}]");
+
+            var basic = node.GetCommandClass<Basic>();
+            var basicReport = await basic.Get();
+            LogMessage($"BasicReport report of Node {basicReport.Node:D3} is [{basicReport}]");
+
+            var alarm = node.GetCommandClass<Alarm>();
+            var alarmReport = await basic.Get();
+            LogMessage($"AlarmReport report of Node {alarmReport.Node:D3} is [{alarmReport}]");
 
             Console.ReadLine();
         }
