@@ -321,7 +321,7 @@ namespace ZWave.Channel
                 }).ConfigureAwait(false);
 
                 return null;
-            }, $"{nodeID} {command}");
+            }, $"NodeID:{nodeID:D3} {command}");
         }
 
         public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID)
@@ -376,7 +376,7 @@ namespace ZWave.Channel
                 {
                     NodeEventReceived -= onNodeEventReceived;
                 }
-            }, $"{nodeID} {command} {responseCommandID}");
+            }, $"NodeID:{nodeID:D3} {command} {responseCommandID}");
         }
     }
 }
