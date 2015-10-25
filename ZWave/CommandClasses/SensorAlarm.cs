@@ -22,9 +22,9 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<SensorAlarmReport> Get()
+        public async Task<SensorAlarmReport> Get(AlarmType type)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Channel.Send(Node, new Command(Class, command.Get, Convert.ToByte(type)), command.Report);
             return new SensorAlarmReport(Node, response);
         }
 
