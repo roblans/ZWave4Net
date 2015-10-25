@@ -29,11 +29,12 @@ namespace ZWave.Devices.Fibaro
                 return true;
             }
 
-            var alarm = (await Node.GetCommandClass<SensorAlarm>().Get(AlarmType.General));
-            if (alarm.Level == 0xFF)
+            var sensorBinary = (await Node.GetCommandClass<SensorBinary>().Get());
+            if (sensorBinary.Value)
             {
                 return true;
             }
+
             return false;
         }
 
