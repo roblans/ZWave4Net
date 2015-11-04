@@ -12,7 +12,10 @@ namespace ZWaveDriverSample
     {
         static void Main(string[] args)
         {
-            var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
+            var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element =>
+                element != "COM1"
+                && element != "COM10"
+                && element != "COM11").First();
 
             var controller = new ZWaveController(portName);
             //controller.Channel.Log = Console.Out;
@@ -63,17 +66,17 @@ namespace ZWaveDriverSample
             LogMessage($"ControllerID: {controllerNodeID:D3}");
 
             var nodes = await controller.GetNodes();
-            foreach (var node in nodes)
-            {
-                var protocolInfo = await node.GetProtocolInfo();
-                LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
+            //foreach (var node in nodes)
+            //{
+            //    var protocolInfo = await node.GetProtocolInfo();
+            //    LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
 
-                var neighbours = await node.GetNeighbours();
-                LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
+            //    var neighbours = await node.GetNeighbours();
+            //    LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
 
-                // subcribe to changes
-                Subscribe(node);
-            }
+            //    // subcribe to changes
+            //    Subscribe(node);
+            //}
 
 
             //await InitializeWallPlug(nodes[2]);
@@ -82,7 +85,8 @@ namespace ZWaveDriverSample
             //await InitializeGarageDoorSensor(nodes[5]);
             //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[7]);
-            await InitializeDoorSensor(nodes[8]);
+            //await InitializeDoorSensor(nodes[8]);
+            await InitializeFibaro2xSwitch(nodes[4]);
 
             Console.ReadLine();
         }
@@ -289,6 +293,20 @@ namespace ZWaveDriverSample
             var alarm = node.GetCommandClass<Alarm>();
             var alarmReport = await basic.Get();
             LogMessage($"AlarmReport report of Node {alarmReport.Node:D3} is [{alarmReport}]");
+
+            Console.ReadLine();
+        }
+
+        private static async Task InitializeFibaro2xSwitch(Node node)
+        {
+            await Task.Run(() =>
+            {
+                var multiChannel = node.GetCommandClass<MultiChannel>();
+                multiChannel.Changed += (_, a) =>
+                {
+                    LogMessage($"Event received:\n{a.Report}");
+                };
+            });
 
             Console.ReadLine();
         }

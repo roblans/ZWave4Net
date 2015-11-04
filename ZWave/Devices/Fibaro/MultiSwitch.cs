@@ -17,13 +17,12 @@ namespace ZWave.Devices.Fibaro
         public MultiSwitch(Node node)
             : base(node)
         {
-            Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary1_Changed;
-            Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary2_Changed;
+            Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary_Changed;
+            Node.GetCommandClass<MultiChannel>().Changed += MultiChannel_Changed;
         }
 
 
-        // ToDo: other report!
-        private void SwitchBinary1_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
             {
@@ -34,15 +33,33 @@ namespace ZWave.Devices.Fibaro
                 OnSwitchedOff1(EventArgs.Empty);
             }
         }
-        private void SwitchBinary2_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private void MultiChannel_Changed(object sender, ReportEventArgs<MultiChannelReport> e)
         {
-            if (e.Report.Value)
+            if (e.Report.Report is SwitchBinaryReport)
             {
-                OnSwitchedOn2(EventArgs.Empty);
-            }
-            else
-            {
-                OnSwitchedOff2(EventArgs.Empty);
+                var switchReport = e.Report.Report as SwitchBinaryReport;
+                if (byte.Equals(e.Report.EndPointID, 1))
+                {
+                    if (switchReport.Value)
+                    {
+                        OnSwitchedOn1(EventArgs.Empty);
+                    }
+                    else
+                    {
+                        OnSwitchedOff1(EventArgs.Empty);
+                    }
+                }
+                else if (byte.Equals(e.Report.EndPointID, 2))
+                {
+                    if (switchReport.Value)
+                    {
+                        OnSwitchedOn2(EventArgs.Empty);
+                    }
+                    else
+                    {
+                        OnSwitchedOff2(EventArgs.Empty);
+                    }
+                }
             }
         }
 
