@@ -17,11 +17,23 @@ namespace ZWave.Devices.Fibaro
         public MultiSwitch(Node node)
             : base(node)
         {
+            Node.GetCommandClass<Basic>().Changed += Basic_Changed;
             Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary_Changed;
             Node.GetCommandClass<MultiChannel>().Changed += MultiChannel_Changed;
         }
 
 
+        private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
+        {
+            if (e.Report.Value)
+            {
+                OnSwitchedOn1(EventArgs.Empty);
+            }
+            else
+            {
+                OnSwitchedOff1(EventArgs.Empty);
+            }
+        }
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
             if (e.Report.Value)
