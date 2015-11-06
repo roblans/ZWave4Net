@@ -23,19 +23,15 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<ThermostatModeReport> Get(ThermostatModeType type)
+        public async Task<ThermostatModeReport> Get(ThermostatSetpointType type)
         {
             var response = await Channel.Send(Node, new Command(Class, command.Get, Convert.ToByte(type)), command.Report);
-            return new ThermostatSetpointReport(Node, response);
+            return new ThermostatModeReport(Node, response);
         }
 
-        public async Task Set(ThermostatModeType type, float value)
+        public async Task Set(ThermostatSetpointType type, float value)
         {
-            // encode value, decimals = 1, scale = 0 (°C) 
-            var encoded = PayloadConverter.GetBytes(value, decimals: 1, scale: 0);
-
-            var payload = new byte[] { Convert.ToByte(type) }.Concat(encoded).ToArray();
-            await Channel.Send(Node, new Command(Class, command.Set, payload));
+            await Channel.Send(Node, new Command(Class, command.Set, Convert.ToByte(type)));
         }
 
         protected internal override void HandleEvent(Command command)
@@ -43,7 +39,7 @@ namespace ZWave.CommandClasses
             base.HandleEvent(command);
 
             var report = new ThermostatModeReport(Node, command.Payload);
-            OnChanged(new ReportEventArgs<ThermostatSetpointReport>(report));
+            OnChanged(new ReportEventArgs<ThermostatModeReport>(report));
         }
 
         protected virtual void OnChanged(ReportEventArgs<ThermostatModeReport> e)

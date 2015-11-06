@@ -18,7 +18,10 @@ namespace ZWaveDriverSample
                 && element != "COM11").First();
 
             var controller = new ZWaveController(portName);
-            //controller.Channel.Log = Console.Out;
+            if (Directory.Exists(@"D:\Temp"))
+            {
+                controller.Channel.Log = File.CreateText(@"D:\Temp\ZWave_Driver.log");
+            }
 
             controller.Open();
             try
@@ -66,17 +69,17 @@ namespace ZWaveDriverSample
             LogMessage($"ControllerID: {controllerNodeID:D3}");
 
             var nodes = await controller.GetNodes();
-            //foreach (var node in nodes)
-            //{
-            //    var protocolInfo = await node.GetProtocolInfo();
-            //    LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
+            foreach (var node in nodes)
+            {
+                var protocolInfo = await node.GetProtocolInfo();
+                LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
 
-            //    var neighbours = await node.GetNeighbours();
-            //    LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
+                var neighbours = await node.GetNeighbours();
+                LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
 
-            //    // subcribe to changes
-            //    Subscribe(node);
-            //}
+                // subcribe to changes
+                Subscribe(node);
+            }
 
 
             //await InitializeWallPlug(nodes[2]);
@@ -86,7 +89,7 @@ namespace ZWaveDriverSample
             //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[7]);
             //await InitializeDoorSensor(nodes[8]);
-            await InitializeFibaro2xSwitch(nodes[4]);
+            //await InitializeFibaro2xSwitch(nodes[4]);
 
             Console.ReadLine();
         }
@@ -116,6 +119,9 @@ namespace ZWaveDriverSample
 
             var switchBinary = node.GetCommandClass<SwitchBinary>();
             switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var multiChannel = node.GetCommandClass<MultiChannel>();
+            multiChannel.Changed += (_, e) => LogMessage($"MultiChannel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
             thermostatSetpoint.Changed += (_, e) => LogMessage($"thermostatSetpoint report of Node {e.Report.Node:D3} changed to [{e.Report}]");

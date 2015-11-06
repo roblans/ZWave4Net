@@ -25,7 +25,7 @@ namespace ZWave.Devices.Fibaro
 
         private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
-            if (e.Report.Value)
+            if (byte.Equals(e.Report.Value, 0xFF))
             {
                 OnSwitchedOn1(EventArgs.Empty);
             }
