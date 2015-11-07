@@ -341,7 +341,7 @@ namespace ZWave.Channel
                     {
                         // BugFix: 
                         // http://stackoverflow.com/questions/19481964/calling-taskcompletionsource-setresult-in-a-non-blocking-manner
-                        Task.Run(() => completionSource.SetResult(e.Command));
+                        Task.Run(() => completionSource.TrySetResult(e.Command));
                     }
                 };
 
