@@ -68,7 +68,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorMultiLevelReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchBinary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchBinaryReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatSetpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatSetpointReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatSetpointType.cs" />

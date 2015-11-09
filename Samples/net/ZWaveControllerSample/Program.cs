@@ -12,10 +12,16 @@ namespace ZWaveDriverSample
     {
         static void Main(string[] args)
         {
-            var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
+            var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element =>
+                element != "COM1"
+                && element != "COM10"
+                && element != "COM11").First();
 
             var controller = new ZWaveController(portName);
-            //controller.Channel.Log = Console.Out;
+            if (Directory.Exists(@"D:\Temp"))
+            {
+                controller.Channel.Log = File.CreateText(@"D:\Temp\ZWave_Driver.log");
+            }
 
             controller.Open();
             try
@@ -82,7 +88,8 @@ namespace ZWaveDriverSample
             //await InitializeGarageDoorSensor(nodes[5]);
             //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[7]);
-            await InitializeDoorSensor(nodes[8]);
+            //await InitializeDoorSensor(nodes[8]);
+            //await InitializeFibaro2xSwitch(nodes[4]);
 
             Console.ReadLine();
         }
@@ -112,6 +119,9 @@ namespace ZWaveDriverSample
 
             var switchBinary = node.GetCommandClass<SwitchBinary>();
             switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var multiChannel = node.GetCommandClass<MultiChannel>();
+            multiChannel.Changed += (_, e) => LogMessage($"MultiChannel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
             thermostatSetpoint.Changed += (_, e) => LogMessage($"thermostatSetpoint report of Node {e.Report.Node:D3} changed to [{e.Report}]");
@@ -289,6 +299,20 @@ namespace ZWaveDriverSample
             var alarm = node.GetCommandClass<Alarm>();
             var alarmReport = await basic.Get();
             LogMessage($"AlarmReport report of Node {alarmReport.Node:D3} is [{alarmReport}]");
+
+            Console.ReadLine();
+        }
+
+        private static async Task InitializeFibaro2xSwitch(Node node)
+        {
+            await Task.Run(() =>
+            {
+                var multiChannel = node.GetCommandClass<MultiChannel>();
+                multiChannel.Changed += (_, a) =>
+                {
+                    LogMessage($"Event received:\n{a.Report}");
+                };
+            });
 
             Console.ReadLine();
         }
