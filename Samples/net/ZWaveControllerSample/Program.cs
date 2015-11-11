@@ -82,7 +82,7 @@ namespace ZWaveDriverSample
             //await InitializeGarageDoorSensor(nodes[5]);
             //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[7]);
-            await InitializeDoorSensor(nodes[8]);
+            await InitializeDoorSensor(nodes[10]);
 
             Console.ReadLine();
         }
