@@ -63,10 +63,10 @@ namespace ZWave.CommandClasses
 
         public async Task Set(byte parameter, ulong value)
         {
-            await Set(parameter, value, false);
+            await Set(parameter, (long)value, false);
         }
 
-        private async Task Set(byte parameter, object value, bool signed)
+        private async Task Set(byte parameter, long value, bool signed)
         {
             // extra roundtrip to get the correct size of the parameter
             var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report);
