@@ -22,10 +22,9 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<BatteryReport> Get()
+        public async Task<byte[]> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
-            return new BatteryReport(Node, response);
+            return await Channel.Send(Node, new Command(Class, command.Get), command.Report);
         }
 
         public async Task Add(byte groupID, byte nodeID)
