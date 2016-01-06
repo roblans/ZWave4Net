@@ -81,8 +81,8 @@ namespace ZWaveDriverSample
             //await InitializeShockSensor(nodes[4]);
             //await InitializeGarageDoorSensor(nodes[5]);
             //await InitializeThermostat(nodes[6]);
-            //await InitializeMultiSensor(nodes[7]);
-            await InitializeDoorSensor(nodes[10]);
+            await InitializeMultiSensor(nodes[7]);
+            //await InitializeDoorSensor(nodes[10]);
 
             Console.ReadLine();
         }
@@ -228,6 +228,8 @@ namespace ZWaveDriverSample
 
             var configuration = motionSensor.GetCommandClass<Configuration>();
             await configuration.Set(111, (uint)240); // minimum interval 240 seconds
+            await configuration.Set(3, (UInt16)60); // set motion timeout to 60 seconds
+            var motionTimeout = await configuration.Get(3);
 
             Console.ReadLine();
         }
