@@ -228,7 +228,7 @@ namespace ZWaveDriverSample
 
             var configuration = motionSensor.GetCommandClass<Configuration>();
             await configuration.Set(111, (uint)240); // minimum interval 240 seconds
-            await configuration.Set(3, (UInt16)60); // set motion timeout to 60 seconds
+            await configuration.Set(3, (UInt16)300); // set motion timeout to 5 minutes
             var motionTimeout = await configuration.Get(3);
 
             Console.ReadLine();
