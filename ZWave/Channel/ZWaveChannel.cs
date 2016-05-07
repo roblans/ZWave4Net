@@ -45,6 +45,14 @@ namespace ZWave.Channel
         {
         }
 #endif
+
+#if WINDOWS_UWP
+        public ZWaveChannel(ushort vendorId, ushort productId)
+             : this(new SerialPort(vendorId, productId))
+        {
+        }
+#endif
+
         protected virtual void OnError(ErrorEventArgs e)
         {
             LogMessage($"Exception: {e.Error}");

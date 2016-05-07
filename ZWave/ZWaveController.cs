@@ -34,6 +34,13 @@ namespace ZWave
         }
 #endif
 
+#if WINDOWS_UWP
+        public ZWaveController(ushort vendorId, ushort productId)
+             : this(new ZWaveChannel(vendorId, productId))
+        {
+        }
+#endif
+
         protected virtual void OnError(ErrorEventArgs e)
         {
             Error?.Invoke(this, e);
