@@ -93,5 +93,5 @@ FIBARO Motion Sensor sample:
 
 Note: running ZWave4Net on Raspberry PI IoT Windows 10:
 
-                // note: opening the serialport by name fails on Windows 10 IoT, use USB vendorId and productId instead
-                var controller = new ZWaveController(vendorId: 0x0658, productId: 0x0200);
+   // note: opening the serialport by name fails on Windows 10 IoT, use USB vendorId and productId instead
+   var controller = new ZWaveController(vendorId: 0x0658, productId: 0x0200);
