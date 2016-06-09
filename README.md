@@ -7,6 +7,8 @@ Supported Targets:
 - Universal Windows: uap10.0
 - Portable Class Library: net45 + win8
 
+Runs on Raspberry PI IoT Windows 10 (see note below)
+
 NuGet package: https://www.nuget.org/packages/ZWave4Net/
 
 Supported Z-Wave command classes:
@@ -88,3 +90,8 @@ FIBARO Motion Sensor sample:
             // close the controller
             controller.Close();
         }
+
+Note: running ZWave4Net on Raspberry PI IoT Windows 10:
+
+    // note: opening the serialport by name fails on Windows 10 IoT, use USB vendorId and productId instead
+    var controller = new ZWaveController(vendorId: 0x0658, productId: 0x0200);
