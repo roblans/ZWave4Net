@@ -50,6 +50,13 @@ namespace ZWave
 
         public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses()
         {
+            // is this node the controller?
+            if (await Controller.GetNodeID() == NodeID)
+            {
+                // yes, so return an empty collection. GetSupportedCommandClasses is not supported by the controller
+                return new VersionCommandClassReport[0];
+            }
+
             var version = GetCommandClass<CommandClasses.Version>();
             var reports = new List<VersionCommandClassReport>();
             foreach(var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())

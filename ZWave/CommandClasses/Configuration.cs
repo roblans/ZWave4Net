@@ -26,6 +26,12 @@ namespace ZWave.CommandClasses
             return new ConfigurationReport(Node, response);
         }
 
+        public async Task Set(byte parameter, object value, byte size)
+        {
+            var int64 = Convert.ToInt64(value);
+            await Set(parameter, int64, true, size);
+        }
+
         public async Task Set(byte parameter, sbyte value)
         {
             await Set(parameter, value, true);
@@ -66,11 +72,14 @@ namespace ZWave.CommandClasses
             await Set(parameter, (long)value, false);
         }
 
-        private async Task Set(byte parameter, long value, bool signed)
+        private async Task Set(byte parameter, long value, bool signed, byte size = 0)
         {
-            // extra roundtrip to get the correct size of the parameter
-            var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report);
-            var size = response[1];
+            if (size == 0)
+            {
+                // extra roundtrip to get the correct size of the parameter
+                var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report);
+                size = response[1];
+            }
 
             var values = default(byte[]);
             switch(size)
