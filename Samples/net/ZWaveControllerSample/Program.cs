@@ -115,6 +115,9 @@ namespace ZWaveDriverSample
 
             var thermostatSetpoint = node.GetCommandClass<ThermostatSetpoint>();
             thermostatSetpoint.Changed += (_, e) => LogMessage($"thermostatSetpoint report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var sceneActivation = node.GetCommandClass<SceneActivation>();
+            sceneActivation.Changed += (_, e) => LogMessage($"sceneActivation report of Node {e.Report.Node:D3} changed to [{e.Report}]");
         }
 
         private static async Task InitializeWallPlug(Node node)

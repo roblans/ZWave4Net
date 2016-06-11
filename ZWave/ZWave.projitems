@@ -60,6 +60,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\NodeReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ReportEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SceneActivation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SceneActivationReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorAlarm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorAlarmReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorBinary.cs" />

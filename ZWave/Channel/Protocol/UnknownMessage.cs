@@ -18,7 +18,7 @@ namespace ZWave.Channel.Protocol
 
         public override string ToString()
         {
-            return string.Concat(base.ToString(), " ", $"Payload:{BitConverter.ToString(Payload)} (unknown message!)");
+            return string.Concat(base.ToString(), " ", $"Payload:{BitConverter.ToString(Payload)}");
         }
     }
 }
