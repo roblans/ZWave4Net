@@ -22,6 +22,7 @@ Supported Z-Wave command classes:
 - Configuration
 - ManufacturerSpecific
 - Meter
+- SceneActivation
 - SensorAlarm
 - SensorBinary
 - SensorMultiLevel
