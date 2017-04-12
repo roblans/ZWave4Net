@@ -16,6 +16,7 @@ namespace ZWave
         private byte? _nodeID;
         public readonly ZWaveChannel Channel;
         public event EventHandler<ErrorEventArgs> Error;
+        public event EventHandler ChannelClosed;
 
         private ZWaveController(ZWaveChannel channel)
         {
@@ -46,16 +47,27 @@ namespace ZWave
             Error?.Invoke(this, e);
         }
 
+        protected virtual void OnChannelClosed(EventArgs e)
+        {
+            ChannelClosed?.Invoke(this, e);
+        }
+
         public void Open()
         {
             Channel.NodeEventReceived += Channel_NodeEventReceived;
             Channel.Error += Channel_Error;
+            Channel.ChannelClosed += Channel_Closed;
             Channel.Open();
         }
 
         private void Channel_Error(object sender, ErrorEventArgs e)
         {
             OnError(e);
+        }
+
+        private void Channel_Closed(object sender, EventArgs e)
+        {
+            OnChannelClosed(e);
         }
 
         private async void Channel_NodeEventReceived(object sender, NodeEventArgs e)

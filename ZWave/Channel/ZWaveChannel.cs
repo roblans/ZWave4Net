@@ -14,12 +14,12 @@ namespace ZWave.Channel
     public class ZWaveChannel
     {
         private readonly SemaphoreSlim _semaphore;
-        private readonly Task _portReadTask;
-        private readonly Task _processEventsTask;
-        private readonly Task _transmitTask;
-        private readonly BlockingCollection<NodeEvent> _eventQueue = new BlockingCollection<NodeEvent>();
-        private readonly BlockingCollection<Message> _transmitQueue = new BlockingCollection<Message>();
-        private readonly BlockingCollection<Message> _responseQueue = new BlockingCollection<Message>();
+        private Task _portReadTask;
+        private Task _processEventsTask;
+        private Task _transmitTask;
+        private BlockingCollection<NodeEvent> _eventQueue;
+        private BlockingCollection<Message> _transmitQueue;
+        private BlockingCollection<Message> _responseQueue;
 
         public readonly ISerialPort Port;
         public TextWriter Log { get; set; }
@@ -27,6 +27,7 @@ namespace ZWave.Channel
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
         public event EventHandler<ErrorEventArgs> Error;
+        public event EventHandler ChannelClosed;
 
         public ZWaveChannel(ISerialPort port)
         {
@@ -34,9 +35,6 @@ namespace ZWave.Channel
                 throw new ArgumentNullException(nameof(port));
 
             _semaphore = new SemaphoreSlim(1, 1);
-            _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
-            _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
-            _portReadTask = new Task(() => ReadPort(Port));
         }
 
 #if NET || WINDOWS_UWP
@@ -59,6 +57,12 @@ namespace ZWave.Channel
             Error?.Invoke(this, e);
         }
 
+        protected virtual void OnChannelClosed(EventArgs e)
+        {
+            LogMessage($"Connection closed");
+            ChannelClosed?.Invoke(this, e);
+        }
+
         private void LogMessage(string message)
         {
             if (Log != null && message != null)
@@ -71,7 +75,7 @@ namespace ZWave.Channel
         {
             if (ex is AggregateException)
             {
-                foreach(var inner in ((AggregateException)ex).InnerExceptions)
+                foreach (var inner in ((AggregateException)ex).InnerExceptions)
                 {
                     LogMessage(inner.ToString());
                 }
@@ -127,6 +131,7 @@ namespace ZWave.Channel
                 catch (IOException)
                 {
                     // port closed, we're done so return
+                    OnChannelClosed(EventArgs.Empty);
                     return;
                 }
                 catch (Exception ex)
@@ -227,6 +232,16 @@ namespace ZWave.Channel
         {
             Port.Open();
 
+            // create tasks, on open or re-open
+            _eventQueue = new BlockingCollection<NodeEvent>();
+            _transmitQueue = new BlockingCollection<Message>();
+            _responseQueue = new BlockingCollection<Message>();
+
+            _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
+            _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
+            _portReadTask = new Task(() => ReadPort(Port));
+
+            // start tasks
             _portReadTask.Start();
             _processEventsTask.Start();
             _transmitTask.Start();
