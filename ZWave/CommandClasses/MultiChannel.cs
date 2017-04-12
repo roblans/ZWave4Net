@@ -16,6 +16,8 @@ namespace ZWave.CommandClasses
             Encap = 0x0d,
         }
 
+        public event EventHandler<ReportEventArgs<MultiChannelReport>> Changed;
+
         public MultiChannel(Node node) : base(node, CommandClass.MultiChannel)
         {
         }
@@ -26,9 +28,27 @@ namespace ZWave.CommandClasses
             await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointID, Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Set), value ? (byte)0xFF : (byte)0x00));
         }
 
-        public async Task<byte[]> Get()
+        public async Task<byte[]> Get(/* todo: byte endPointID */)
         {
+            /* todo: fill report, this call doesn't work */
             return await Channel.Send(Node, new Command(Class, command.EndPointGet), command.EndPointReport);
+        }
+
+        protected internal override void HandleEvent(Command command)
+        {
+            base.HandleEvent(command);
+
+            var report = new MultiChannelReport(Node, command.Payload);
+            OnChanged(new ReportEventArgs<MultiChannelReport>(report));
+        }
+
+        protected virtual void OnChanged(ReportEventArgs<MultiChannelReport> e)
+        {
+            var handler = Changed;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }
