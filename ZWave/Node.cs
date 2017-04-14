@@ -14,6 +14,8 @@ namespace ZWave
         public readonly byte NodeID;
         public readonly ZWaveController Controller;
 
+        public event System.EventHandler<NodeEventArgs> UnknownCommandReceived;
+
         public Node(byte nodeID, ZWaveController contoller)
         {
             NodeID = nodeID;
@@ -106,6 +108,15 @@ namespace ZWave
             {
                 target.HandleEvent(command);
             }
+            else
+            {
+                OnUnknownCommandReceived(new ZWave.Channel.NodeEventArgs(NodeID, command));
+            }
+        }
+
+        public virtual void OnUnknownCommandReceived(NodeEventArgs args)
+        {
+            UnknownCommandReceived?.Invoke(this, args);
         }
     }
 }
