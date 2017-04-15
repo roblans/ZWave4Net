@@ -38,6 +38,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Association.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CentralSceneReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CentralScene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Basic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ClockReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\BasicReport.cs" />

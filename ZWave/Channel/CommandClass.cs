@@ -14,6 +14,7 @@ namespace ZWave.Channel
         Meter = 0x32,
         Color = 0x33,
         ThermostatSetpoint = 0x43,
+        CentralScene = 0x5B,
         MultiChannel = 0x60,
         Configuration = 0x70,
         Alarm = 0x71,

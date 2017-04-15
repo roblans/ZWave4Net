@@ -67,7 +67,7 @@ namespace ZWave.Channel
         {
             if (Log != null && message != null)
             {
-                Log.WriteLine(message);
+                Log.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd H:mm:ss.fff")} {message}");
             }
         }
 
