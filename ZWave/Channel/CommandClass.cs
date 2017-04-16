@@ -8,6 +8,7 @@ namespace ZWave.Channel
     {
         Basic = 0x20,
         SwitchBinary = 0x25,
+        SwitchMultiLevel = 0x26,
         SceneActivation = 0x2B,
         SensorBinary = 0x30,
         SensorMultiLevel = 0x31,

@@ -240,7 +240,7 @@ namespace ZWave.Channel
             _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
             _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
             _portReadTask = new Task(() => ReadPort(Port));
-
+            
             // start tasks
             _portReadTask.Start();
             _processEventsTask.Start();
