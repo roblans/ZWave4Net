@@ -27,11 +27,13 @@ namespace ZWave.CommandClasses
             var controllerID = await Node.Controller.GetNodeID();
             await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointID, Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Set), value ? (byte)0xFF : (byte)0x00));
         }
-
-        public async Task<byte[]> Get(/* todo: byte endPointID */)
+        
+        public async Task<MultiChannelReport> Get(byte endPointID)
         {
-            /* todo: fill report, this call doesn't work */
-            return await Channel.Send(Node, new Command(Class, command.EndPointGet), command.EndPointReport);
+            // Fixed! and it works like a charm
+            var controllerID = await Node.Controller.GetNodeID();
+            var response = await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointID,  Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Get)), command.Encap);
+            return new MultiChannelReport(Node, response);
         }
 
         protected internal override void HandleEvent(Command command)

@@ -15,7 +15,9 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
-            //controller.Channel.Log = Console.Out;
+            controller.Channel.Log = Console.Out;
+            //controller.Channel.Log = new System.IO.StreamWriter("./ZWaveChannelLog.log");
+            controller.Channel.MaxExchangeEttempt = 1;
 
             controller.Open();
             try
@@ -45,7 +47,7 @@ namespace ZWaveDriverSample
             var text = $"{DateTime.Now.TimeOfDay} {message}";
 
             Console.WriteLine(text);
-            lock(typeof(File))
+            lock (typeof(File))
             {
                 if (Directory.Exists(@"D:\Temp"))
                 {
@@ -63,28 +65,57 @@ namespace ZWaveDriverSample
             LogMessage($"ControllerID: {controllerNodeID:D3}");
 
             var nodes = await controller.GetNodes();
-            foreach (var node in nodes)
-            {
-                var protocolInfo = await node.GetProtocolInfo();
-                LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
+            //foreach (var node in nodes)
+            //{
+            //    var protocolInfo = await node.GetProtocolInfo();
+            //    LogMessage($"Node: {node}, Generic = {protocolInfo.GenericType}, Basic = {protocolInfo.BasicType}, Listening = {protocolInfo.IsListening} ");
 
-                var neighbours = await node.GetNeighbours();
-                LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
+            //    var neighbours = await node.GetNeighbours();
+            //    LogMessage($"Node: {node}, Neighbours = {string.Join(", ", neighbours.Cast<object>().ToArray())}");
 
-                // subcribe to changes
-                Subscribe(node);
-            }
+            //    // subcribe to changes
+            //    Subscribe(node);
+            //}
 
-
+            await SetLightsOnAndOff(nodes.First(n => n.NodeID == 13));
             //await InitializeWallPlug(nodes[2]);
             //await InitializeWallPlug(nodes[3]);
             //await InitializeShockSensor(nodes[4]);
             //await InitializeGarageDoorSensor(nodes[5]);
             //await InitializeThermostat(nodes[6]);
-            await InitializeMultiSensor(nodes[7]);
+            //await InitializeMultiSensor(nodes[7]);
             //await InitializeDoorSensor(nodes[10]);
 
             Console.ReadLine();
+        }
+
+        private static async Task SetLightsOnAndOff(Node node)
+        {
+            Console.ReadLine();
+            var switcher = node.GetCommandClass<MultiChannel>();
+            await switcher.BinarySwitchSet(1, false);
+            await switcher.BinarySwitchSet(2, false);
+            await GetSwitchState(switcher);
+            Console.ReadLine();
+            await switcher.BinarySwitchSet(1, true);
+            await GetSwitchState(switcher);
+            Console.ReadLine();
+            await switcher.BinarySwitchSet(2, true);
+            await GetSwitchState(switcher);
+            Console.ReadLine();
+            await switcher.BinarySwitchSet(1, false);
+            await GetSwitchState(switcher);
+            Console.ReadLine();
+            await switcher.BinarySwitchSet(2, false);
+            await GetSwitchState(switcher);
+            LogMessage("Done");
+        }
+        private static async Task GetSwitchState(MultiChannel switcher)
+        {
+            var report = await switcher.Get(1);
+            LogMessage("1. " + string.Join(",", report));
+            report = await switcher.Get(2);
+            LogMessage("2. " + string.Join(",", report));
         }
 
         private static void Subscribe(Node node)
@@ -108,7 +139,7 @@ namespace ZWaveDriverSample
             sensorAlarm.Changed += (_, e) => LogMessage($"SensorAlarm report of Node {e.Report.Node:D3} changed to [{e.Report}]");
 
             var wakeUp = node.GetCommandClass<WakeUp>();
-            wakeUp.Changed += (_, e) =>{  LogMessage($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]"); };
+            wakeUp.Changed += (_, e) => { LogMessage($"WakeUp report of Node {e.Report.Node:D3} changed to [{e.Report}]"); };
 
             var switchBinary = node.GetCommandClass<SwitchBinary>();
             switchBinary.Changed += (_, e) => LogMessage($"SwitchBinary report of Node {e.Report.Node:D3} changed to [{e.Report}]");

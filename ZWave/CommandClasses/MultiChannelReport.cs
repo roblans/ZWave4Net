@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ZWave.Channel.Protocol;
 
@@ -7,30 +8,31 @@ namespace ZWave.CommandClasses
 {
     public class MultiChannelReport : NodeReport
     {
-        public readonly byte Byte0;
-        public readonly byte Byte1;
-        public readonly byte Byte2;
-        public readonly byte Byte3;
+        public readonly byte ControllerID;
+        public readonly byte EndPointID;
 
-        public readonly byte Value;
+        public readonly NodeReport Report;
 
         internal MultiChannelReport(Node node, byte[] payload) : base(node)
         {
             if (payload == null)
                 throw new ArgumentNullException(nameof(payload));
-            if (payload.Length < 5)
+            if (payload.Length < 3)
                 throw new ReponseFormatException($"The response was not in the expected format. {GetType().Name}: Payload: {BitConverter.ToString(payload)}");
 
-            Byte0 = payload[0];
-            Byte1 = payload[1];
-            Byte2 = payload[2];
-            Byte3 = payload[3];
-            Value = payload[4];
+            ControllerID = payload[0];
+            EndPointID = payload[1];
+
+            // check sub report
+            if(payload.Length > 3 && payload[2] == 37 && payload[3] == 3)
+            {
+                Report = new SwitchBinaryReport(node, payload.Skip(4).ToArray<Byte>());
+            }
         }
 
         public override string ToString()
         {
-            return $"Byte0:{Byte0}. Byte1:{Byte1}. Byte2:{Byte2}. Byte3:{Byte3}. Value:{Value}";
+            return $"ControllerID:{ControllerID}. EndPointID:{EndPointID}. Report:{Report}";
         }
     }
 }

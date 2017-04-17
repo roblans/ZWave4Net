@@ -29,6 +29,8 @@ namespace ZWave.Channel
         public event EventHandler<ErrorEventArgs> Error;
         public event EventHandler ChannelClosed;
 
+        public int MaxExchangeEttempt { get; set; } = 3;
+
         public ZWaveChannel(ISerialPort port)
         {
             if ((Port = port) == null)
@@ -277,7 +279,7 @@ namespace ZWave.Channel
                     }
                     catch (CanResponseException)
                     {
-                        if (attempt++ >= 3)
+                        if (attempt++ >= MaxExchangeEttempt)
                             throw;
 
                         LogMessage($"CAN received on: {message}. Retrying attempt: {attempt}");
@@ -286,7 +288,7 @@ namespace ZWave.Channel
                     }
                     catch (TransmissionException)
                     {
-                        if (attempt++ >= 3)
+                        if (attempt++ >= MaxExchangeEttempt)
                             throw;
 
                         LogMessage($"Transmission failure on: {message}. Retrying attempt: {attempt}");
@@ -295,7 +297,7 @@ namespace ZWave.Channel
                     }
                     catch (TimeoutException)
                     {
-                        if (attempt++ >= 3)
+                        if (attempt++ >= MaxExchangeEttempt)
                             throw;
 
                         LogMessage($"Timeout on: {message}. Retrying attempt: {attempt}");
