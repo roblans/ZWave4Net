@@ -77,7 +77,8 @@ namespace ZWaveDriverSample
             //    Subscribe(node);
             //}
 
-            await SetLightsOnAndOff(nodes.First(n => n.NodeID == 13));
+            await ReadSensorValues(nodes[20]);
+            //await MultiChannel(nodes[13]);
             //await InitializeWallPlug(nodes[2]);
             //await InitializeWallPlug(nodes[3]);
             //await InitializeShockSensor(nodes[4]);
@@ -89,7 +90,13 @@ namespace ZWaveDriverSample
             Console.ReadLine();
         }
 
-        private static async Task SetLightsOnAndOff(Node node)
+        private static async Task ReadSensorValues(Node node)
+        {
+            var sensorMultiLevel = node.GetCommandClass<SensorMultiLevel>();
+            var temperature = await sensorMultiLevel.Get(SensorType.Temperature);
+            var lux = await sensorMultiLevel.Get(SensorType.Luminance);
+        }
+        private static async Task MultiChannelTest(Node node)
         {
             Console.ReadLine();
             var switcher = node.GetCommandClass<MultiChannel>();
