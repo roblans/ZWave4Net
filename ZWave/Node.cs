@@ -14,6 +14,8 @@ namespace ZWave
         public readonly byte NodeID;
         public readonly ZWaveController Controller;
 
+        public event System.EventHandler<NodeEventArgs> UnknownCommandReceived;
+
         public Node(byte nodeID, ZWaveController contoller)
         {
             NodeID = nodeID;
@@ -22,6 +24,7 @@ namespace ZWave
             _commandClasses.Add(new Basic(this));
             _commandClasses.Add(new ManufacturerSpecific(this));
             _commandClasses.Add(new Battery(this));
+            _commandClasses.Add(new SwitchMultiLevel(this));
             _commandClasses.Add(new Alarm(this));
             _commandClasses.Add(new Association(this));
             _commandClasses.Add(new SensorBinary(this));
@@ -36,6 +39,7 @@ namespace ZWave
             _commandClasses.Add(new MultiChannel(this));
             _commandClasses.Add(new ThermostatSetpoint(this));
             _commandClasses.Add(new Clock(this));
+            _commandClasses.Add(new CentralScene(this));
             _commandClasses.Add(new SceneActivation(this));
         }
 
@@ -106,6 +110,15 @@ namespace ZWave
             {
                 target.HandleEvent(command);
             }
+            else
+            {
+                OnUnknownCommandReceived(new ZWave.Channel.NodeEventArgs(NodeID, command));
+            }
+        }
+
+        public virtual void OnUnknownCommandReceived(NodeEventArgs args)
+        {
+            UnknownCommandReceived?.Invoke(this, args);
         }
     }
 }

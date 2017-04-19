@@ -22,9 +22,9 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<SensorMultiLevelReport> Get()
+        public async Task<SensorMultiLevelReport> Get(SensorType type)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Channel.Send(Node, new Command(Class, command.Get, (byte)type), command.Report);
             return new SensorMultiLevelReport(Node, response);
         }
 
