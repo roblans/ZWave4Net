@@ -27,9 +27,9 @@ namespace ZWave.Channel
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
         public event EventHandler<ErrorEventArgs> Error;
-        public event EventHandler ChannelClosed;
+        public event EventHandler Closed;
 
-        public int MaxExchangeEttempt { get; set; } = 3;
+        public int MaxRetryCount { get; set; } = 3;
 
         public ZWaveChannel(ISerialPort port)
         {
@@ -59,10 +59,10 @@ namespace ZWave.Channel
             Error?.Invoke(this, e);
         }
 
-        protected virtual void OnChannelClosed(EventArgs e)
+        protected virtual void OnClosed(EventArgs e)
         {
             LogMessage($"Connection closed");
-            ChannelClosed?.Invoke(this, e);
+            Closed?.Invoke(this, e);
         }
 
         private void LogMessage(string message)
@@ -133,7 +133,7 @@ namespace ZWave.Channel
                 catch (IOException)
                 {
                     // port closed, we're done so return
-                    OnChannelClosed(EventArgs.Empty);
+                    OnClosed(EventArgs.Empty);
                     return;
                 }
                 catch (Exception ex)
@@ -279,7 +279,7 @@ namespace ZWave.Channel
                     }
                     catch (CanResponseException)
                     {
-                        if (attempt++ >= MaxExchangeEttempt)
+                        if (attempt++ >= MaxRetryCount)
                             throw;
 
                         LogMessage($"CAN received on: {message}. Retrying attempt: {attempt}");
@@ -288,7 +288,7 @@ namespace ZWave.Channel
                     }
                     catch (TransmissionException)
                     {
-                        if (attempt++ >= MaxExchangeEttempt)
+                        if (attempt++ >= MaxRetryCount)
                             throw;
 
                         LogMessage($"Transmission failure on: {message}. Retrying attempt: {attempt}");
@@ -297,7 +297,7 @@ namespace ZWave.Channel
                     }
                     catch (TimeoutException)
                     {
-                        if (attempt++ >= MaxExchangeEttempt)
+                        if (attempt++ >= MaxRetryCount)
                             throw;
 
                         LogMessage($"Timeout on: {message}. Retrying attempt: {attempt}");

@@ -56,7 +56,7 @@ namespace ZWave
         {
             Channel.NodeEventReceived += Channel_NodeEventReceived;
             Channel.Error += Channel_Error;
-            Channel.ChannelClosed += Channel_Closed;
+            Channel.Closed += Channel_Closed;
             Channel.Open();
         }
 
