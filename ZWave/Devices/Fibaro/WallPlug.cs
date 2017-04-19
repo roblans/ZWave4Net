@@ -45,7 +45,7 @@ namespace ZWave.Devices.Fibaro
 
         public async Task<Measure> GetPowerLoad()
         {
-            var value = (await Node.GetCommandClass<SensorMultiLevel>().Get()).Value;
+            var value = (await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Power)).Value;
             return new Measure(value, Unit.Watt);
         }
 
