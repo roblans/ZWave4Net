@@ -17,32 +17,37 @@ namespace ZWave.Devices.Fibaro
         public MultiSwitch(Node node)
             : base(node)
         {
-            Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary1_Changed;
-            Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary2_Changed;
+            Node.GetCommandClass<MultiChannel>().Changed += Switch_Changed;
         }
 
-
-        // ToDo: other report!
-        private void SwitchBinary1_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
+        private void Switch_Changed(object sender, ReportEventArgs<MultiChannelReport> e)
         {
-            if (e.Report.Value)
+            var endpointReport = (SwitchBinaryReport) e.Report.Report;
+            switch (e.Report.EndPointID)
             {
-                OnSwitchedOn1(EventArgs.Empty);
-            }
-            else
-            {
-                OnSwitchedOff1(EventArgs.Empty);
-            }
-        }
-        private void SwitchBinary2_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
-        {
-            if (e.Report.Value)
-            {
-                OnSwitchedOn2(EventArgs.Empty);
-            }
-            else
-            {
-                OnSwitchedOff2(EventArgs.Empty);
+                case 1:
+                    if (endpointReport.Value)
+                    {
+                        OnSwitchedOn1(EventArgs.Empty);
+                    }
+                    else
+                    {
+                        OnSwitchedOff1(EventArgs.Empty);
+                    }
+                    break;
+                case 2:
+                    if (endpointReport.Value)
+                    {
+                        OnSwitchedOn2(EventArgs.Empty);
+                    }
+                    else
+                    {
+                        OnSwitchedOff2(EventArgs.Empty);
+                    }
+                    break;
+                default:
+                    //don't care: this device only ever has 2 endpoints.
+                    break;
             }
         }
 
