@@ -20,8 +20,8 @@ namespace ZWave.CommandClasses
             if (payload.Length < 3)
                 throw new ReponseFormatException($"The response was not in the expected format. {GetType().Name}: Payload: {BitConverter.ToString(payload)}");
 
-            ControllerID = payload[0];
-            EndPointID = payload[1];
+            EndPointID = payload[0];
+            ControllerID = payload[1];
 
             // check sub report
             if(payload.Length > 3 && payload[2] == 37 && payload[3] == 3)
