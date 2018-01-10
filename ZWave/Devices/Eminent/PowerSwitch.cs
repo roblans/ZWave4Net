@@ -23,14 +23,18 @@ namespace ZWave.Devices.Eminent
 
         private async void Node_UpdateReceived(object sender, EventArgs e)
         {
-            // node has updated, fetch the current state of the switch 
-            // weird behaviour: this will raise a SwitchBinary.Changed event
-            await Node.GetCommandClass<SwitchBinary>().Get();
+           var report = await Node.GetCommandClass<SwitchBinary>().Get();
+           OnReportChanged(report);
         }
 
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
-            if (e.Report.Value)
+            OnReportChanged(e.Report);
+        }
+
+        private void OnReportChanged(SwitchBinaryReport report)
+        {
+            if (report.Value)
             {
                 OnSwitchedOn(EventArgs.Empty);
             }

@@ -20,6 +20,7 @@ namespace ZWaveDriverSample
             //controller.Channel.Log = Console.Out;
 
             controller.Open();
+            DynamicInvoke(controller, 19, "switchbinary", "set", "true").Wait();
             try
             {
                 Run(controller).Wait();
@@ -343,8 +344,10 @@ namespace ZWaveDriverSample
 
             var commandClass = getCommandClassMethod.Invoke(node, null);
             var invokeMethod = commandClass.GetType().GetMethods().FirstOrDefault(element => string.Compare(element.Name, invokeMethodName, true) == 0);
+            foreach(var parameter in invokeMethod.GetParameters())
+            {
 
-
+            }
         }
     }
 }
