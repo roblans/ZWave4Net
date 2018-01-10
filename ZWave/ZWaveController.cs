@@ -55,6 +55,7 @@ namespace ZWave
         public void Open()
         {
             Channel.NodeEventReceived += Channel_NodeEventReceived;
+            Channel.NodeUpdateReceived += Channel_NodeUpdateReceived;
             Channel.Error += Channel_Error;
             Channel.Closed += Channel_Closed;
             Channel.Open();
@@ -87,10 +88,28 @@ namespace ZWave
             }
         }
 
+        private async void Channel_NodeUpdateReceived(object sender, NodeUpdateEventArgs e)
+        {
+            try
+            {
+                var nodes = await GetNodes();
+                var target = nodes[e.NodeID];
+                if (target != null)
+                {
+                    target.HandleUpdate();
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError(new ErrorEventArgs(ex));
+            }
+        }
+
         public void Close()
         {
             Channel.Error -= Channel_Error;
             Channel.NodeEventReceived -= Channel_NodeEventReceived;
+            Channel.NodeUpdateReceived -= Channel_NodeUpdateReceived;
             Channel.Close();
         }
 

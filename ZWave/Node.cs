@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ZWave.CommandClasses;
 using ZWave.Channel;
 using System.Collections;
+using System;
 
 namespace ZWave
 {
@@ -15,6 +16,7 @@ namespace ZWave
         public readonly ZWaveController Controller;
 
         public event System.EventHandler<NodeEventArgs> UnknownCommandReceived;
+        public event System.EventHandler<EventArgs> UpdateReceived;
 
         public Node(byte nodeID, ZWaveController contoller)
         {
@@ -33,7 +35,7 @@ namespace ZWave
             _commandClasses.Add(new WakeUp(this));
             _commandClasses.Add(new Meter(this));
             _commandClasses.Add(new SwitchBinary(this));
-            _commandClasses.Add(new Version(this));
+            _commandClasses.Add(new ZWave.CommandClasses.Version(this));
             _commandClasses.Add(new Configuration(this));
             _commandClasses.Add(new Color(this));
             _commandClasses.Add(new MultiChannel(this));
@@ -116,7 +118,17 @@ namespace ZWave
             }
         }
 
-        public virtual void OnUnknownCommandReceived(NodeEventArgs args)
+        internal void HandleUpdate()
+        {
+            OnUpdateReceived(EventArgs.Empty);
+        }
+        
+        protected virtual void OnUpdateReceived(EventArgs args)
+        {
+            UpdateReceived?.Invoke(this, args);
+        }
+
+        protected virtual void OnUnknownCommandReceived(NodeEventArgs args)
         {
             UnknownCommandReceived?.Invoke(this, args);
         }

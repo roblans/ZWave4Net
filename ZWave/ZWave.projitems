@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Function.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\ISerialPort.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\NodeEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\NodeUpdateEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunctionCompleted.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\Exceptions.cs" />
@@ -26,6 +27,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\NodeCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\NodeCommandCompleted.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\NodeEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\NodeUpdate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\NodeUpdateState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ReceiveStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\TransmissionState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\TransmitOptions.cs" />
@@ -94,6 +97,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Clock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Danfoss\RadiatorThermostat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Eminent\PowerSwitch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\DoorSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\SmokeSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\MotionSensor.cs" />

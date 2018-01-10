@@ -17,7 +17,7 @@ namespace ZWave.Channel
         private Task _portReadTask;
         private Task _processEventsTask;
         private Task _transmitTask;
-        private BlockingCollection<NodeEvent> _eventQueue;
+        private BlockingCollection<Message> _eventQueue;
         private BlockingCollection<Message> _transmitQueue;
         private BlockingCollection<Message> _responseQueue;
 
@@ -26,6 +26,7 @@ namespace ZWave.Channel
         public TimeSpan ReceiveTimeout = TimeSpan.FromSeconds(2);
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
+        public event EventHandler<NodeUpdateEventArgs> NodeUpdateReceived;
         public event EventHandler<ErrorEventArgs> Error;
         public event EventHandler Closed;
 
@@ -107,7 +108,18 @@ namespace ZWave.Channel
                     if (message is NodeEvent)
                     {
                         // yes, so add to eventqueue
-                        _eventQueue.Add((NodeEvent)message);
+                        _eventQueue.Add(message);
+                        // send ACK to controller
+                        _transmitQueue.Add(Message.ACK);
+                        // we're done
+                        continue;
+                    }
+
+                    // is it a updatemessage from a node?
+                    if (message is NodeUpdate)
+                    {
+                        // yes, so add to eventqueue
+                        _eventQueue.Add(message);
                         // send ACK to controller
                         _transmitQueue.Add(Message.ACK);
                         // we're done
@@ -169,10 +181,27 @@ namespace ZWave.Channel
             }
         }
 
-        private void OnNodeEventReceived(NodeEvent nodeEvent)
+        private void OnNodeMessageReceived(Message message)
         {
-            if (nodeEvent == null)
-                throw new ArgumentNullException(nameof(nodeEvent));
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            if (message is NodeEvent)
+            {
+                OnNodeEventReceived((NodeEvent)message);
+                return;
+            }
+            if (message is NodeUpdate)
+            {
+                OnNodeUpdateReceived((NodeUpdate)message);
+                return;
+            }
+        }
+
+        private void OnNodeEventReceived(NodeEvent @event)
+        {
+            if (@event == null)
+                throw new ArgumentNullException(nameof(@event));
 
             var handler = NodeEventReceived;
             if (handler != null)
@@ -181,7 +210,29 @@ namespace ZWave.Channel
                 {
                     try
                     {
-                        invocation(this, new NodeEventArgs(nodeEvent.NodeID, nodeEvent.Command));
+                        invocation(this, new NodeEventArgs(@event.NodeID, @event.Command));
+                    }
+                    catch (Exception ex)
+                    {
+                        LogMessage(ex.ToString());
+                    }
+                }
+            }
+        }
+
+        private void OnNodeUpdateReceived(NodeUpdate update)
+        {
+            if (update == null)
+                throw new ArgumentNullException(nameof(update));
+
+            var handler = NodeUpdateReceived;
+            if (handler != null)
+            {
+                foreach (var invocation in handler.GetInvocationList().Cast<EventHandler<NodeUpdateEventArgs>>())
+                {
+                    try
+                    {
+                        invocation(this, new NodeUpdateEventArgs(update.NodeID));
                     }
                     catch (Exception ex)
                     {
@@ -235,11 +286,11 @@ namespace ZWave.Channel
             Port.Open();
 
             // create tasks, on open or re-open
-            _eventQueue = new BlockingCollection<NodeEvent>();
+            _eventQueue = new BlockingCollection<Message>();
             _transmitQueue = new BlockingCollection<Message>();
             _responseQueue = new BlockingCollection<Message>();
 
-            _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeEventReceived));
+            _processEventsTask = new Task(() => ProcessQueue(_eventQueue, OnNodeMessageReceived));
             _transmitTask = new Task(() => ProcessQueue(_transmitQueue, OnTransmit));
             _portReadTask = new Task(() => ReadPort(Port));
             

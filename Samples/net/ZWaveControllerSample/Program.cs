@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ZWave;
 using ZWave.CommandClasses;
+using ZWave.Devices.Eminent;
 
 namespace ZWaveDriverSample
 {
@@ -15,6 +16,7 @@ namespace ZWaveDriverSample
             var portName = System.IO.Ports.SerialPort.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
+
             //controller.Channel.Log = Console.Out;
 
             controller.Open();
@@ -83,6 +85,9 @@ namespace ZWaveDriverSample
             //await InitializeThermostat(nodes[6]);
             //await InitializeMultiSensor(nodes[18]);
             //await InitializeDoorSensor(nodes[10]);
+            //await InitializePowerSwitch(nodes[19]);
+            //await InitializePowerSwitch(nodes[20]);
+            //await InitializePowerSwitch(nodes[21]);
 
             Console.ReadLine();
         }
@@ -296,6 +301,50 @@ namespace ZWaveDriverSample
             LogMessage($"AlarmReport report of Node {alarmReport.Node:D3} is [{alarmReport}]");
 
             Console.ReadLine();
+        }
+
+        private static async Task InitializePowerSwitch(Node node)
+        {
+
+            var association = node.GetCommandClass<Association>();
+            await association.Add(1, 1);
+            await association.Add(2, 1);
+            await association.Add(3, 1);
+
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+
+            var manufacturerSpecific = node.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+            LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+
+            var switchBinary = node.GetCommandClass<SwitchBinary>();
+            await switchBinary.Set(true);
+            await Task.Delay(1000);
+            await switchBinary.Set(false);
+
+            Console.ReadLine();
+        }
+
+        private static async Task DynamicInvoke(ZWaveController controller, byte nodeID, string commandClassName, string invokeMethodName, params string[] arguments)
+        {
+            var nodes = await controller.GetNodes();
+            var node = nodes[nodeID];
+            if (node == null)
+                return;
+
+            var commandClassType = typeof(CommandClassBase).Assembly.GetExportedTypes().FirstOrDefault(element => element.IsSubclassOf(typeof(CommandClassBase)) && string.Compare(element.Name, commandClassName, true) == 0);
+            if (commandClassType == null)
+                return;
+
+            var getCommandClassMethod = typeof(Node).GetMethod(nameof(Node.GetCommandClass)).MakeGenericMethod(commandClassType);
+            if (getCommandClassMethod == null)
+                return;
+
+            var commandClass = getCommandClassMethod.Invoke(node, null);
+            var invokeMethod = commandClass.GetType().GetMethods().FirstOrDefault(element => string.Compare(element.Name, invokeMethodName, true) == 0);
+
+
         }
     }
 }
