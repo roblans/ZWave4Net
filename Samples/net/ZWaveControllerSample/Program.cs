@@ -17,10 +17,16 @@ namespace ZWaveDriverSample
 
             var controller = new ZWaveController(portName);
 
+            //// netsh http add urlacl url=http://+:8080/ user=Iedereen
+            //// http://localhost:8080/api/v1.0/controller/nodes/19/classes/basic/methods/get/
+            //var server = new ZWave.Net.ZWaveRestServer(controller, 8080);
+            //server.Open();
+            //Console.ReadLine();
+            //server.Close();
+
             //controller.Channel.Log = Console.Out;
 
             controller.Open();
-            DynamicInvoke(controller, 19, "switchbinary", "set", "true").Wait();
             try
             {
                 Run(controller).Wait();
