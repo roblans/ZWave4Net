@@ -17,16 +17,15 @@ namespace ZWaveDriverSample
 
             var controller = new ZWaveController(portName);
 
-            //// netsh http add urlacl url=http://+:8080/ user=Iedereen
-            //// http://localhost:8080/api/v1.0/controller/nodes/19/classes/basic/methods/get/
-            //var server = new ZWave.Net.ZWaveRestServer(controller, 8080);
-            //server.Open();
-            //Console.ReadLine();
-            //server.Close();
-
+            // netsh http add urlacl url=http://+:80/ user=Everyone
+            // http://localhost:80/api/v1.0/controller/nodes/20/basic/get/
+            //var server = new ZWave.Net.ZWaveRestServer(controller);
+            //server.Log = Console.Out;
+ 
             //controller.Channel.Log = Console.Out;
 
             controller.Open();
+            //server.Open();
             try
             {
                 Run(controller).Wait();
@@ -45,6 +44,7 @@ namespace ZWaveDriverSample
             finally
             {
                 Console.ReadLine();
+                //server.Close();
                 controller.Close();
             }
         }
@@ -331,29 +331,6 @@ namespace ZWaveDriverSample
             await switchBinary.Set(false);
 
             Console.ReadLine();
-        }
-
-        private static async Task DynamicInvoke(ZWaveController controller, byte nodeID, string commandClassName, string invokeMethodName, params string[] arguments)
-        {
-            var nodes = await controller.GetNodes();
-            var node = nodes[nodeID];
-            if (node == null)
-                return;
-
-            var commandClassType = typeof(CommandClassBase).Assembly.GetExportedTypes().FirstOrDefault(element => element.IsSubclassOf(typeof(CommandClassBase)) && string.Compare(element.Name, commandClassName, true) == 0);
-            if (commandClassType == null)
-                return;
-
-            var getCommandClassMethod = typeof(Node).GetMethod(nameof(Node.GetCommandClass)).MakeGenericMethod(commandClassType);
-            if (getCommandClassMethod == null)
-                return;
-
-            var commandClass = getCommandClassMethod.Invoke(node, null);
-            var invokeMethod = commandClass.GetType().GetMethods().FirstOrDefault(element => string.Compare(element.Name, invokeMethodName, true) == 0);
-            foreach(var parameter in invokeMethod.GetParameters())
-            {
-
-            }
         }
     }
 }
