@@ -86,7 +86,7 @@ namespace ZWave.Net
                     if (parameter.ParameterType.IsEnum)
                     {
                         // yes, so convert string to enum
-                        var enumValue = Enum.Parse(parameter.ParameterType, queryParameterValue);
+                        var enumValue = Enum.Parse(parameter.ParameterType, queryParameterValue, true);
                         
                         // and add typed parameter to collection 
                         argumentValues.Add(enumValue);
