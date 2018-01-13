@@ -18,14 +18,14 @@ namespace ZWaveDriverSample
             var controller = new ZWaveController(portName);
 
             // netsh http add urlacl url=http://+:80/ user=Everyone
-            // http://localhost:80/api/v1.0/controller/nodes/20/basic/get/
-            //var server = new ZWave.Net.ZWaveRestServer(controller);
-            //server.Log = Console.Out;
+            // http://localhost:80/api/v1.0/controller/nodes/19/basic/get/
+            var server = new ZWave.Net.ZWaveRestServer(controller);
+            server.Log = Console.Out;
  
-            //controller.Channel.Log = Console.Out;
+            controller.Channel.Log = Console.Out;
 
             controller.Open();
-            //server.Open();
+            server.Open();
             try
             {
                 Run(controller).Wait();
@@ -44,7 +44,7 @@ namespace ZWaveDriverSample
             finally
             {
                 Console.ReadLine();
-                //server.Close();
+                server.Close();
                 controller.Close();
             }
         }
