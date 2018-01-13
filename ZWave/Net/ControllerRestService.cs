@@ -94,9 +94,9 @@ namespace ZWave.Net
                         // done
                         continue;
                     }
-                    
-                    // convert to correct type 
-                    var argumentValue = Convert.ChangeType(queryParameterValue, parameter.ParameterType, CultureInfo.InstalledUICulture);
+
+                    // convert string to typed parameter 
+                    var argumentValue = Convert.ChangeType(queryParameterValue, parameter.ParameterType, CultureInfo.InvariantCulture);
                     
                     // and add typed parameter to collection 
                     argumentValues.Add(argumentValue);
