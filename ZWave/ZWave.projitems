@@ -41,6 +41,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Association.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationGroupsReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchMultiLevel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchMultiLevelReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CentralSceneReport.cs" />

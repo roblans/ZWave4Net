@@ -22,7 +22,7 @@ namespace ZWaveDriverSample
             var server = new ZWave.Net.ZWaveRestServer(controller);
             server.Log = Console.Out;
  
-            controller.Channel.Log = Console.Out;
+            //controller.Channel.Log = Console.Out;
 
             controller.Open();
             server.Open();
@@ -94,7 +94,8 @@ namespace ZWaveDriverSample
             //await InitializeDoorSensor(nodes[10]);
             //await InitializePowerSwitch(nodes[19]);
             //await InitializePowerSwitch(nodes[20]);
-            //await InitializePowerSwitch(nodes[21]);
+            //await InitializePowerSwitch(nodes[24]);
+            await InitializePowerSwitch(nodes[25]);
 
             Console.ReadLine();
         }
@@ -130,6 +131,9 @@ namespace ZWaveDriverSample
 
             var sceneActivation = node.GetCommandClass<SceneActivation>();
             sceneActivation.Changed += (_, e) => LogMessage($"sceneActivation report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var multiChannel = node.GetCommandClass<MultiChannel>();
+            multiChannel.Changed += (_, e) => LogMessage($"multichannel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
         }
 
         private static async Task InitializeWallPlug(Node node)
@@ -312,11 +316,11 @@ namespace ZWaveDriverSample
 
         private static async Task InitializePowerSwitch(Node node)
         {
+            //var association = node.GetCommandClass<Association>();
+            //var groups = await association.GetGroups();
 
-            var association = node.GetCommandClass<Association>();
-            await association.Add(1, 1);
-            await association.Add(2, 1);
-            await association.Add(3, 1);
+            //await association.Remove(1);
+            //await association.Add(1, 19, 20, 21, 22, 23);
 
             var supportedCommandClasses = await node.GetSupportedCommandClasses();
             LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");

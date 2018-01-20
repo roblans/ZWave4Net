@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,19 +23,28 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<byte[]> Get()
+        public async Task<AssociationReport> Get(byte groupID)
         {
-            return await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Channel.Send(Node, new Command(Class, command.Get, groupID), command.Report);
+            return new AssociationReport(Node, response);
         }
 
-        public async Task Add(byte groupID, byte nodeID)
+        public async Task Add(byte groupID, params byte[] nodes)
         {
-            await Channel.Send(Node, new Command(Class, command.Set, groupID, nodeID));
+            var payload = new byte[] { groupID }.Concat(nodes).ToArray();
+            await Channel.Send(Node, new Command(Class, command.Set, payload));
         }
 
-        public async Task Remove(byte groupID, byte nodeID)
+        public async Task Remove(byte groupID, params byte[] nodes)
         {
-            await Channel.Send(Node, new Command(Class, command.Remove, groupID, nodeID));
+            var payload = new byte[] { groupID }.Concat(nodes).ToArray();
+            await Channel.Send(Node, new Command(Class, command.Remove, payload));
+        }
+
+        public async Task<AssociationGroupsReport> GetGroups()
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.GroupingsGet), command.GroupingsReport);
+            return new AssociationGroupsReport(Node, response);
         }
     }
 }
