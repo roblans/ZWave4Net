@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Threax.ZWave.Net</PackageId>
+    <Authors>Modified By Andrew Piper, Originally Rob Lans</Authors>
+    <Company></Company>
+    <Description>Version of zwave.net for netstandard 2.0. Originally created by Rob Lans.</Description>
+    <PackageProjectUrl>https://github.com/threax/ZWave4Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/threax/ZWave4Net</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <Import Project="..\ZWave\ZWave.projitems" Label="Shared" />
