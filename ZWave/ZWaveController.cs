@@ -28,7 +28,7 @@ namespace ZWave
         {
         }
 
-#if NET || WINDOWS_UWP
+#if NET || WINDOWS_UWP || NETSTANDARD2_0
         public ZWaveController(string portName)
             : this(new ZWaveChannel(portName))
         {

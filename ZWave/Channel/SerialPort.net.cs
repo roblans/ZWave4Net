@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ZWave.Channel
 {
-#if NET
+#if NET || NETSTANDARD2_0
     public class SerialPort : ISerialPort
     {
         private readonly System.IO.Ports.SerialPort _port;
