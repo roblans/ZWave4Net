@@ -27,4 +27,5 @@
     <file src="ZWave.uap10.0\bin\Release\ZWave.dll" target="lib\uap10.0" />
     <file src="ZWave.uap10.0\bin\Release\ZWave.dll" target="lib\uap10.0" />
     <file src="ZWave.netstandard2.0\bin\Release\netstandard2.0\ZWave.netstandard2.0.dll" target="lib\netstandard2.0" />
+   </files>
 </package>
