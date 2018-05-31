@@ -108,6 +108,16 @@ namespace ZWave.Devices.Fibaro
             return TimeSpan.FromSeconds(value);
         }
 
+        public async Task SetPowerLoadChangeReporting(sbyte percentage)
+        {
+            await Node.GetCommandClass<Configuration>().Set(42, percentage);
+        }
+
+        public async Task<sbyte> GetPowerLoadChangeReporting()
+        {
+            return (sbyte)(await Node.GetCommandClass<Configuration>().Get(42)).Value;
+        }
+
         public async Task SetMeasureInterval(TimeSpan value)
         {
             await Node.GetCommandClass<Configuration>().Set(47, (ushort)value.TotalSeconds);
