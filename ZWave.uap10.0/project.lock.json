@@ -15486,19 +15486,19 @@
     "UAP,Version=v10.0.10240": []
   },
   "packageFolders": {
-    "C:\\Users\\haviv\\.nuget\\packages\\": {}
+    "C:\\Users\\Rob\\.nuget\\packages\\": {}
   },
   "project": {
     "restore": {
-      "projectUniqueName": "C:\\Users\\haviv\\Source\\Repos\\ZWave4Net2\\ZWave.uap10.0\\ZWave.uap10.0.csproj",
+      "projectUniqueName": "C:\\Users\\Rob\\Projecten\\GitHub\\ZWave4Net\\ZWave.uap10.0\\ZWave.uap10.0.csproj",
       "projectName": "ZWave.uap10.0",
-      "projectPath": "C:\\Users\\haviv\\Source\\Repos\\ZWave4Net2\\ZWave.uap10.0\\ZWave.uap10.0.csproj",
-      "projectJsonPath": "C:\\Users\\haviv\\Source\\Repos\\ZWave4Net2\\ZWave.uap10.0\\project.json",
-      "packagesPath": "C:\\Users\\haviv\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\haviv\\Source\\Repos\\ZWave4Net2\\ZWave.uap10.0\\obj\\",
+      "projectPath": "C:\\Users\\Rob\\Projecten\\GitHub\\ZWave4Net\\ZWave.uap10.0\\ZWave.uap10.0.csproj",
+      "projectJsonPath": "C:\\Users\\Rob\\Projecten\\GitHub\\ZWave4Net\\ZWave.uap10.0\\project.json",
+      "packagesPath": "C:\\Users\\Rob\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Rob\\Projecten\\GitHub\\ZWave4Net\\ZWave.uap10.0\\obj\\",
       "projectStyle": "ProjectJson",
       "configFilePaths": [
-        "C:\\Users\\haviv\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Rob\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "sources": {
