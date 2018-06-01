@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ZWave.Channel
+﻿namespace ZWave.Channel
 {
     public enum CommandClass : byte
     {
+        NoOperation = 0x00,
         Basic = 0x20,
         SwitchBinary = 0x25,
         SwitchMultiLevel = 0x26,
