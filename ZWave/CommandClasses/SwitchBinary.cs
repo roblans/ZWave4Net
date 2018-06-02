@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class SwitchBinary : CommandClassBase
+    public class SwitchBinary : EndpointSupportedCommandClassBase
     {
         public event EventHandler<ReportEventArgs<SwitchBinaryReport>> Changed;
 
@@ -17,19 +15,23 @@ namespace ZWave.CommandClasses
             Report = 0x03
         }
 
-        public SwitchBinary(Node node) : base(node, CommandClass.SwitchBinary)
-        {
-        }
+        public SwitchBinary(Node node)
+            : base(node, CommandClass.SwitchBinary)
+        { }
+
+        internal SwitchBinary(Node node, byte endpointId)
+            : base(node, CommandClass.SwitchBinary, endpointId)
+        { }
 
         public async Task<SwitchBinaryReport> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Send(new Command(Class, command.Get), command.Report);
             return new SwitchBinaryReport(Node, response);
         }
 
         public async Task Set(bool value)
         {
-            await Channel.Send(Node, new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00));
+            await Send(new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00));
         }
 
         protected internal override void HandleEvent(Command command)

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using ZWave.Channel;
 using ZWave.Channel.Protocol;
 
 namespace ZWave.CommandClasses
@@ -24,7 +23,7 @@ namespace ZWave.CommandClasses
             ControllerID = payload[1];
 
             // check sub report
-            if(payload.Length > 3 && payload[2] == 37 && payload[3] == 3)
+            if (payload.Length > 3 && payload[2] == Convert.ToByte(CommandClass.SwitchBinary) && payload[3] == Convert.ToByte(SwitchBinary.command.Report))
             {
                 Report = new SwitchBinaryReport(node, payload.Skip(4).ToArray<Byte>());
             }
