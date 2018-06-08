@@ -10,10 +10,9 @@ namespace ZWave.CommandClasses
     {
         enum command : byte
         {
-            //SupportedGet = 0x01,
-            //SupportedReport = 0x02,
-            Get = 0x04,
-            Report = 0x05
+            Set = 0x01,
+            Get = 0x02,
+            Report = 0x03
         }
 
         public event EventHandler<ReportEventArgs<SwitchMultiLevelReport>> Changed;
@@ -28,7 +27,12 @@ namespace ZWave.CommandClasses
             return new SwitchMultiLevelReport(Node, response);
         }
 
-        protected internal override void HandleEvent(Command command)
+		public async Task Set(byte value)
+		{
+			await Channel.Send(Node, new Command(Class, command.Set, value));
+		}
+
+		protected internal override void HandleEvent(Command command)
         {
             base.HandleEvent(command);
 
