@@ -6,7 +6,7 @@ using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class SensorMultiLevel : CommandClassBase
+    public class SensorMultiLevel : EndpointSupportedCommandClassBase
     {
         public event EventHandler<ReportEventArgs<SensorMultiLevelReport>> Changed;
 
@@ -18,13 +18,17 @@ namespace ZWave.CommandClasses
             Report = 0x05
         }
 
-        public SensorMultiLevel(Node node) : base(node, CommandClass.SensorMultiLevel)
-        {
-        }
+        public SensorMultiLevel(Node node)
+            : base(node, CommandClass.SensorMultiLevel)
+        { }
+
+        internal SensorMultiLevel(Node node, byte endpointId)
+            : base(node, CommandClass.SensorMultiLevel, endpointId)
+        { }
 
         public async Task<SensorMultiLevelReport> Get(SensorType type)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get, (byte)type), command.Report);
+            var response = await Send(new Command(Class, command.Get, (byte)type), command.Report);
             return new SensorMultiLevelReport(Node, response);
         }
 

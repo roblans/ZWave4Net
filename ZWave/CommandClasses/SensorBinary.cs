@@ -6,7 +6,7 @@ using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class SensorBinary : CommandClassBase
+    public class SensorBinary : EndpointSupportedCommandClassBase
     {
         public event EventHandler<ReportEventArgs<SensorBinaryReport>> Changed;
 
@@ -16,13 +16,17 @@ namespace ZWave.CommandClasses
             Report = 0x03
         }
 
-        public SensorBinary(Node node) : base(node, CommandClass.SensorBinary)
-        {
-        }
+        public SensorBinary(Node node)
+            : base(node, CommandClass.SensorBinary)
+        { }
+
+        internal SensorBinary(Node node, byte endpointId)
+            : base(node, CommandClass.SensorBinary, endpointId)
+        { }
 
         public async Task<SensorBinaryReport> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Send(new Command(Class, command.Get), command.Report);
             return new SensorBinaryReport(Node, response);
         }
 
