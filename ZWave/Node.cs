@@ -11,6 +11,7 @@ namespace ZWave
     public class Node
     {
         private List<CommandClassBase> _commandClasses = new List<CommandClassBase>();
+        private IDictionary<CommandClass, VersionCommandClassReport> _commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
 
         public readonly byte NodeID;
         public readonly ZWaveController Controller;
@@ -65,16 +66,18 @@ namespace ZWave
             }
 
             var version = GetCommandClass<CommandClasses.Version>();
-            var reports = new List<VersionCommandClassReport>();
-            foreach(var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
+            var commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
+            foreach (var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
             {
                 var report = await version.GetCommandClass(commandClass);
-                if (report.Version == 0)
-                    continue;
-
-                reports.Add(report);
+                commandClassVersions[commandClass] = report;
             }
-            return reports.ToArray();
+
+            _commandClassVersions = commandClassVersions;
+            lock(_commandClassVersions)
+            {
+                return _commandClassVersions.Values.Where(r => r.Version > 0).ToArray();
+            }
         }
 
         public async Task<NodeProtocolInfo> GetProtocolInfo()
@@ -103,6 +106,26 @@ namespace ZWave
         public override string ToString()
         {
             return $"{NodeID:D3}";
+        }
+
+        internal async Task<VersionCommandClassReport> GetCommandClassVersionReport(CommandClass commandClass)
+        {
+            lock(_commandClassVersions)
+            {
+                if (_commandClassVersions.ContainsKey(commandClass))
+                    return _commandClassVersions[commandClass];
+            }
+
+            // The version isn't cached, so we should bring it now.
+            //
+            var version = GetCommandClass<CommandClasses.Version>();
+            var report = await version.GetCommandClass(commandClass);
+            lock (_commandClassVersions)
+            {
+                _commandClassVersions[commandClass] = report;
+            }
+
+            return report;
         }
 
         internal void HandleEvent(Command command)
