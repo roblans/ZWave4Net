@@ -53,22 +53,22 @@ namespace ZWave.Devices.Fibaro
 
         public async Task SwitchOn1()
         {
-            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(1, true);
+            await Node.GetCommandClass<MultiChannel>().GetEndPointCommandClass<SwitchBinary>(1).Set(true);
         }
 
         public async Task SwitchOff1()
         {
-            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(1, false);
+            await Node.GetCommandClass<MultiChannel>().GetEndPointCommandClass<SwitchBinary>(1).Set(false);
         }
 
         public async Task SwitchOn2()
         {
-            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(2, true);
+            await Node.GetCommandClass<MultiChannel>().GetEndPointCommandClass<SwitchBinary>(2).Set(true);
         }
 
         public async Task SwitchOff2()
         {
-            await Node.GetCommandClass<MultiChannel>().BinarySwitchSet(2, false);
+            await Node.GetCommandClass<MultiChannel>().GetEndPointCommandClass<SwitchBinary>(2).Set(false);
         }
 
         public async Task AddAssociation(AssociationGroup group, Node node)
