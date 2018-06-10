@@ -9,10 +9,10 @@ namespace ZWave.Channel
         public CommunicationException(string message, Exception inner) : base(message, inner) { }
     }
 
-    public class VesrionNotSupportedException : Exception
+    public class VersionNotSupportedException : Exception
     {
-        public VesrionNotSupportedException() : base("version not supported") { }
-        public VesrionNotSupportedException(string message) : base(message) { }
-        public VesrionNotSupportedException(string message, Exception inner) : base(message, inner) { }
+        public VersionNotSupportedException() : base("version not supported") { }
+        public VersionNotSupportedException(string message) : base(message) { }
+        public VersionNotSupportedException(string message, Exception inner) : base(message, inner) { }
     }
 }

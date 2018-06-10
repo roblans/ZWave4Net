@@ -38,7 +38,7 @@ namespace ZWave.CommandClasses
         {
             if (!await IsSupportGetSupportedSensors())
             {
-                throw new VesrionNotSupportedException($"GetSupportedSensors works with class type {Class} greater or equal to {GetSupportedSensorsMinimalProtocolVersion}.");
+                throw new VersionNotSupportedException($"GetSupportedSensors works with class type {Class} greater or equal to {GetSupportedSensorsMinimalProtocolVersion}.");
             }
 
             var response = await Send(new Command(Class, command.SupportedGet), command.SupportedReport);
