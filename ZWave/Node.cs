@@ -86,6 +86,17 @@ namespace ZWave
             return NodeProtocolInfo.Parse(response);
         }
 
+        public async Task<RequestNeighborUpdateReport> RequestNeighborUpdate(Action<RequestNeighborUpdateReport> progress = null)
+        {
+            var response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID }, (payload) =>
+            {
+                var report = new RequestNeighborUpdateReport(this, payload);
+                progress?.Invoke(report);
+                return report.IsCompleted;
+            });
+            return new RequestNeighborUpdateReport(this, response);
+        }
+
         public async Task<Node[]> GetNeighbours()
         {
             var nodes = await Controller.GetNodes();

@@ -24,7 +24,7 @@ namespace ZWave.Channel
         public readonly ISerialPort Port;
         public TextWriter Log { get; set; }
         public TimeSpan ReceiveTimeout = TimeSpan.FromSeconds(2);
-        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
+        public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(50);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
         public event EventHandler<NodeUpdateEventArgs> NodeUpdateReceived;
         public event EventHandler<ErrorEventArgs> Error;
@@ -363,20 +363,33 @@ namespace ZWave.Channel
             }
         }
 
-        public Task<byte[]> Send(Function function, params byte[] payload)
+        private Task<byte[]> Send(Function function, byte[] payload, Func<ControllerFunctionMessage, bool> predicate)
         {
             return Exchange(async () =>
             {
                 var request = new ControllerFunction(function, payload);
                 _transmitQueue.Add(request);
 
-                var response = await WaitForResponse((message) =>
-                {
-                    return (message is ControllerFunctionCompleted && ((ControllerFunctionCompleted)message).Function == function);
-                }).ConfigureAwait(false);
+                var response = await WaitForResponse((message) => predicate((ControllerFunctionMessage)message)).ConfigureAwait(false);
 
-                return ((ControllerFunctionCompleted)response).Payload;
+                return ((ControllerFunctionMessage)response).Payload;
             }, $"{function} {(payload != null ? BitConverter.ToString(payload) : string.Empty)}");
+        }
+
+        public Task<byte[]> Send(Function function, params byte[] payload)
+        {
+            return Send(function, payload, (message) =>
+            {
+                return (message is ControllerFunctionCompleted && ((ControllerFunctionCompleted)message).Function == function);
+            });
+        }
+
+        public Task<byte[]> Send(Function function, byte[] payload, Func<byte[], bool> predicate)
+        {
+            return Send(function, payload, (message) =>
+            {
+                return (message is ControllerFunctionEvent) && predicate(((ControllerFunctionEvent)message).Payload);
+            });
         }
 
         public Task Send(byte nodeID, Command command)

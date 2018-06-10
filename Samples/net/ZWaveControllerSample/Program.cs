@@ -22,7 +22,7 @@ namespace ZWaveDriverSample
             var server = new ZWave.Net.ZWaveRestServer(controller);
             server.Log = Console.Out;
  
-            //controller.Channel.Log = Console.Out;
+            controller.Channel.Log = Console.Out;
 
             controller.Open();
             server.Open();
@@ -95,7 +95,9 @@ namespace ZWaveDriverSample
             //await InitializePowerSwitch(nodes[19]);
             //await InitializePowerSwitch(nodes[20]);
             //await InitializePowerSwitch(nodes[24]);
-            await InitializePowerSwitch(nodes[25]);
+            //await InitializePowerSwitch(nodes[25]);
+
+            var requestNeighborUpdate = await nodes[19].RequestNeighborUpdate((report) => LogMessage($"RequestNeighborUpdate: {report} "));
 
             Console.ReadLine();
         }
