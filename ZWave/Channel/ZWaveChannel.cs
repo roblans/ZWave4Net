@@ -372,10 +372,12 @@ namespace ZWave.Channel
 
                 var response = await WaitForResponse((message) =>
                 {
-                    return (message is ControllerFunctionCompleted && ((ControllerFunctionCompleted)message).Function == function);
+                    if (message is ControllerFunctionCompleted && ((ControllerFunctionCompleted)message).Function == function) return true;
+                    if (function == Function.RequestNodeNeighborUpdate && message.Function == function) return true;
+                    return false;
                 }).ConfigureAwait(false);
 
-                return ((ControllerFunctionCompleted)response).Payload;
+                return ((IMessageWithPayload)response).Payload;
             }, $"{function} {(payload != null ? BitConverter.ToString(payload) : string.Empty)}");
         }
 

@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace ZWave.Channel.Protocol
 {
-    class ControllerFunctionCompleted : Message
+    class ControllerFunctionCompleted : Message, IMessageWithPayload
     {
-        public readonly byte[] Payload;
+        readonly byte[] payload;
+
+        public byte[] Payload { get { return payload; } }
 
         public ControllerFunctionCompleted(Function function, byte[] payload)
             : base(FrameHeader.SOF, MessageType.Response, function)
         {
-            Payload = payload;
+            this.payload = payload;
         }
 
         public override string ToString()

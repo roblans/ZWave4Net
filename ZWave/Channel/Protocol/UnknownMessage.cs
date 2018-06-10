@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace ZWave.Channel.Protocol
 {
-    class UnknownMessage : Message
+    class UnknownMessage : Message, IMessageWithPayload
     {
-        public readonly byte[] Payload;
+        readonly byte[] payload;
+
+        public byte[] Payload { get { return payload; } }
 
         public UnknownMessage(FrameHeader header, MessageType type, Function function, byte[] payload)
             : base(header, type, function)
         {
-            Payload = payload;
+            this.payload = payload;
         }
 
         public override string ToString()
