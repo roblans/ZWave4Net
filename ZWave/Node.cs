@@ -10,6 +10,7 @@ namespace ZWave
 {
     public class Node
     {
+        private static byte functionID = 0;
         private List<CommandClassBase> _commandClasses = new List<CommandClassBase>();
         private IDictionary<CommandClass, VersionCommandClassReport> _commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
 
@@ -44,6 +45,11 @@ namespace ZWave
             _commandClasses.Add(new Clock(this));
             _commandClasses.Add(new CentralScene(this));
             _commandClasses.Add(new SceneActivation(this));
+        }
+
+        private static byte GetNextFunctionID()
+        {
+            lock (typeof(Node)) { return functionID = (byte)((functionID % 255) + 1); }
         }
 
         protected ZWaveChannel Channel
@@ -86,15 +92,31 @@ namespace ZWave
             return NodeProtocolInfo.Parse(response);
         }
 
-        public async Task<RequestNeighborUpdateReport> RequestNeighborUpdate(Action<RequestNeighborUpdateReport> progress = null)
+        public async Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress = null)
         {
-            var response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID }, (payload) =>
+            // get next functionID (1..255) 
+            var functionID = GetNextFunctionID();
+
+            // send request, pass current node and functionID
+            var response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID, functionID }, (payload) =>
             {
-                var report = new RequestNeighborUpdateReport(this, payload);
-                progress?.Invoke(report);
-                return report.IsCompleted;
+                // check if repsonse matches request 
+                if (payload[0] == functionID)
+                {
+                    // yes, so parse status
+                    var status =(NeighborUpdateStatus)payload[1];
+
+                    // if callback delegate provided then invoke with progress 
+                    progress?.Invoke(status);
+
+                    // return true when final state reached (we're done)
+                    return status == NeighborUpdateStatus.Done || status == NeighborUpdateStatus.Failed;
+                }
+                return false;
             });
-            return new RequestNeighborUpdateReport(this, response);
+
+            // return the status of the final reponse
+            return (NeighborUpdateStatus)response[1];
         }
 
         public async Task<Node[]> GetNeighbours()

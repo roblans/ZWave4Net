@@ -129,7 +129,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ControllerRestService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\IControllerRestService.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RequestNeighborUpdateReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NeighborUpdateStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ZWaveRestServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeCollection.cs" />
