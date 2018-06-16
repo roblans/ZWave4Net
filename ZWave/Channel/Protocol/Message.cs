@@ -118,6 +118,10 @@ namespace ZWave.Channel.Protocol
                     {
                         return new NodeUpdate(payload);
                     }
+                    else
+                    {
+                        return new ControllerFunctionEvent(function, payload);
+                    }
                 }
                 if (type == MessageType.Response)
                 {

@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ZWave.Channel
 {
-    public class CommunicationException : System.Exception
+    public class CommunicationException : Exception
     {
         public CommunicationException() : base("Communication error") { }
         public CommunicationException(string message) : base(message) { }
-        public CommunicationException(string message, System.Exception inner) : base(message, inner) { }
+        public CommunicationException(string message, Exception inner) : base(message, inner) { }
+    }
+
+    public class VersionNotSupportedException : Exception
+    {
+        public VersionNotSupportedException() : base("version not supported") { }
+        public VersionNotSupportedException(string message) : base(message) { }
+        public VersionNotSupportedException(string message, Exception inner) : base(message, inner) { }
     }
 }

@@ -10,7 +10,9 @@ namespace ZWave
 {
     public class Node
     {
+        private static byte functionID = 0;
         private List<CommandClassBase> _commandClasses = new List<CommandClassBase>();
+        private IDictionary<CommandClass, VersionCommandClassReport> _commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
 
         public readonly byte NodeID;
         public readonly ZWaveController Controller;
@@ -45,6 +47,11 @@ namespace ZWave
             _commandClasses.Add(new SceneActivation(this));
         }
 
+        private static byte GetNextFunctionID()
+        {
+            lock (typeof(Node)) { return functionID = (byte)((functionID % 255) + 1); }
+        }
+
         protected ZWaveChannel Channel
         {
             get { return Controller.Channel; }
@@ -65,22 +72,51 @@ namespace ZWave
             }
 
             var version = GetCommandClass<CommandClasses.Version>();
-            var reports = new List<VersionCommandClassReport>();
-            foreach(var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
+            var commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
+            foreach (var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
             {
                 var report = await version.GetCommandClass(commandClass);
-                if (report.Version == 0)
-                    continue;
-
-                reports.Add(report);
+                commandClassVersions[commandClass] = report;
             }
-            return reports.ToArray();
+
+            _commandClassVersions = commandClassVersions;
+            lock(_commandClassVersions)
+            {
+                return _commandClassVersions.Values.Where(r => r.Version > 0).ToArray();
+            }
         }
 
         public async Task<NodeProtocolInfo> GetProtocolInfo()
         {
             var response = await Channel.Send(Function.GetNodeProtocolInfo, NodeID);
             return NodeProtocolInfo.Parse(response);
+        }
+
+        public async Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress = null)
+        {
+            // get next functionID (1..255) 
+            var functionID = GetNextFunctionID();
+
+            // send request, pass current node and functionID
+            var response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID, functionID }, (payload) =>
+            {
+                // check if repsonse matches request 
+                if (payload[0] == functionID)
+                {
+                    // yes, so parse status
+                    var status =(NeighborUpdateStatus)payload[1];
+
+                    // if callback delegate provided then invoke with progress 
+                    progress?.Invoke(status);
+
+                    // return true when final state reached (we're done)
+                    return status == NeighborUpdateStatus.Done || status == NeighborUpdateStatus.Failed;
+                }
+                return false;
+            });
+
+            // return the status of the final reponse
+            return (NeighborUpdateStatus)response[1];
         }
 
         public async Task<Node[]> GetNeighbours()
@@ -103,6 +139,26 @@ namespace ZWave
         public override string ToString()
         {
             return $"{NodeID:D3}";
+        }
+
+        internal async Task<VersionCommandClassReport> GetCommandClassVersionReport(CommandClass commandClass)
+        {
+            lock(_commandClassVersions)
+            {
+                if (_commandClassVersions.ContainsKey(commandClass))
+                    return _commandClassVersions[commandClass];
+            }
+
+            // The version isn't cached, so we should bring it now.
+            //
+            var version = GetCommandClass<CommandClasses.Version>();
+            var report = await version.GetCommandClass(commandClass);
+            lock (_commandClassVersions)
+            {
+                _commandClassVersions[commandClass] = report;
+            }
+
+            return report;
         }
 
         internal void HandleEvent(Command command)

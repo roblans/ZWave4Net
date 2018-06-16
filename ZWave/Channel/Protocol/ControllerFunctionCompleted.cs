@@ -6,23 +6,11 @@ using System.Threading.Tasks;
 
 namespace ZWave.Channel.Protocol
 {
-    class ControllerFunctionCompleted : Message
+    class ControllerFunctionCompleted : ControllerFunctionMessage
     {
-        public readonly byte[] Payload;
-
         public ControllerFunctionCompleted(Function function, byte[] payload)
-            : base(FrameHeader.SOF, MessageType.Response, function)
+            : base(MessageType.Response, function, payload)
         {
-            Payload = payload;
-        }
-
-        public override string ToString()
-        {
-            if (Payload != null)
-            {
-                return string.Concat(base.ToString(), " ", $"Payload:{BitConverter.ToString(Payload)}");
-            }
-            return base.ToString();
         }
     }
 }

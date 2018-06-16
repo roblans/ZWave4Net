@@ -18,12 +18,12 @@ namespace ZWave.Devices.Fibaro
 
         }
 
-        public async Task SwitchOn()
+        public Task SwitchOn()
         {
             throw new NotImplementedException();
         }
 
-        public async Task SwitchOff()
+        public Task SwitchOff()
         {
             throw new NotImplementedException();
         }
@@ -38,7 +38,7 @@ namespace ZWave.Devices.Fibaro
             await Node.GetCommandClass<Association>().Remove((byte)group, node.NodeID);
         }
 
-        public async Task SetColor(byte red, byte green, byte blue, byte white)
+        public Task SetColor(byte red, byte green, byte blue, byte white)
         {
             throw new NotImplementedException();
         }

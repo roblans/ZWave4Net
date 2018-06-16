@@ -19,6 +19,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\NodeEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\NodeUpdateEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunctionMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunctionEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\ControllerFunctionCompleted.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\Exceptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\FrameHeader.cs" />
@@ -46,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\EndpointSupportedCommandClassBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelCapabilityReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelEndPointReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorMultilevelSupportedSensorReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchMultiLevel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchMultiLevelReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CentralSceneReport.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ControllerRestService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\IControllerRestService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NeighborUpdateStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ZWaveRestServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeCollection.cs" />

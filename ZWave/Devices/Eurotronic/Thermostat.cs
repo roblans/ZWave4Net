@@ -25,7 +25,7 @@ namespace ZWave.Devices.Vision
             }
         }
 
-        public async Task SetTemperature(double temperature)
+        public Task SetTemperature(double temperature)
         {
             throw new NotImplementedException();
         }

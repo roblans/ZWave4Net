@@ -6,29 +6,37 @@ using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class SwitchMultiLevel : CommandClassBase
+    public class SwitchMultiLevel : EndpointSupportedCommandClassBase
     {
         enum command : byte
         {
-            //SupportedGet = 0x01,
-            //SupportedReport = 0x02,
-            Get = 0x04,
-            Report = 0x05
+            Set = 0x01,
+            Get = 0x02,
+            Report = 0x03
         }
 
         public event EventHandler<ReportEventArgs<SwitchMultiLevelReport>> Changed;
 
-        public SwitchMultiLevel(Node node) : base(node, CommandClass.SwitchMultiLevel)
-        {
-        }
+        public SwitchMultiLevel(Node node)
+            : base(node, CommandClass.SwitchMultiLevel)
+        { }
+
+        internal SwitchMultiLevel(Node node, byte endpointId)
+            : base(node, CommandClass.SwitchMultiLevel, endpointId)
+        { }
 
         public async Task<SwitchMultiLevelReport> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            var response = await Send(new Command(Class, command.Get), command.Report);
             return new SwitchMultiLevelReport(Node, response);
         }
 
-        protected internal override void HandleEvent(Command command)
+		public async Task Set(byte value)
+		{
+			await Channel.Send(Node, new Command(Class, command.Set, value));
+		}
+
+		protected internal override void HandleEvent(Command command)
         {
             base.HandleEvent(command);
 

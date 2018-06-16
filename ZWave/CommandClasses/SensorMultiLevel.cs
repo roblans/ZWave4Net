@@ -6,8 +6,10 @@ using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class SensorMultiLevel : CommandClassBase
+    public class SensorMultiLevel : EndpointSupportedCommandClassBase
     {
+        private const int GetSupportedSensorsMinimalProtocolVersion = 5;
+
         public event EventHandler<ReportEventArgs<SensorMultiLevelReport>> Changed;
 
         enum command
@@ -18,13 +20,34 @@ namespace ZWave.CommandClasses
             Report = 0x05
         }
 
-        public SensorMultiLevel(Node node) : base(node, CommandClass.SensorMultiLevel)
+        public SensorMultiLevel(Node node)
+            : base(node, CommandClass.SensorMultiLevel)
+        { }
+
+        internal SensorMultiLevel(Node node, byte endpointId)
+            : base(node, CommandClass.SensorMultiLevel, endpointId)
+        { }
+
+        public async Task<bool> IsSupportGetSupportedSensors()
         {
+            var report = await Node.GetCommandClassVersionReport(Class);
+            return report.Version >= GetSupportedSensorsMinimalProtocolVersion;
+        }
+
+        public async Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors()
+        {
+            if (!await IsSupportGetSupportedSensors())
+            {
+                throw new VersionNotSupportedException($"GetSupportedSensors works with class type {Class} greater or equal to {GetSupportedSensorsMinimalProtocolVersion}.");
+            }
+
+            var response = await Send(new Command(Class, command.SupportedGet), command.SupportedReport);
+            return new SensorMultilevelSupportedSensorReport(Node, response);
         }
 
         public async Task<SensorMultiLevelReport> Get(SensorType type)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get, (byte)type), command.Report);
+            var response = await Send(new Command(Class, command.Get, (byte)type), command.Report);
             return new SensorMultiLevelReport(Node, response);
         }
 
