@@ -22,6 +22,7 @@
         WakeUp = 0x84,
         Association = 0x85,
         Version = 0x86,
+        MultiChannelAssociation = 0x8E,
         SensorAlarm = 0x9C,
     }
 }
