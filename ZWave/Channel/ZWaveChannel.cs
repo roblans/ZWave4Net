@@ -413,7 +413,7 @@ namespace ZWave.Channel
             }, $"NodeID:{nodeID:D3}, Command:{command}");
         }
 
-        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID)
+        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID, Func<byte[], bool> payloadValidation = null)
         {
             if (nodeID == 0)
                 throw new ArgumentOutOfRangeException(nameof(nodeID), nodeID, "nodeID can not be 0");
@@ -428,9 +428,12 @@ namespace ZWave.Channel
                 {
                     if (e.NodeID == nodeID && e.Command.ClassID == command.ClassID && e.Command.CommandID == responseCommandID)
                     {
-                        // BugFix: 
-                        // http://stackoverflow.com/questions/19481964/calling-taskcompletionsource-setresult-in-a-non-blocking-manner
-                        Task.Run(() => completionSource.TrySetResult(e.Command));
+                        if (payloadValidation == null || payloadValidation(e.Command.Payload))
+                        {
+                            // BugFix: 
+                            // http://stackoverflow.com/questions/19481964/calling-taskcompletionsource-setresult-in-a-non-blocking-manner
+                            Task.Run(() => completionSource.TrySetResult(e.Command));
+                        }
                     }
                 };
 
