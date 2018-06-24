@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ZWave.Channel
@@ -19,6 +17,11 @@ namespace ZWave.Channel
         public static Task<byte[]> Send(this ZWaveChannel channel, Node node, Command command, Enum responseCommand)
         {
             return channel.Send(node.NodeID, command, Convert.ToByte(responseCommand));
+        }
+
+        public static Task<byte[]> Send(this ZWaveChannel channel, Node node, Command command, Enum responseCommand, Func<byte[], bool> payloadValidation)
+        {
+            return channel.Send(node.NodeID, command, Convert.ToByte(responseCommand), payloadValidation);
         }
     }
 }
