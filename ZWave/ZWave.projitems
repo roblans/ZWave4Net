@@ -46,6 +46,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationGroupsReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\EndpointSupportedCommandClassBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelAssociation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelAssociationReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelCapabilityReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelEndPointReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorMultilevelSupportedSensorReport.cs" />

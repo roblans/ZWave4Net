@@ -45,6 +45,7 @@ namespace ZWave
             _commandClasses.Add(new Clock(this));
             _commandClasses.Add(new CentralScene(this));
             _commandClasses.Add(new SceneActivation(this));
+            _commandClasses.Add(new MultiChannelAssociation(this));
         }
 
         private static byte GetNextFunctionID()

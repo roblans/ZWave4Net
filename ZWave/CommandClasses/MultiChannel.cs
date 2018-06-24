@@ -1,12 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using ZWave.Channel;
+using ZWave.Channel.Protocol;
 
 namespace ZWave.CommandClasses
 {
     public class MultiChannel : CommandClassBase
     {
+        // This dictionary maps each endpoint id and command class type to it's instance.
+        // We cache this so we can notify the command classes on event.
+        //
+        private IDictionary<byte, IDictionary<Type, EndpointSupportedCommandClassBase>> _endpointCommandClasses = new Dictionary<byte, IDictionary<Type, EndpointSupportedCommandClassBase>>();
+
         public enum command
         {
             EndPointGet = 0x07,
@@ -16,6 +24,7 @@ namespace ZWave.CommandClasses
             Encap = 0x0d,
         }
 
+        [Obsolete("Changed event is deprecated, please use the endpoint command classes instead.")]
         public event EventHandler<ReportEventArgs<MultiChannelReport>> Changed;
 
         public MultiChannel(Node node)
@@ -59,23 +68,43 @@ namespace ZWave.CommandClasses
             return new MultiChannelCapabilityReport(Node, response);
         }
 
-        public T GetEndPointCommandClass<T>(byte endPointId) where T : ICommandClass
+        public T GetEndPointCommandClass<T>(byte endPointId) where T : EndpointSupportedCommandClassBase
         {
             if (endPointId == 0)
                 throw new ArgumentException("Endpoint id must be grater then 0.", nameof(endPointId));
 
-            // All supported command classes must have constructor that accept 2 arguments - the node and the endpoint id.
-            //
-            ConstructorInfo constructor = GetCommandClassConstructor<T>();
-            if (constructor == null)
+            lock(_endpointCommandClasses)
             {
-                throw new NotSupportedException($"{GetType()} not supporting command class {typeof(T)}");
-            }
+                // Search for cached instance. If exist, return it.
+                //
+                if (_endpointCommandClasses.ContainsKey(endPointId) && _endpointCommandClasses[endPointId].ContainsKey(typeof(T)))
+                {
+                    return (T)_endpointCommandClasses[endPointId][typeof(T)];
+                }
 
-            return (T)constructor.Invoke(new object[] { Node, endPointId });
+                // All supported command classes must have constructor that accept 2 arguments - the node and the endpoint id.
+                //
+                ConstructorInfo constructor = GetCommandClassConstructor<T>();
+                if (constructor == null)
+                {
+                    throw new NotSupportedException($"{GetType()} not supporting command class {typeof(T)}");
+                }
+
+                T res = (T)constructor.Invoke(new object[] { Node, endPointId });
+
+                // Cache this instance for future use.
+                //
+                if (!_endpointCommandClasses.ContainsKey(endPointId))
+                {
+                    _endpointCommandClasses[endPointId] = new Dictionary<Type, EndpointSupportedCommandClassBase>();
+                }
+
+                _endpointCommandClasses[endPointId][typeof(T)] = res;
+                return res;
+            }
         }
 
-        private static ConstructorInfo GetCommandClassConstructor<T>() where T : ICommandClass
+        private static ConstructorInfo GetCommandClassConstructor<T>() where T : EndpointSupportedCommandClassBase
         {
             foreach (ConstructorInfo ctr in typeof(T).GetTypeInfo().DeclaredConstructors)
             {
@@ -93,6 +122,25 @@ namespace ZWave.CommandClasses
         {
             base.HandleEvent(command);
 
+            if (command.Payload.Length < 4)
+                throw new ReponseFormatException($"The response was not in the expected format. {GetType().Name}: Payload: {BitConverter.ToString(command.Payload)}");
+
+            byte endPointId = command.Payload[0];
+            CommandClass commandClass = (CommandClass)command.Payload[2];
+            lock(_endpointCommandClasses)
+            {
+                if (_endpointCommandClasses.ContainsKey(endPointId))
+                {
+                    EndpointSupportedCommandClassBase endpointCommandClass = _endpointCommandClasses[endPointId].Values.FirstOrDefault(cc => cc.Class == commandClass);
+                    if (endpointCommandClass != null)
+                    {
+                        endpointCommandClass.HandleEndpointReport(command.Payload.Skip(4).ToArray(), command.Payload[3]);
+                    }
+                }
+            }
+
+            // This part is for backward compatibility.
+            //
             var report = new MultiChannelReport(Node, command.Payload);
             OnChanged(new ReportEventArgs<MultiChannelReport>(report));
         }
