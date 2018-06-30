@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ZWave.Channel;
+using System.Threading;
 
 namespace ZWave.CommandClasses
 {
@@ -20,17 +21,27 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task Set(ColorComponent[] components)
+        public Task Set(ColorComponent[] components)
+        {
+            return Set(components, CancellationToken.None);
+        }
+
+        public async Task Set(ColorComponent[] components, CancellationToken cancellationToken)
         {
             var payload = new List<byte>();
             payload.Add((byte)components.Length);
             payload.AddRange(components.SelectMany(element => element.ToBytes()));
-            await Channel.Send(Node, new Command(Class, command.Set, payload.ToArray()));
+            await Channel.Send(Node, new Command(Class, command.Set, payload.ToArray()), cancellationToken);
         }
 
-        public async Task<ColorReport> Get(byte componentID)
+        public Task<ColorReport> Get(byte componentID)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get, componentID), command.Report);
+            return Get(componentID, CancellationToken.None);
+        }
+
+        public async Task<ColorReport> Get(byte componentID, CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get, componentID), command.Report, cancellationToken);
             return new ColorReport(Node, response);
         }
     }

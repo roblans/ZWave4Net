@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -24,9 +25,14 @@ namespace ZWave.CommandClasses
             : base(node, CommandClass.SensorBinary, endpointId)
         { }
 
-        public async Task<SensorBinaryReport> Get()
+        public Task<SensorBinaryReport> Get()
         {
-            var response = await Send(new Command(Class, command.Get), command.Report);
+            return Get(CancellationToken.None);
+        }
+
+        public async Task<SensorBinaryReport> Get(CancellationToken cancellationToken)
+        {
+            var response = await Send(new Command(Class, command.Get), command.Report, cancellationToken);
             return new SensorBinaryReport(Node, response);
         }
 

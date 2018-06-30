@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 using ZWave.Channel.Protocol;
@@ -26,34 +27,34 @@ namespace ZWave.CommandClasses
             _endpointId = endpointId;
         }
 
-        protected async Task<byte[]> Send(Command command, Enum responseCommand)
+        protected async Task<byte[]> Send(Command command, Enum responseCommand, CancellationToken cancellationToken)
         {
             if (_endpointId == 0)
             {
                 // Send in regular manner.
                 //
-                return await Channel.Send(Node, command, responseCommand);
+                return await Channel.Send(Node, command, responseCommand, cancellationToken);
             }
             else
             {
                 Command encapsolatedCommand = await EncapsulatCommandForEndpoint(command);
-                byte[] response = await Channel.Send(Node, encapsolatedCommand, MultiChannel.command.Encap, EncapsulatCommandEndpointValidator(responseCommand));
+                byte[] response = await Channel.Send(Node, encapsolatedCommand, MultiChannel.command.Encap, EncapsulatCommandEndpointValidator(responseCommand), cancellationToken);
                 return ExtractEndpointResponse(response, responseCommand);
             }
         }
 
-        protected async Task Send(Command command)
+        protected async Task Send(Command command, CancellationToken cancellationToken)
         {
             if (_endpointId == 0)
             {
                 // Send in regular manner.
                 //
-                await Channel.Send(Node, command);
+                await Channel.Send(Node, command, cancellationToken);
             }
             else
             {
                 Command encapsolatedCommand = await EncapsulatCommandForEndpoint(command);
-                await Channel.Send(Node, encapsolatedCommand);
+                await Channel.Send(Node, encapsolatedCommand, cancellationToken);
             }
         }
 

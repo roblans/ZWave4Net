@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -23,21 +24,36 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<WakeUpIntervalReport> GetInterval()
+        public Task<WakeUpIntervalReport> GetInterval()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.IntervalGet), command.IntervalReport);
+            return GetInterval(CancellationToken.None);
+        }
+
+        public async Task<WakeUpIntervalReport> GetInterval(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.IntervalGet), command.IntervalReport, cancellationToken);
             return new WakeUpIntervalReport(Node, response);
         }
 
-        public async Task SetInterval(TimeSpan interval, byte targetNodeID)
+        public Task SetInterval(TimeSpan interval, byte targetNodeID)
         {
-            var seconds = PayloadConverter.GetBytes((uint)interval.TotalSeconds);
-            await Channel.Send(Node, new Command(Class, command.IntervalSet, seconds[1], seconds[2], seconds[3], targetNodeID));
+            return SetInterval(interval, targetNodeID, CancellationToken.None);
         }
 
-        public async Task NoMoreInformation()
+        public async Task SetInterval(TimeSpan interval, byte targetNodeID, CancellationToken cancellationToken)
         {
-            await Channel.Send(Node, new Command(Class, command.NoMoreInformation));
+            var seconds = PayloadConverter.GetBytes((uint)interval.TotalSeconds);
+            await Channel.Send(Node, new Command(Class, command.IntervalSet, seconds[1], seconds[2], seconds[3], targetNodeID), cancellationToken);
+        }
+
+        public Task NoMoreInformation()
+        {
+            return NoMoreInformation(CancellationToken.None);
+        }
+
+        public async Task NoMoreInformation(CancellationToken cancellationToken)
+        {
+            await Channel.Send(Node, new Command(Class, command.NoMoreInformation), cancellationToken);
         }
 
         protected internal override void HandleEvent(Command command)

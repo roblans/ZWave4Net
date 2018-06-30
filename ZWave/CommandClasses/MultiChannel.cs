@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 using ZWave.Channel.Protocol;
@@ -39,7 +40,7 @@ namespace ZWave.CommandClasses
                 throw new ArgumentException("Endpoint id must be grater then 0.", nameof(endPointId));
 
             var controllerID = await Node.Controller.GetNodeID();
-            await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointId, Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Set), value ? (byte)0xFF : (byte)0x00));
+            await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointId, Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Set), value ? (byte)0xFF : (byte)0x00), CancellationToken.None);
         }
 
         [Obsolete("Get is deprecated, please use GetEndPointCommandClass instead.")]
@@ -49,22 +50,32 @@ namespace ZWave.CommandClasses
                 throw new ArgumentException("Endpoint id must be grater then 0.", nameof(endPointId));
 
             var controllerID = await Node.Controller.GetNodeID();
-            var response = await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointId, Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Get)), command.Encap);
+            var response = await Channel.Send(Node, new Command(Class, command.Encap, controllerID, endPointId, Convert.ToByte(CommandClass.SwitchBinary), Convert.ToByte(SwitchBinary.command.Get)), command.Encap, CancellationToken.None);
             return new MultiChannelReport(Node, response);
         }
 
-        public async Task<MultiChannelEndPointReport> DiscoverEndpoints()
+        public Task<MultiChannelEndPointReport> DiscoverEndpoints()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.EndPointGet), command.EndPointReport);
+            return DiscoverEndpoints(CancellationToken.None);
+        }
+
+        public async Task<MultiChannelEndPointReport> DiscoverEndpoints(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.EndPointGet), command.EndPointReport, cancellationToken);
             return new MultiChannelEndPointReport(Node, response);
         }
 
-        public async Task<MultiChannelCapabilityReport> GetEndPointCapabilities(byte endPointId)
+        public Task<MultiChannelCapabilityReport> GetEndPointCapabilities(byte endPointId)
+        {
+            return GetEndPointCapabilities(endPointId, CancellationToken.None);
+        }
+
+        public async Task<MultiChannelCapabilityReport> GetEndPointCapabilities(byte endPointId, CancellationToken cancellationToken)
         {
             if (endPointId == 0)
                 throw new ArgumentException("Endpoint id must be grater then 0.", nameof(endPointId));
 
-            var response = await Channel.Send(Node, new Command(Class, command.CapabilityGet, endPointId), command.CapabilityReport);
+            var response = await Channel.Send(Node, new Command(Class, command.CapabilityGet, endPointId), command.CapabilityReport, cancellationToken);
             return new MultiChannelCapabilityReport(Node, response);
         }
 

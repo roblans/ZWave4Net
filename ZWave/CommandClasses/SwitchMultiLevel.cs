@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -25,18 +26,29 @@ namespace ZWave.CommandClasses
             : base(node, CommandClass.SwitchMultiLevel, endpointId)
         { }
 
-        public async Task<SwitchMultiLevelReport> Get()
+        public Task<SwitchMultiLevelReport> Get()
         {
-            var response = await Send(new Command(Class, command.Get), command.Report);
+            return Get(CancellationToken.None);
+        }
+
+
+        public async Task<SwitchMultiLevelReport> Get(CancellationToken cancellationToken)
+        {
+            var response = await Send(new Command(Class, command.Get), command.Report, cancellationToken);
             return new SwitchMultiLevelReport(Node, response);
         }
 
-		public async Task Set(byte value)
-		{
-			await Channel.Send(Node, new Command(Class, command.Set, value));
-		}
+        public Task Set(byte value)
+        {
+            return Set(value, CancellationToken.None);
+        }
 
-		protected internal override void HandleEvent(Command command)
+        public async Task Set(byte value, CancellationToken cancellationToken)
+        {
+            await Channel.Send(Node, new Command(Class, command.Set, value), cancellationToken);
+        }
+
+        protected internal override void HandleEvent(Command command)
         {
             base.HandleEvent(command);
 

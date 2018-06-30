@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -25,15 +26,25 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<MeterReport> Get()
+        public Task<MeterReport> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            return Get(CancellationToken.None);
+        }
+
+        public async Task<MeterReport> Get(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
             return new MeterReport(Node, response);
         }
 
-        public async Task<MeterSupportedReport> GetSupported()
+        public Task<MeterSupportedReport> GetSupported()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport);
+            return GetSupported(CancellationToken.None);
+        }
+
+        public async Task<MeterSupportedReport> GetSupported(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport, cancellationToken);
             return new MeterSupportedReport(Node, response);
         }
 
