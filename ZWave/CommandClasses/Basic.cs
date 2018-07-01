@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -21,15 +22,25 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<BasicReport> Get()
+        public Task<BasicReport> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            return Get(CancellationToken.None);
+        }
+
+        public async Task<BasicReport> Get(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
             return new BasicReport(Node, response);
         }
 
-        public async Task Set(byte value)
+        public Task Set(byte value)
         {
-            await Channel.Send(Node, new Command(Class, command.Set, value));
+            return Set(value, CancellationToken.None);
+        }
+
+        public async Task Set(byte value, CancellationToken cancellationToken)
+        {
+            await Channel.Send(Node, new Command(Class, command.Set, value), cancellationToken);
         }
 
         protected internal override void HandleEvent(Command command)

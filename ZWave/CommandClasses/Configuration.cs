@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -20,64 +21,114 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<ConfigurationReport> Get(byte parameter)
+        public Task<ConfigurationReport> Get(byte parameter)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report);
+            return Get(parameter, CancellationToken.None);
+        }
+
+        public async Task<ConfigurationReport> Get(byte parameter, CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report, cancellationToken);
             return new ConfigurationReport(Node, response);
         }
 
-        public async Task Set(byte parameter, object value, byte size)
+        public Task Set(byte parameter, object value, byte size)
+        {
+            return Set(parameter, value, size, CancellationToken.None);
+        }
+
+        public async Task Set(byte parameter, object value, byte size, CancellationToken cancellationToken)
         {
             var int64 = Convert.ToInt64(value);
-            await Set(parameter, int64, true, size);
+            await Set(parameter, int64, true, size, cancellationToken);
         }
 
-        public async Task Set(byte parameter, sbyte value)
+        public Task Set(byte parameter, sbyte value)
         {
-            await Set(parameter, value, true);
+            return Set(parameter, value, CancellationToken.None);
         }
 
-        public async Task Set(byte parameter, byte value)
+        public async Task Set(byte parameter, sbyte value, CancellationToken cancellationToken)
         {
-            await Set(parameter, value, false);
+            await Set(parameter, value, true, 0, cancellationToken);
         }
 
-        public async Task Set(byte parameter, short value)
+        public Task Set(byte parameter, byte value)
         {
-            await Set(parameter, value, true);
+            return Set(parameter, value, CancellationToken.None);
         }
 
-        public async Task Set(byte parameter, ushort value)
+        public async Task Set(byte parameter, byte value, CancellationToken cancellationToken)
         {
-            await Set(parameter, value, false);
+            await Set(parameter, value, false, 0, cancellationToken);
         }
 
-        public async Task Set(byte parameter, int value)
+        public Task Set(byte parameter, short value)
         {
-            await Set(parameter, value, true);
+            return Set(parameter, value, CancellationToken.None);
         }
 
-        public async Task Set(byte parameter, uint value)
+        public async Task Set(byte parameter, short value, CancellationToken cancellationToken)
         {
-            await Set(parameter, value, false);
+            await Set(parameter, value, true, 0, cancellationToken);
         }
 
-        public async Task Set(byte parameter, long value)
+        public Task Set(byte parameter, ushort value)
         {
-            await Set(parameter, value, true);
+            return Set(parameter, value, CancellationToken.None);
         }
 
-        public async Task Set(byte parameter, ulong value)
+        public async Task Set(byte parameter, ushort value, CancellationToken cancellationToken)
         {
-            await Set(parameter, (long)value, false);
+            await Set(parameter, value, false, 0, cancellationToken);
         }
 
-        private async Task Set(byte parameter, long value, bool signed, byte size = 0)
+        public Task Set(byte parameter, int value)
+        {
+            return Set(parameter, value, CancellationToken.None);
+        }
+
+        public async Task Set(byte parameter, int value, CancellationToken cancellationToken)
+        {
+            await Set(parameter, value, true, 0, cancellationToken);
+        }
+
+        public Task Set(byte parameter, uint value)
+        {
+            return Set(parameter, value, CancellationToken.None);
+        }
+
+        public async Task Set(byte parameter, uint value, CancellationToken cancellationToken)
+        {
+            await Set(parameter, value, false, 0, cancellationToken);
+        }
+
+        public Task Set(byte parameter, long value)
+        {
+            return Set(parameter, value, CancellationToken.None);
+        }
+
+        public async Task Set(byte parameter, long value, CancellationToken cancellationToken)
+        {
+            await Set(parameter, value, true, 0, cancellationToken);
+        }
+
+        public Task Set(byte parameter, ulong value)
+        {
+            return Set(parameter, value, CancellationToken.None);
+        }
+
+        public async Task Set(byte parameter, ulong value, CancellationToken cancellationToken)
+        {
+            await Set(parameter, (long)value, false, 0, cancellationToken);
+        }
+
+        private async Task Set(byte parameter, long value, bool signed, byte size, CancellationToken cancellationToken)
         {
             if (size == 0)
             {
                 // extra roundtrip to get the correct size of the parameter
-                var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report);
+                var response = await Channel.Send(Node, new Command(Class, command.Get, parameter), command.Report, cancellationToken);
                 size = response[1];
             }
 
@@ -99,7 +150,7 @@ namespace ZWave.CommandClasses
                 default:
                     throw new NotSupportedException($"Size:{size} is not supported");
             }
-            await Channel.Send(Node, new Command(Class, command.Set, new[] { parameter, (byte)values.Length }.Concat(values).ToArray()));
+            await Channel.Send(Node, new Command(Class, command.Set, new[] { parameter, (byte)values.Length }.Concat(values).ToArray()), cancellationToken);
         }
     }
 }

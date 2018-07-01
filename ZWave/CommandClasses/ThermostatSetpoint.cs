@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using ZWave.Channel;
+using System.Threading;
 
 namespace ZWave.CommandClasses
 {
@@ -23,19 +24,29 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<ThermostatSetpointReport> Get(ThermostatSetpointType type)
+        public Task<ThermostatSetpointReport> Get(ThermostatSetpointType type)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get, Convert.ToByte(type)), command.Report);
+            return Get(type, CancellationToken.None);
+        }
+
+        public async Task<ThermostatSetpointReport> Get(ThermostatSetpointType type, CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get, Convert.ToByte(type)), command.Report, cancellationToken);
             return new ThermostatSetpointReport(Node, response);
         }
 
-        public async Task Set(ThermostatSetpointType type, float value)
+        public Task Set(ThermostatSetpointType type, float value)
+        {
+            return Set(type, value, CancellationToken.None);
+        }
+
+        public async Task Set(ThermostatSetpointType type, float value, CancellationToken cancellationToken)
         {
             // encode value, decimals = 1, scale = 0 (°C) 
             var encoded = PayloadConverter.GetBytes(value, decimals: 1, scale: 0);
 
             var payload = new byte[] { Convert.ToByte(type) }.Concat(encoded).ToArray();
-            await Channel.Send(Node, new Command(Class, command.Set, payload));
+            await Channel.Send(Node, new Command(Class, command.Set, payload), cancellationToken);
         }
 
         protected internal override void HandleEvent(Command command)
