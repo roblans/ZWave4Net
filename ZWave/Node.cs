@@ -5,6 +5,7 @@ using ZWave.CommandClasses;
 using ZWave.Channel;
 using System.Collections;
 using System;
+using System.Threading;
 
 namespace ZWave
 {
@@ -87,13 +88,24 @@ namespace ZWave
             }
         }
 
-        public async Task<NodeProtocolInfo> GetProtocolInfo()
+        public Task<NodeProtocolInfo> GetProtocolInfo()
         {
-            var response = await Channel.Send(Function.GetNodeProtocolInfo, NodeID);
+            return GetProtocolInfo(CancellationToken.None);
+        }
+
+        public async Task<NodeProtocolInfo> GetProtocolInfo(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Function.GetNodeProtocolInfo, cancellationToken, NodeID);
             return NodeProtocolInfo.Parse(response);
         }
 
-        public async Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress = null)
+        public Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress = null)
+        {
+            return RequestNeighborUpdate(progress, CancellationToken.None);
+        }
+
+
+        public async Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress, CancellationToken cancellationToken)
         {
             // get next functionID (1..255) 
             var functionID = GetNextFunctionID();
@@ -114,18 +126,23 @@ namespace ZWave
                     return status == NeighborUpdateStatus.Done || status == NeighborUpdateStatus.Failed;
                 }
                 return false;
-            });
+            }, cancellationToken);
 
             // return the status of the final reponse
             return (NeighborUpdateStatus)response[1];
         }
 
-        public async Task<Node[]> GetNeighbours()
+        public Task<Node[]> GetNeighbours()
+        {
+            return GetNeighbours(CancellationToken.None);
+        }
+
+        public async Task<Node[]> GetNeighbours(CancellationToken cancellationToken)
         {
             var nodes = await Controller.GetNodes();
             var results = new List<Node>();
 
-            var response = await Channel.Send(Function.GetRoutingTableLine, NodeID);
+            var response = await Channel.Send(Function.GetRoutingTableLine, cancellationToken, NodeID);
             var bits = new BitArray(response);
             for (byte i = 0; i < bits.Length; i++)
             {

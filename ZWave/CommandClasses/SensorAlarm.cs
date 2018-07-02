@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -22,9 +23,14 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<SensorAlarmReport> Get(AlarmType type)
+        public Task<SensorAlarmReport> Get(AlarmType type)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get, Convert.ToByte(type)), command.Report);
+            return Get(type, CancellationToken.None);
+        }
+
+        public async Task<SensorAlarmReport> Get(AlarmType type, CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get, Convert.ToByte(type)), command.Report, cancellationToken);
             return new SensorAlarmReport(Node, response);
         }
 

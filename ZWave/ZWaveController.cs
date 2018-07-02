@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -113,32 +114,47 @@ namespace ZWave
             Channel.Close();
         }
 
-        public async Task<string> GetVersion()
+        public Task<string> GetVersion()
+        {
+            return GetVersion(CancellationToken.None);
+        }
+
+        public async Task<string> GetVersion(CancellationToken cancellationToken)
         {
             if (_version == null)
             {
-                var response = await Channel.Send(Function.GetVersion);
+                var response = await Channel.Send(Function.GetVersion, cancellationToken);
                 var data = response.TakeWhile(element => element != 0).ToArray();
                 _version = Encoding.UTF8.GetString(data, 0, data.Length);
             }
             return _version;
         }
 
-        public async Task<uint> GetHomeID()
+        public Task<uint> GetHomeID()
+        {
+            return GetHomeID(CancellationToken.None);
+        }
+
+        public async Task<uint> GetHomeID(CancellationToken cancellationToken)
         {
             if (_homeID == null)
             {
-                var response = await Channel.Send(Function.MemoryGetId);
+                var response = await Channel.Send(Function.MemoryGetId, cancellationToken);
                 _homeID = PayloadConverter.ToUInt32(response);
             }
             return _homeID.Value;
         }
 
-        public async Task<byte> GetNodeID()
+        public Task<byte> GetNodeID()
+        {
+            return GetNodeID(CancellationToken.None);
+        }
+
+        public async Task<byte> GetNodeID(CancellationToken cancellationToken)
         {
             if (_nodeID == null)
             {
-                var response = await Channel.Send(Function.MemoryGetId);
+                var response = await Channel.Send(Function.MemoryGetId, cancellationToken);
                 _nodeID = response[4];
             }
             return _nodeID.Value;
@@ -146,9 +162,14 @@ namespace ZWave
 
         public Task<NodeCollection> DiscoverNodes()
         {
+            return DiscoverNodes(CancellationToken.None);
+        }
+
+        public Task<NodeCollection> DiscoverNodes(CancellationToken cancellationToken)
+        {
             return _getNodes = Task.Run(async () =>
             {
-                var response = await Channel.Send(Function.DiscoveryNodes);
+                var response = await Channel.Send(Function.DiscoveryNodes, cancellationToken);
                 var values = response.Skip(3).Take(29).ToArray();
 
                 var nodes = new NodeCollection();

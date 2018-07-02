@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -34,20 +35,30 @@ namespace ZWave.CommandClasses
             return report.Version >= GetSupportedSensorsMinimalProtocolVersion;
         }
 
-        public async Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors()
+        public Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors()
+        {
+            return GetSupportedSensors(CancellationToken.None);
+        }
+
+        public async Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors(CancellationToken cancellationToken)
         {
             if (!await IsSupportGetSupportedSensors())
             {
                 throw new VersionNotSupportedException($"GetSupportedSensors works with class type {Class} greater or equal to {GetSupportedSensorsMinimalProtocolVersion}.");
             }
 
-            var response = await Send(new Command(Class, command.SupportedGet), command.SupportedReport);
+            var response = await Send(new Command(Class, command.SupportedGet), command.SupportedReport, cancellationToken);
             return new SensorMultilevelSupportedSensorReport(Node, response);
         }
 
-        public async Task<SensorMultiLevelReport> Get(SensorType type)
+        public Task<SensorMultiLevelReport> Get(SensorType type)
         {
-            var response = await Send(new Command(Class, command.Get, (byte)type), command.Report);
+            return Get(type, CancellationToken.None);
+        }
+
+        public async Task<SensorMultiLevelReport> Get(SensorType type, CancellationToken cancellationToken)
+        {
+            var response = await Send(new Command(Class, command.Get, (byte)type), command.Report, cancellationToken);
             return new SensorMultiLevelReport(Node, response);
         }
 

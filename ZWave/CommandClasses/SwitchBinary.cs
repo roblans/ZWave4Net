@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -23,15 +24,25 @@ namespace ZWave.CommandClasses
             : base(node, CommandClass.SwitchBinary, endpointId)
         { }
 
-        public async Task<SwitchBinaryReport> Get()
+        public Task<SwitchBinaryReport> Get()
         {
-            var response = await Send(new Command(Class, command.Get), command.Report);
+            return Get(CancellationToken.None);
+        }
+
+        public async Task<SwitchBinaryReport> Get(CancellationToken cancellationToken)
+        {
+            var response = await Send(new Command(Class, command.Get), command.Report, cancellationToken);
             return new SwitchBinaryReport(Node, response);
         }
 
-        public async Task Set(bool value)
+        public Task Set(bool value)
         {
-            await Send(new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00));
+            return Set(value, CancellationToken.None);
+        }
+
+        public async Task Set(bool value, CancellationToken cancellationToken)
+        {
+            await Send(new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00), cancellationToken);
         }
 
         protected internal override void HandleEvent(Command command)

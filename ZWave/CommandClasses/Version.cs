@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -21,15 +22,25 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<VersionReport> Get()
+        public Task<VersionReport> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            return Get(CancellationToken.None);
+        }
+
+        public async Task<VersionReport> Get(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
             return new VersionReport(Node, response);
         }
 
-        public async Task<VersionCommandClassReport> GetCommandClass(CommandClass @class)
+        public Task<VersionCommandClassReport> GetCommandClass(CommandClass @class)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.CommandClassGet, Convert.ToByte(@class)), command.CommandClassReport);
+            return GetCommandClass(@class, CancellationToken.None);
+        }
+
+        public async Task<VersionCommandClassReport> GetCommandClass(CommandClass @class, CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.CommandClassGet, Convert.ToByte(@class)), command.CommandClassReport, cancellationToken);
             return new VersionCommandClassReport(Node, response);
         }
     }

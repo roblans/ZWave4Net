@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -39,23 +40,43 @@ namespace ZWave.CommandClasses
 
         public Task Add(byte groupId, byte[] destinationNodeIds, Endpoint[] destinationEndpoints)
         {
-            return Channel.Send(Node, new Command(Class, command.Set, GetEndpointsPayload(groupId, destinationNodeIds, destinationEndpoints, MultiChannelAssociationSetMarker)));
+            return Add(groupId, destinationNodeIds, destinationEndpoints, CancellationToken.None);
         }
 
-        public async Task<MultiChannelAssociationReport> Get(byte groupID)
+        public Task Add(byte groupId, byte[] destinationNodeIds, Endpoint[] destinationEndpoints, CancellationToken cancellationToken)
         {
-            byte[] response = await Channel.Send(Node, new Command(Class, command.Get, groupID), command.Report);
+            return Channel.Send(Node, new Command(Class, command.Set, GetEndpointsPayload(groupId, destinationNodeIds, destinationEndpoints, MultiChannelAssociationSetMarker)), cancellationToken);
+        }
+
+        public Task<MultiChannelAssociationReport> Get(byte groupdId)
+        {
+            return Get(groupdId, CancellationToken.None);
+        }
+
+        public async Task<MultiChannelAssociationReport> Get(byte groupId, CancellationToken cancellationToken)
+        {
+            byte[] response = await Channel.Send(Node, new Command(Class, command.Get, groupId), command.Report, cancellationToken);
             return new MultiChannelAssociationReport(Node, response);
         }
 
         public Task Remove(byte groupId, byte[] destinationNodeIds, Endpoint[] destinationEndpoints)
         {
-            return Channel.Send(Node, new Command(Class, command.Remove, GetEndpointsPayload(groupId, destinationNodeIds, destinationEndpoints, MultiChannelAssociationRemoveMarker)));
+            return Remove(groupId, destinationNodeIds, destinationEndpoints, CancellationToken.None);
         }
 
-        public async Task<AssociationGroupsReport> GetGroups()
+        public Task Remove(byte groupId, byte[] destinationNodeIds, Endpoint[] destinationEndpoints, CancellationToken cancellationToken)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.GroupingsGet), command.GroupingsReport);
+            return Channel.Send(Node, new Command(Class, command.Remove, GetEndpointsPayload(groupId, destinationNodeIds, destinationEndpoints, MultiChannelAssociationRemoveMarker)), cancellationToken);
+        }
+
+        public Task<AssociationGroupsReport> GetGroups()
+        {
+            return GetGroups(CancellationToken.None);
+        }
+
+        public async Task<AssociationGroupsReport> GetGroups(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.GroupingsGet), command.GroupingsReport, cancellationToken);
             return new AssociationGroupsReport(Node, response);
         }
 

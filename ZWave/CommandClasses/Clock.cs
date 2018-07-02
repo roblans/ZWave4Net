@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
@@ -19,13 +20,23 @@ namespace ZWave.CommandClasses
         {
         }
 
-        public async Task<ClockReport> Get()
+        public Task<ClockReport> Get()
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report);
+            return Get(CancellationToken.None);
+        }
+
+        public async Task<ClockReport> Get(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
             return new ClockReport(Node, response);
         }
 
-        public async Task Set(DayOfWeek dayOfWeek, byte hour, byte minute)
+        public Task Set(DayOfWeek dayOfWeek, byte hour, byte minute)
+        {
+            return Set(dayOfWeek, hour, minute);
+        }
+
+        public async Task Set(DayOfWeek dayOfWeek, byte hour, byte minute, CancellationToken cancellationToken)
         {
             var day = default(byte);
             switch (dayOfWeek)
@@ -58,7 +69,7 @@ namespace ZWave.CommandClasses
             payload[0] |= (byte)(hour & 0x1F);
             payload[1] = minute;
 
-            await Channel.Send(Node, new Command(Class, command.Set, payload));
+            await Channel.Send(Node, new Command(Class, command.Set, payload), cancellationToken);
         }
     }
 }
