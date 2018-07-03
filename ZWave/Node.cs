@@ -64,7 +64,12 @@ namespace ZWave
             return _commandClasses.OfType<T>().FirstOrDefault();
         }
 
-        public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses()
+        public Task<VersionCommandClassReport[]> GetSupportedCommandClasses()
+        {
+            return GetSupportedCommandClasses(CancellationToken.None);
+        }
+
+        public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses(CancellationToken cancellationToken)
         {
             // is this node the controller?
             if (await Controller.GetNodeID() == NodeID)
@@ -77,7 +82,7 @@ namespace ZWave
             var commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
             foreach (var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
             {
-                var report = await version.GetCommandClass(commandClass);
+                var report = await version.GetCommandClass(commandClass, cancellationToken);
                 commandClassVersions[commandClass] = report;
             }
 
@@ -159,7 +164,7 @@ namespace ZWave
             return $"{NodeID:D3}";
         }
 
-        internal async Task<VersionCommandClassReport> GetCommandClassVersionReport(CommandClass commandClass)
+        internal async Task<VersionCommandClassReport> GetCommandClassVersionReport(CommandClass commandClass, CancellationToken cancellationToken)
         {
             lock(_commandClassVersions)
             {
@@ -170,7 +175,7 @@ namespace ZWave
             // The version isn't cached, so we should bring it now.
             //
             var version = GetCommandClass<CommandClasses.Version>();
-            var report = await version.GetCommandClass(commandClass);
+            var report = await version.GetCommandClass(commandClass, cancellationToken);
             lock (_commandClassVersions)
             {
                 _commandClassVersions[commandClass] = report;

@@ -186,9 +186,14 @@ namespace ZWave
             });
         }
 
-        public async Task<NodeCollection> GetNodes()
+        public Task<NodeCollection> GetNodes()
         {
-            return await (_getNodes ?? (_getNodes = DiscoverNodes()));
+            return GetNodes(CancellationToken.None);
+        }
+
+        public async Task<NodeCollection> GetNodes(CancellationToken cancellationToken)
+        {
+            return await (_getNodes ?? (_getNodes = DiscoverNodes(cancellationToken)));
         }
     }
 }
