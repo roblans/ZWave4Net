@@ -37,7 +37,7 @@ namespace ZWave.CommandClasses
             }
             else
             {
-                Command encapsolatedCommand = await EncapsulatCommandForEndpoint(command);
+                Command encapsolatedCommand = await EncapsulatCommandForEndpoint(command, cancellationToken);
                 byte[] response = await Channel.Send(Node, encapsolatedCommand, MultiChannel.command.Encap, EncapsulatCommandEndpointValidator(responseCommand), cancellationToken);
                 return ExtractEndpointResponse(response, responseCommand);
             }
@@ -53,7 +53,7 @@ namespace ZWave.CommandClasses
             }
             else
             {
-                Command encapsolatedCommand = await EncapsulatCommandForEndpoint(command);
+                Command encapsolatedCommand = await EncapsulatCommandForEndpoint(command, cancellationToken);
                 await Channel.Send(Node, encapsolatedCommand, cancellationToken);
             }
         }
@@ -63,9 +63,9 @@ namespace ZWave.CommandClasses
             HandleEvent(new Command(Class, reportType, wrappedPayload));
         }
 
-        private async Task<Command> EncapsulatCommandForEndpoint(Command command)
+        private async Task<Command> EncapsulatCommandForEndpoint(Command command, CancellationToken cancellationToken)
         {
-            byte controllerId = await Node.Controller.GetNodeID();
+            byte controllerId = await Node.Controller.GetNodeID(cancellationToken);
 
             // Encapsulation have additional 4 params.
             const int encapsolationEdditionalParams = 4;
