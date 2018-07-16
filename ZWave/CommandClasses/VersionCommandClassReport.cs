@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ZWave.Channel;
 using ZWave.Channel.Protocol;
 
@@ -20,6 +18,22 @@ namespace ZWave.CommandClasses
 
             Class = (CommandClass)Enum.ToObject(typeof(CommandClass), payload[0]);
             Version = payload[1];
+        }
+
+        internal static Func<byte[], bool> GetResponseValidatorForCommandClass(Node node, CommandClass @class)
+        {
+            return payload =>
+            {
+                try
+                {
+                    var report = new VersionCommandClassReport(node, payload);
+                    return report.Class == @class;
+                }
+                catch
+                {
+                    return false;
+                }
+            };
         }
 
         public override string ToString()
