@@ -18,8 +18,20 @@ namespace ZWave
         public readonly byte NodeID;
         public readonly ZWaveController Controller;
 
-        public event System.EventHandler<NodeEventArgs> UnknownCommandReceived;
-        public event System.EventHandler<EventArgs> UpdateReceived;
+        /// <summary>
+        /// Will be fired when unknown command received.
+        /// </summary>
+        public event EventHandler<NodeEventArgs> UnknownCommandReceived;
+
+        /// <summary>
+        /// Will be fired when node update command received.
+        /// </summary>
+        public event EventHandler<EventArgs> UpdateReceived;
+
+        /// <summary>
+        /// Will be fired when any command received.
+        /// </summary>
+        public event EventHandler<EventArgs> MessageReceived;
 
         public Node(byte nodeID, ZWaveController contoller)
         {
@@ -104,7 +116,6 @@ namespace ZWave
             return RequestNeighborUpdate(progress, CancellationToken.None);
         }
 
-
         public async Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress, CancellationToken cancellationToken)
         {
             // get next functionID (1..255) 
@@ -113,7 +124,7 @@ namespace ZWave
             // send request, pass current node and functionID
             var response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID, functionID }, (payload) =>
             {
-                // check if repsonse matches request 
+                // check if response matches request 
                 if (payload[0] == functionID)
                 {
                     // yes, so parse status
@@ -128,7 +139,7 @@ namespace ZWave
                 return false;
             }, cancellationToken);
 
-            // return the status of the final reponse
+            // return the status of the final response
             return (NeighborUpdateStatus)response[1];
         }
 
@@ -181,19 +192,21 @@ namespace ZWave
 
         internal void HandleEvent(Command command)
         {
-            var target = _commandClasses.FirstOrDefault(element => System.Convert.ToByte(element.Class) == command.ClassID);
+            MessageReceived?.Invoke(this, EventArgs.Empty);
+            var target = _commandClasses.FirstOrDefault(element => Convert.ToByte(element.Class) == command.ClassID);
             if (target != null)
             {
                 target.HandleEvent(command);
             }
             else
             {
-                OnUnknownCommandReceived(new ZWave.Channel.NodeEventArgs(NodeID, command));
+                OnUnknownCommandReceived(new NodeEventArgs(NodeID, command));
             }
         }
 
         internal void HandleUpdate()
         {
+            MessageReceived?.Invoke(this, EventArgs.Empty);
             OnUpdateReceived(EventArgs.Empty);
         }
         
