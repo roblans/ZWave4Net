@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
@@ -29,9 +27,14 @@ namespace ZWave.CommandClasses
             : base(node, CommandClass.SensorMultiLevel, endpointId)
         { }
 
-        public async Task<bool> IsSupportGetSupportedSensors()
+        public Task<bool> IsSupportGetSupportedSensors()
         {
-            var report = await Node.GetCommandClassVersionReport(Class);
+            return IsSupportGetSupportedSensors(CancellationToken.None);
+        }
+
+        public async Task<bool> IsSupportGetSupportedSensors(CancellationToken cancellationToken)
+        {
+            var report = await Node.GetCommandClassVersionReport(Class, cancellationToken);
             return report.Version >= GetSupportedSensorsMinimalProtocolVersion;
         }
 
@@ -42,7 +45,7 @@ namespace ZWave.CommandClasses
 
         public async Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors(CancellationToken cancellationToken)
         {
-            if (!await IsSupportGetSupportedSensors())
+            if (!await IsSupportGetSupportedSensors(cancellationToken))
             {
                 throw new VersionNotSupportedException($"GetSupportedSensors works with class type {Class} greater or equal to {GetSupportedSensorsMinimalProtocolVersion}.");
             }
