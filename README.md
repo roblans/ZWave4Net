@@ -17,11 +17,14 @@ Supported Z-Wave command classes:
 - Association
 - Basic
 - Battery
+- CentralScene
 - Clock
 - Color
 - Configuration
 - ManufacturerSpecific
 - Meter
+- MultiChannel
+- MultiChannelAssociation
 - SceneActivation
 - SensorAlarm
 - SensorBinary
