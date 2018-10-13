@@ -11,6 +11,8 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Product />
     <Version>1.0.0</Version>
+    <AssemblyName>ZWave</AssemblyName>
+    <RootNamespace>ZWave</RootNamespace>
   </PropertyGroup>
 
   <Import Project="..\ZWave\ZWave.projitems" Label="Shared" />

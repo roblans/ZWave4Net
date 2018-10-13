@@ -40,7 +40,7 @@ namespace ZWave.Channel
             _semaphore = new SemaphoreSlim(1, 1);
         }
 
-#if NET || WINDOWS_UWP || NETSTANDARD2_0
+#if NET || WINDOWS_UWP
         public ZWaveChannel(string portName)
              : this(new SerialPort(portName))
         {

@@ -23,5 +23,6 @@
     <file src="ZWave.portable-net45+win8\bin\Release\ZWave.dll" target="lib\portable-net45+win8" />
     <file src="ZWave.uap10.0\bin\Release\ZWave.dll" target="lib\uap10.0" />
     <file src="ZWave.core2.0\bin\Release\netcoreapp2.0\ZWave.dll" target="lib\netcoreapp2.0" />
-   </files>
+    <file src="ZWave.NetStandard2.0\bin\Release\netstandard2.0\ZWave.dll" target="lib\netstandard2.0" />
+  </files>
 </package>
