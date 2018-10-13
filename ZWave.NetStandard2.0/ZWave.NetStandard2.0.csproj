@@ -15,8 +15,4 @@
 
   <Import Project="..\ZWave\ZWave.projitems" Label="Shared" />
 
-  <ItemGroup>
-    <PackageReference Include="System.IO.Ports" Version="4.4.0" />
-  </ItemGroup>
-
 </Project>
