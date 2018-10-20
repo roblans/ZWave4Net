@@ -9,7 +9,8 @@
       - Managed Framework: net45
       - Portable Class Library: net45 + win8
       - Universal App Platform: win10
-      - .NET Core: 2.0 (no serial port) 
+      - .NET Standard: 2.0 (uses SerialPortStream package for serial port)
+      - .NET Core: 2.0 (uses SerialPortStream package for serial port)
     </description>
     <summary>ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick</summary>
     <version>1.0.0.0</version>
@@ -18,6 +19,14 @@
     <projectUrl>https://github.com/roblans/ZWave4Net</projectUrl>
     <tags>zwave z-wave home automation Aeotec Aeon</tags>
   </metadata>
+  <dependencies>
+    <group targetFramework="netcoreapp2.0">
+      <dependency id="SerialPortStream" version="2.1.4" />
+    </group>
+    <group targetFramework="netstandard2.0">
+      <dependency id="SerialPortStream" version="2.1.4" />
+    </group>
+  </dependencies>
   <files>
     <file src="ZWave.net45\bin\Release\ZWave.dll" target="lib\net45" />
     <file src="ZWave.portable-net45+win8\bin\Release\ZWave.dll" target="lib\portable-net45+win8" />

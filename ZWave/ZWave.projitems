@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\TransmissionState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\TransmitOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\UnknownMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\SerialPort.core.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\SerialPort.net.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\SerialPort.uap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\ZWaveChannel.cs" />
