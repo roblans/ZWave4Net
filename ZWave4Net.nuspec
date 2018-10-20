@@ -18,15 +18,15 @@
     <copyright>© 2015 Rob Lans</copyright>
     <projectUrl>https://github.com/roblans/ZWave4Net</projectUrl>
     <tags>zwave z-wave home automation Aeotec Aeon</tags>
+    <dependencies>
+      <group targetFramework="netcoreapp2.0">
+        <dependency id="SerialPortStream" version="2.1.4" />
+      </group>
+      <group targetFramework="netstandard2.0">
+        <dependency id="SerialPortStream" version="2.1.4" />
+      </group>
+    </dependencies>
   </metadata>
-  <dependencies>
-    <group targetFramework="netcoreapp2.0">
-      <dependency id="SerialPortStream" version="2.1.4" />
-    </group>
-    <group targetFramework="netstandard2.0">
-      <dependency id="SerialPortStream" version="2.1.4" />
-    </group>
-  </dependencies>
   <files>
     <file src="ZWave.net45\bin\Release\ZWave.dll" target="lib\net45" />
     <file src="ZWave.portable-net45+win8\bin\Release\ZWave.dll" target="lib\portable-net45+win8" />
