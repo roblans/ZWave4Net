@@ -178,6 +178,26 @@ namespace ZWave.Channel.Protocol
 
     static partial class Extensions
     {
+
+#if NETCOREAPP2_0 || NETSTANDARD2_0
+
+        // NOTE: Core and Standard uses SerialPortStream package
+        // Stream.ReadAsync is very slow, use blocking Stream.Read wrapped in a task
+        public static Task ReadAsyncExact(this Stream stream, byte[] buffer, int offset, int count)
+        {
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+
+            return Task.Run(() =>
+            {
+                var read = 0;
+                while (read < count)
+                {
+                    read += stream.Read(buffer, offset + read, count - read);
+                }
+            });
+        }
+#else
         public static async Task ReadAsyncExact(this Stream stream, byte[] buffer, int offset, int count)
         {
             if (buffer == null)
@@ -189,6 +209,8 @@ namespace ZWave.Channel.Protocol
                 read += await stream.ReadAsync(buffer, offset + read, count - read);
             }
         }
-    }
 
+#endif
+
+    }
 }

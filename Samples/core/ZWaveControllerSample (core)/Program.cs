@@ -15,6 +15,8 @@ namespace ZWaveControllerSample
             var portName = RJCP.IO.Ports.SerialPortStream.GetPortNames().Where(element => element != "COM1").First();
 
             var controller = new ZWaveController(portName);
+            //controller.Channel.Log = Console.Out;
+            
             controller.Open();
             try
             {
