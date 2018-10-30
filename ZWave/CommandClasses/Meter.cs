@@ -44,7 +44,7 @@ namespace ZWave.CommandClasses
 
         public Task<MeterReport> Get(ElectricMeterScale scale, CancellationToken cancellationToken)
         {
-            return Get(scale, cancellationToken);
+            return Get((Enum)scale, cancellationToken);
         }
 
         public Task<MeterReport> Get(GasMeterScale scale)
@@ -54,7 +54,7 @@ namespace ZWave.CommandClasses
 
         public Task<MeterReport> Get(GasMeterScale scale, CancellationToken cancellationToken)
         {
-            return Get(scale, cancellationToken);
+            return Get((Enum)scale, cancellationToken);
         }
 
         public Task<MeterReport> Get(WaterMeterScale scale)
@@ -64,7 +64,7 @@ namespace ZWave.CommandClasses
 
         public Task<MeterReport> Get(WaterMeterScale scale, CancellationToken cancellationToken)
         {
-            return Get(scale, cancellationToken);
+            return Get((Enum)scale, cancellationToken);
         }
 
         private async Task<MeterReport> Get(Enum scale, CancellationToken cancellationToken)
