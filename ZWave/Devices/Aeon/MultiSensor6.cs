@@ -77,6 +77,30 @@ namespace ZWave.Devices.Aeon
             await Node.GetCommandClass<Association>().Remove(Convert.ToByte(group), node.NodeID);
         }
 
+        public async Task<Measure> GetTemperature()
+        {
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Temperature);
+            return new Measure(report.Value, Unit.Celsius);
+        }
+
+        public async Task<Measure> GetLuminance()
+        {
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Luminance);
+            return new Measure(report.Value, Unit.Lux);
+        }
+
+        public async Task<Measure> GetRelativeHumidity()
+        {
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.RelativeHumidity);
+            return new Measure(report.Value, Unit.Humidity);
+        }
+
+        public async Task<Measure> GetUltraviolet()
+        {
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Ultraviolet);
+            return new Measure(report.Value, Unit.Ultraviolet);
+        }
+
         protected virtual void OnMotionDetected(EventArgs e)
         {
             MotionDetected?.Invoke(this, e);
