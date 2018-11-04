@@ -8,14 +8,17 @@ namespace ZWave.Devices.Fibaro
 {
     public class WallPlug : Device
     {
+        public readonly FirmwareVersion Version;
+
         public event EventHandler<MeasureEventArgs> EnergyConsumptionMeasured;
         public event EventHandler<MeasureEventArgs> PowerLoadMeasured;
         public event EventHandler<EventArgs> SwitchedOn;
         public event EventHandler<EventArgs> SwitchedOff;
 
-        public WallPlug(Node node)
+        public WallPlug(Node node, FirmwareVersion version = FirmwareVersion.Latest)
             : base(node)
         {
+            Version = version;
             Node.GetCommandClass<SwitchBinary>().Changed += SwitchBinary_Changed;
             Node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
             Node.GetCommandClass<Meter>().Changed += Meter_Changed;
@@ -82,45 +85,137 @@ namespace ZWave.Devices.Fibaro
 
         public async Task SetLedRingColorOn(LedRingColorOn colorOn)
         {
-            await Node.GetCommandClass<Configuration>().Set(61, Convert.ToByte(colorOn));
+            var parameterID = default(byte);
+            switch(Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 61;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 41;
+                    break;
+            }
+            await Node.GetCommandClass<Configuration>().Set(parameterID, Convert.ToByte(colorOn));
         }
 
         public async Task<LedRingColorOn> GetLedRingColorOn()
         {
-            var value = (await Node.GetCommandClass<Configuration>().Get(61)).Value;
+            var parameterID = default(byte);
+            switch (Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 61;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 41;
+                    break;
+            }
+
+            var value = (await Node.GetCommandClass<Configuration>().Get(parameterID)).Value;
             return (LedRingColorOn)Enum.ToObject(typeof(LedRingColorOn), value);
         }
 
         public async Task<LedRingColorOff> GetLedRingColorOff()
         {
-            var value = (await Node.GetCommandClass<Configuration>().Get(62)).Value;
+            var parameterID = default(byte);
+            switch (Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 62;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 42;
+                    break;
+            }
+
+            var value = (await Node.GetCommandClass<Configuration>().Get(parameterID)).Value;
             return (LedRingColorOff)Enum.ToObject(typeof(LedRingColorOn), value);
         }
 
         public async Task SetLedRingColorOff(LedRingColorOff colorOff)
         {
-            await Node.GetCommandClass<Configuration>().Set(62, Convert.ToByte(colorOff));
+            var parameterID = default(byte);
+            switch (Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 62;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 42;
+                    break;
+            }
+
+            await Node.GetCommandClass<Configuration>().Set(parameterID, Convert.ToByte(colorOff));
         }
 
         public async Task<TimeSpan> GetMeasureInterval()
         {
-            var value = Convert.ToUInt16((await Node.GetCommandClass<Configuration>().Get(47)).Value);
+            var parameterID = default(byte);
+            switch (Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 47;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 14;
+                    break;
+            }
+
+            var value = Convert.ToUInt16((await Node.GetCommandClass<Configuration>().Get(parameterID)).Value);
             return TimeSpan.FromSeconds(value);
-        }
-
-        public async Task SetPowerLoadChangeReporting(sbyte percentage)
-        {
-            await Node.GetCommandClass<Configuration>().Set(42, percentage);
-        }
-
-        public async Task<sbyte> GetPowerLoadChangeReporting()
-        {
-            return (sbyte)(await Node.GetCommandClass<Configuration>().Get(42)).Value;
         }
 
         public async Task SetMeasureInterval(TimeSpan value)
         {
-            await Node.GetCommandClass<Configuration>().Set(47, (ushort)value.TotalSeconds);
+            var parameterID = default(byte);
+            switch (Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 47;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 14;
+                    break;
+            }
+            await Node.GetCommandClass<Configuration>().Set(parameterID, (ushort)value.TotalSeconds);
+        }
+
+        public async Task<sbyte> GetPowerLoadChangeReporting()
+        {
+            var parameterID = default(byte);
+            switch (Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 42;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 11;
+                    break;
+            }
+            return (sbyte)(await Node.GetCommandClass<Configuration>().Get(parameterID)).Value;
+        }
+
+        public async Task SetPowerLoadChangeReporting(sbyte percentage)
+        {
+            var parameterID = default(byte);
+            switch (Version)
+            {
+                case FirmwareVersion.V2:
+                    parameterID = 42;
+                    break;
+                case FirmwareVersion.V3:
+                case FirmwareVersion.Latest:
+                    parameterID = 11;
+                    break;
+            }
+            await Node.GetCommandClass<Configuration>().Set(parameterID, percentage);
         }
 
         protected virtual void OnSwitchedOn(EventArgs e)
@@ -141,6 +236,13 @@ namespace ZWave.Devices.Fibaro
         protected virtual void OnEnergyConsumptionMeasured(MeasureEventArgs e)
         {
             EnergyConsumptionMeasured?.Invoke(this, e);
+        }
+
+        public enum FirmwareVersion : byte
+        {
+            Latest = 0,
+            V2 = 2,
+            V3 = 3,
         }
 
         public enum LedRingColorOn : byte
