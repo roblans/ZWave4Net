@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
@@ -11,98 +9,84 @@ namespace ZWave.CommandClasses
     {
         public event EventHandler<ReportEventArgs<MeterReport>> Changed;
 
-        enum command
+        enum Command
         {
             Get = 0x01,
             Report = 0x02,
-            
+
             // Version 2
             SupportedGet = 0x03,
             SupportedReport = 0x04,
             Reset = 0x05
         }
 
-        public Meter(Node node) : base(node, CommandClass.Meter)
-        {
-        }
+        public Meter(Node node) : base(node, CommandClass.Meter) { }
 
-        public Task<MeterReport> Get()
+        public async Task<MeterReport> Get(CancellationToken? cancellationToken = null)
         {
-            return Get(CancellationToken.None);
-        }
+            byte[] response;
+            if (cancellationToken.HasValue)
+                response = await Channel.Send(Node, new Channel.Command(Class, Command.Get), Command.Report, cancellationToken.Value);
+            else
+                response = await Channel.Send(Node, new Channel.Command(Class, Command.Get), Command.Report, CancellationToken.None);
 
-        public async Task<MeterReport> Get(CancellationToken cancellationToken)
-        {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
             return new MeterReport(Node, response);
         }
 
-        public Task<MeterReport> Get(ElectricMeterScale scale)
+        public Task<MeterReport> Get(ElectricMeterScale scale, CancellationToken? cancellationToken = null)
         {
-            return Get(scale, CancellationToken.None);
+            if (cancellationToken.HasValue)
+                return Get((Enum)scale, cancellationToken.Value);
+
+            return Get((Enum)scale, CancellationToken.None);
         }
 
-        public Task<MeterReport> Get(ElectricMeterScale scale, CancellationToken cancellationToken)
+        public Task<MeterReport> Get(GasMeterScale scale, CancellationToken? cancellationToken = null)
         {
-            return Get((Enum)scale, cancellationToken);
+            if (cancellationToken.HasValue)
+                return Get((Enum)scale, cancellationToken.Value);
+
+            return Get((Enum)scale, CancellationToken.None);
         }
 
-        public Task<MeterReport> Get(GasMeterScale scale)
+        public Task<MeterReport> Get(WaterMeterScale scale, CancellationToken? cancellationToken = null)
         {
-            return Get(scale, CancellationToken.None);
-        }
+            if (cancellationToken.HasValue)
+                return Get((Enum)scale, cancellationToken.Value);
 
-        public Task<MeterReport> Get(GasMeterScale scale, CancellationToken cancellationToken)
-        {
-            return Get((Enum)scale, cancellationToken);
-        }
-
-        public Task<MeterReport> Get(WaterMeterScale scale)
-        {
-            return Get(scale, CancellationToken.None);
-        }
-
-        public Task<MeterReport> Get(WaterMeterScale scale, CancellationToken cancellationToken)
-        {
-            return Get((Enum)scale, cancellationToken);
+            return Get((Enum)scale, CancellationToken.None);
         }
 
         private async Task<MeterReport> Get(Enum scale, CancellationToken cancellationToken)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get, (byte)(Convert.ToByte(scale) << 3)), command.Report, cancellationToken);
+            var response = await Channel.Send(Node, new Channel.Command(Class, Command.Get, (byte)(Convert.ToByte(scale) << 3)), Command.Report, cancellationToken);
             return new MeterReport(Node, response);
         }
 
-        public Task<MeterSupportedReport> GetSupported()
+        public async Task<MeterSupportedReport> GetSupported(CancellationToken? cancellationToken = null)
         {
-            return GetSupported(CancellationToken.None);
-        }
+            byte[] response;
+            if (cancellationToken.HasValue)
+                response = await Channel.Send(Node, new Channel.Command(Class, Command.SupportedGet), Command.SupportedReport, cancellationToken.Value);
+            else
+                response = await Channel.Send(Node, new Channel.Command(Class, Command.SupportedGet), Command.SupportedReport, CancellationToken.None);
 
-        public async Task<MeterSupportedReport> GetSupported(CancellationToken cancellationToken)
-        {
-            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport, cancellationToken);
             return new MeterSupportedReport(Node, response);
         }
 
-        protected internal override void HandleEvent(Command command)
+        protected internal override void HandleEvent(Channel.Command command)
         {
             base.HandleEvent(command);
 
-            if (command.CommandID == Convert.ToByte(Meter.command.Report))
-            {
-                var report = new MeterReport(Node, command.Payload);
-                OnChanged(new ReportEventArgs<MeterReport>(report));
-            }
-        }
+            if (command.CommandID != Convert.ToByte(Command.Report))
+                return;
 
+            var report = new MeterReport(Node, command.Payload);
+            OnChanged(new ReportEventArgs<MeterReport>(report));
+        }
         protected virtual void OnChanged(ReportEventArgs<MeterReport> e)
         {
-            var handler = Changed;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Changed?.Invoke(this, e);
         }
-
     }
 }

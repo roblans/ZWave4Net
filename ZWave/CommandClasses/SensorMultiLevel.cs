@@ -19,13 +19,9 @@ namespace ZWave.CommandClasses
             Report = 0x05
         }
 
-        public SensorMultiLevel(Node node)
-            : base(node, CommandClass.SensorMultiLevel)
-        { }
+        public SensorMultiLevel(Node node) : base(node, CommandClass.SensorMultiLevel) { }
 
-        internal SensorMultiLevel(Node node, byte endpointId)
-            : base(node, CommandClass.SensorMultiLevel, endpointId)
-        { }
+        internal SensorMultiLevel(Node node, byte endpointId) : base(node, CommandClass.SensorMultiLevel, endpointId) { }
 
         public Task<bool> IsSupportGetSupportedSensors()
         {
@@ -75,12 +71,7 @@ namespace ZWave.CommandClasses
 
         protected virtual void OnChanged(ReportEventArgs<SensorMultiLevelReport> e)
         {
-            var handler = Changed;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            Changed?.Invoke(this, e);
         }
-
     }
 }
