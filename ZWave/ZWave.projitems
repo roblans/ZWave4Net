@@ -101,6 +101,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpIntervalReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConfigurationValueAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Deferral.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor6.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor4.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\GarageDoorDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\ShockSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Zipato\RgbwLightBulb.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnumConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ControllerRestService.cs" />
