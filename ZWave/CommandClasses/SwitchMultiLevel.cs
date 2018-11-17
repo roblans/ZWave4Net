@@ -13,7 +13,9 @@ namespace ZWave.CommandClasses
         {
             Set = 0x01,
             Get = 0x02,
-            Report = 0x03
+            Report = 0x03,
+            StartLevelChange = 0x04,
+            StopLevelChange = 0x05,
         }
 
         public event EventHandler<ReportEventArgs<SwitchMultiLevelReport>> Changed;
@@ -46,6 +48,32 @@ namespace ZWave.CommandClasses
         public async Task Set(byte value, CancellationToken cancellationToken)
         {
             await Channel.Send(Node, new Command(Class, command.Set, value), cancellationToken);
+        }
+
+        public Task StartLevelChange(bool increase, byte duration)
+        {
+            return StartLevelChange(increase, duration, CancellationToken.None);
+        }
+
+        public async Task StartLevelChange(bool increase, byte duration, CancellationToken cancellationToken)
+        {
+            var payload = new byte[]
+            {
+                increase ? (byte)0x20 : (byte)0x60,
+                0, // Start level - ignored (for now!)
+                duration,
+            };
+            await Channel.Send(Node, new Command(Class, command.StartLevelChange, payload), cancellationToken);
+        }
+
+        public Task StopLevelChange()
+        {
+            return StopLevelChange(CancellationToken.None);
+        }
+
+        public async Task StopLevelChange(CancellationToken cancellationToken)
+        {
+            await Channel.Send(Node, new Command(Class, command.StopLevelChange), cancellationToken);
         }
 
         protected internal override void HandleEvent(Command command)
