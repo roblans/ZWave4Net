@@ -11,6 +11,8 @@ Supported Targets:
 
 Runs on Raspberry PI IoT Windows 10 (see note below)
 
+![](https://roblans.visualstudio.com/ZWave4Net/_apis/build/status/ZWave4Net)
+
 NuGet package: https://www.nuget.org/packages/ZWave4Net/
 
 Supported Z-Wave command classes:
