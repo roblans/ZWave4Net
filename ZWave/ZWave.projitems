@@ -46,6 +46,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Association.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationGroupsReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CentralSceneSupportedReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\EndpointSupportedCommandClassBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MeterScale.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelAssociation.cs" />
