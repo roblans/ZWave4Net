@@ -1,3 +1,5 @@
+![](https://img.shields.io/vso/build/roblans/df0c356b-e9f5-4364-bdf2-3dde5ed0dc05/7.svg) ![](https://img.shields.io/nuget/v/zwave4net.svg)
+
 # ZWave4Net
  ZWave4Net is a .NET library that interfaces with the Aeotec / Aeon Labs Z-Stick. It uses an event-driven, non-blocking model that makes it lightweight and efficient.
 
