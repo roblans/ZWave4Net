@@ -30,6 +30,11 @@ namespace ZWave.Devices.Fibaro
             }
         }
 
+        public async Task<bool> IsSwitchOn()
+        {
+            return (await Node.GetCommandClass<SwitchBinary>().Get()).Value;
+        }
+
         public async Task SwitchOn()
         {
             await Node.GetCommandClass<SwitchBinary>().Set(true);
