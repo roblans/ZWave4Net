@@ -95,7 +95,7 @@ namespace CommunicationValidator
 
             var foundNodes = new List<Node>();
             // build a node communication matrix
-            foreach (var node in rows.Where(el => el.NodeID.HasValue && !string.IsNullOrEmpty(el.Command)).GroupBy(el => el.NodeID.Value))
+            foreach (var node in rows.Where(el => el.NodeID.HasValue && !string.IsNullOrEmpty(el.Command)).GroupBy(el => el.NodeID.Value).OrderBy(el => el.Key))
             {
                 foundNodes.Add(new Node()
                 {
