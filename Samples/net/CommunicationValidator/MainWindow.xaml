@@ -31,7 +31,7 @@
             <StackPanel Orientation="Horizontal" Margin="3,0">
                 <TextBlock Text="{Binding CommandClass}" Width="120" ToolTip="Command class" />
                 <TextBlock Text="{Binding RequestsSucceeded}" Width="20" FontStyle="Italic" Foreground="Green" ToolTip="Requests succeeded" />
-                <TextBlock Text="{Binding RequestsFailed}" Width="20" FontStyle="Italic" Foreground="Red" ToolTip="Requests failed" />
+                <!--<TextBlock Text="{Binding RequestsFailed}" Width="20" FontStyle="Italic" Foreground="Red" ToolTip="Requests failed" />-->
                 <TextBlock Text="{Binding EventReceived}" Width="20" FontStyle="Italic" Foreground="Blue" ToolTip="Events received" />
             </StackPanel>
         </DataTemplate>
