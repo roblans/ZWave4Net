@@ -1,0 +1,59 @@
+﻿<Window x:Class="CommunicationValidator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model="clr-namespace:CommunicationValidator.Models"
+        mc:Ignorable="d"
+        Title="Communication validator 'log file'" Height="450" Width="800" WindowState="Maximized">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type model:LogRow}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Mode}" Width="80" Name="txtMode" />
+                <TextBlock Text="{Binding Message}" />
+                <TextBlock Text="{Binding MessageDescription}" Margin="10,0" FontSize="8" FontStyle="Italic" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsAck}" Value="true">
+                    <Setter TargetName="txtMode" Property="Foreground" Value="Green" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsNakOrCan}" Value="true">
+                    <Setter TargetName="txtMode" Property="Foreground" Value="Red" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:CommandClassCommunication}">
+            <StackPanel Orientation="Horizontal" Margin="3,0">
+                <TextBlock Text="{Binding CommandClass}" Width="40" ToolTip="Command class" />
+                <TextBlock Text="{Binding RequestsSucceeded}" Width="40" FontStyle="Italic" Foreground="Green" ToolTip="Requests succeeded" />
+                <TextBlock Text="{Binding RequestsFailed}" Width="40" FontStyle="Italic" Foreground="Red" ToolTip="Requests failed" />
+                <TextBlock Text="{Binding EventReceived}" Width="40" FontStyle="Italic" Foreground="Blue" ToolTip="Events received" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:Node}">
+            <StackPanel Orientation="Horizontal" Margin="3,0">
+                <TextBlock Text="{Binding NodeID, StringFormat=Node {0}}" FontWeight="Bold" />
+                <ItemsControl ItemsSource="{Binding CommandClassCommunications}" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <TextBlock Text="log file:" VerticalAlignment="Center" />
+            <TextBox Name="txtLogFile" Text="" Width="100" />
+            <Button Content="bestand openen" VerticalAlignment="Stretch" Click="OpenFile_Click" />
+        </ToolBar>
+
+        <ScrollViewer DockPanel.Dock="Right" Width="auto">
+            <ItemsControl Name="itmNodes" MinWidth="50" Margin="10,3" />
+        </ScrollViewer>
+
+        <ScrollViewer>
+            <ItemsControl Name="itmRowViewer" Margin="3" />
+        </ScrollViewer>
+    </DockPanel>
+</Window>
