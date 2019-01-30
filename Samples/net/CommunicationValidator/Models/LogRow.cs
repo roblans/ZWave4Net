@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,19 +9,48 @@ namespace CommunicationValidator.Models
 {
     public class LogRow
     {
-        public LogRow(byte[] bytes)
+        public LogRow(string line)
         {
-            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
-            if (!bytes.Any()) throw new ArgumentException(nameof(bytes));
+            DateTime = DateTime.ParseExact(line.Remove(23), "yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
+            Mode = line.Remove(0, 24).StartsWith("Received:") ? CommunicationMode.Received : CommunicationMode.Send;
 
-            Message = string.Join(", ", BitConverter.ToString(bytes).Split('-').Select(v => $"0x{v}"));
-            MessageDescription = GetMessageDescription(bytes);
+            var message = line.Remove(0, 24).Split(new[] { ':' }, 2).Last().Trim();
+            if (message == "ACK")
+            {
+                Message = message;
+                MessageDescription = message;
+                IsAck = true;
+            }
+            else if (message == "NAK")
+            {
+                Message = message;
+                MessageDescription = message;
+                IsNakOrCan = true;
+            }
+            else if (message == "CAN")
+            {
+                Message = message;
+                MessageDescription = message;
+                IsNakOrCan = true;
+            }
+            else
+            {
+                var messageParts = message.Split(',').Select(el => el.Trim());
+                var nodePart = messageParts.FirstOrDefault(el => el.StartsWith("NodeID:"));
+                if (!string.IsNullOrEmpty(nodePart))
+                    NodeID = byte.Parse(nodePart.Remove(0, 7));
+                var commandPart = messageParts.FirstOrDefault(el => el.StartsWith("Command:") && !el.StartsWith("Command:["));
+                if (!string.IsNullOrEmpty(commandPart))
+                    Command = commandPart.Remove(0, 8);
 
-            IsAck = bytes.First() == 0x06;
-            IsNakOrCan = bytes.First() == 0x15 || bytes.First() == 0x18;
-
-            Mode = CommunicationMode.Received; //todo
+                MessageDescription = message;
+            }
         }
+
+        public byte? NodeID { get; }
+        public string Command { get; }
+
+        public DateTime DateTime { get; }
 
         public string Message { get; }
 

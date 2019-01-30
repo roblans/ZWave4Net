@@ -10,13 +10,13 @@ namespace CommunicationValidator.Models
     {
 
         public byte NodeID { get; set; }
-        public List<CommandClassCommunication> CommandClassCommunications { get; set; }
+        public CommandClassCommunication[] CommandClassCommunications { get; set; }
 
     }
 
     public class CommandClassCommunication
     {
-        public byte CommandClass { get; set; }
+        public string CommandClass { get; set; }
 
         public int RequestsSucceeded { get; set; }
         public int RequestsFailed { get; set; }

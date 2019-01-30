@@ -9,48 +9,72 @@
     <Window.Resources>
         <DataTemplate DataType="{x:Type model:LogRow}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Mode}" Width="80" Name="txtMode" />
-                <TextBlock Text="{Binding Message}" />
+                <TextBlock Text="{Binding DateTime, StringFormat={}{0:HH:mm:ss.fff}}" Width="80" Name="txtDate" />
+                <TextBlock Text="{Binding Mode}" Width="70" Name="txtMode" />
+                <TextBlock Text="{Binding Message}" Name="txtMessage" />
                 <TextBlock Text="{Binding MessageDescription}" Margin="10,0" FontSize="8" FontStyle="Italic" VerticalAlignment="Center" />
             </StackPanel>
 
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsAck}" Value="true">
-                    <Setter TargetName="txtMode" Property="Foreground" Value="Green" />
+                    <Setter TargetName="txtMessage" Property="Foreground" Value="Green" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsNakOrCan}" Value="true">
                     <Setter TargetName="txtMode" Property="Foreground" Value="Red" />
+                    <Setter TargetName="txtMessage" Property="Foreground" Value="Red" />
+                    <Setter TargetName="txtDate" Property="Foreground" Value="Red" />
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type model:CommandClassCommunication}">
             <StackPanel Orientation="Horizontal" Margin="3,0">
-                <TextBlock Text="{Binding CommandClass}" Width="40" ToolTip="Command class" />
-                <TextBlock Text="{Binding RequestsSucceeded}" Width="40" FontStyle="Italic" Foreground="Green" ToolTip="Requests succeeded" />
-                <TextBlock Text="{Binding RequestsFailed}" Width="40" FontStyle="Italic" Foreground="Red" ToolTip="Requests failed" />
-                <TextBlock Text="{Binding EventReceived}" Width="40" FontStyle="Italic" Foreground="Blue" ToolTip="Events received" />
+                <TextBlock Text="{Binding CommandClass}" Width="120" ToolTip="Command class" />
+                <TextBlock Text="{Binding RequestsSucceeded}" Width="20" FontStyle="Italic" Foreground="Green" ToolTip="Requests succeeded" />
+                <TextBlock Text="{Binding RequestsFailed}" Width="20" FontStyle="Italic" Foreground="Red" ToolTip="Requests failed" />
+                <TextBlock Text="{Binding EventReceived}" Width="20" FontStyle="Italic" Foreground="Blue" ToolTip="Events received" />
             </StackPanel>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type model:Node}">
-            <StackPanel Orientation="Horizontal" Margin="3,0">
+            <StackPanel Margin="3,0">
                 <TextBlock Text="{Binding NodeID, StringFormat=Node {0}}" FontWeight="Bold" />
                 <ItemsControl ItemsSource="{Binding CommandClassCommunications}" />
             </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:LineStatusIndicator}">
+            <ItemsControl ItemsSource="{Binding Lines}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="{Binding Margin}" Background="{Binding Brush}" Width="{Binding Width}" Height="{Binding Height}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </DataTemplate>
     </Window.Resources>
 
     <DockPanel>
         <ToolBar DockPanel.Dock="Top">
             <TextBlock Text="log file:" VerticalAlignment="Center" />
-            <TextBox Name="txtLogFile" Text="" Width="100" />
-            <Button Content="bestand openen" VerticalAlignment="Stretch" Click="OpenFile_Click" />
-        </ToolBar>
+            <TextBox Name="txtLogFile" Text="" Width="200" />
+            <Button Content="open log" VerticalAlignment="Stretch" Click="OpenFile_Click" />
 
+            <Separator Margin="20,0" />
+            <TextBlock Text="No file selected" VerticalAlignment="Center" Name="txtStatus" />
+        </ToolBar>
+        
         <ScrollViewer DockPanel.Dock="Right" Width="auto">
-            <ItemsControl Name="itmNodes" MinWidth="50" Margin="10,3" />
+            <ItemsControl Name="itmNodes" MinWidth="50" Margin="5,3" />
         </ScrollViewer>
+
+        <ContentControl Name="StatusIndicatorBar" DockPanel.Dock="Right" Width="50" />
+
 
         <ScrollViewer>
             <ItemsControl Name="itmRowViewer" Margin="3" />
