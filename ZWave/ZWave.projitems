@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\TransmissionState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\TransmitOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\Protocol\UnknownMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Channel\SerialPort.core.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\SerialPort.net.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\SerialPort.uap.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Channel\ZWaveChannel.cs" />
@@ -45,7 +46,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Association.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationGroupsReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\CentralSceneSupportedReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\EndpointSupportedCommandClassBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MeterScale.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelAssociation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelAssociationReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\MultiChannelCapabilityReport.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpIntervalReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\WakeUpReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConfigurationValueAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Deferral.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor6.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Aeon\MultiSensor4.cs" />
@@ -127,6 +131,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\GarageDoorDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Vision\ShockSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Zipato\RgbwLightBulb.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnumConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ControllerRestService.cs" />

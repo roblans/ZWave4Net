@@ -12,7 +12,7 @@ namespace ZWave.CommandClasses
         public readonly MeterType Type;
         public readonly float Value;
         public readonly string Unit;
-        public readonly byte Scale;
+        public readonly Enum Scale;
 
         internal MeterReport(Node node, byte[] payload) : base(node)
         {
@@ -21,9 +21,11 @@ namespace ZWave.CommandClasses
             if (payload.Length < 3)
                 throw new ReponseFormatException($"The response was not in the expected format. {GetType().Name}: Payload: {BitConverter.ToString(payload)}");
 
+            var scale = default(byte);
             Type = (MeterType)(payload[0] & 0x1F);
-            Value = PayloadConverter.ToFloat(payload.Skip(1).ToArray(), out Scale);
-            Unit = GetUnit(Type, Scale);
+            Value = PayloadConverter.ToFloat(payload.Skip(1).ToArray(), out scale);
+            Unit = GetUnit(Type, scale);
+            Scale = GetScale(Type, scale);
         }
 
         public static string GetUnit(MeterType type, byte scale)
@@ -39,6 +41,20 @@ namespace ZWave.CommandClasses
                 case MeterType.Water: return waterUnits[scale];
                 default: return string.Empty;
             }
+        }
+
+        public static Enum GetScale(MeterType type, byte scale)
+        {
+            switch (type)
+            {
+                case MeterType.Electric:
+                    return (ElectricMeterScale)scale;
+                case MeterType.Gas:
+                    return (GasMeterScale)scale;
+                case MeterType.Water:
+                    return (WaterMeterScale)scale;
+            }
+            return default(Enum);
         }
 
         public override string ToString()

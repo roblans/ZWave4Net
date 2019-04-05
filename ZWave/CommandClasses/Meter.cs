@@ -37,6 +37,42 @@ namespace ZWave.CommandClasses
             return new MeterReport(Node, response);
         }
 
+        public Task<MeterReport> Get(ElectricMeterScale scale)
+        {
+            return Get(scale, CancellationToken.None);
+        }
+
+        public Task<MeterReport> Get(ElectricMeterScale scale, CancellationToken cancellationToken)
+        {
+            return Get((Enum)scale, cancellationToken);
+        }
+
+        public Task<MeterReport> Get(GasMeterScale scale)
+        {
+            return Get(scale, CancellationToken.None);
+        }
+
+        public Task<MeterReport> Get(GasMeterScale scale, CancellationToken cancellationToken)
+        {
+            return Get((Enum)scale, cancellationToken);
+        }
+
+        public Task<MeterReport> Get(WaterMeterScale scale)
+        {
+            return Get(scale, CancellationToken.None);
+        }
+
+        public Task<MeterReport> Get(WaterMeterScale scale, CancellationToken cancellationToken)
+        {
+            return Get((Enum)scale, cancellationToken);
+        }
+
+        private async Task<MeterReport> Get(Enum scale, CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.Get, (byte)(Convert.ToByte(scale) << 3)), command.Report, cancellationToken);
+            return new MeterReport(Node, response);
+        }
+
         public Task<MeterSupportedReport> GetSupported()
         {
             return GetSupported(CancellationToken.None);

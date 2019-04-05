@@ -11,12 +11,14 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Product />
     <Version>1.0.0</Version>
+    <AssemblyName>ZWave</AssemblyName>
+    <RootNamespace>ZWave</RootNamespace>
   </PropertyGroup>
 
   <Import Project="..\ZWave\ZWave.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Ports" Version="4.4.0" />
+    <PackageReference Include="SerialPortStream" Version="2.1.4" />
   </ItemGroup>
 
 </Project>
