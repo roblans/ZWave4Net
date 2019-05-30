@@ -97,7 +97,10 @@ namespace ZWaveDriverSample
             //await InitializePowerSwitch(nodes[24]);
             //await InitializePowerSwitch(nodes[25]);
 
-            var neighborUpdateStatus = await nodes[19].RequestNeighborUpdate((status) => LogMessage($"RequestNeighborUpdate: {status} "));
+            //await InitializeMultiSensor(nodes[26]);
+            await InitializeShutter(nodes[27]);
+
+            //var neighborUpdateStatus = await nodes[19].RequestNeighborUpdate((status) => LogMessage($"RequestNeighborUpdate: {status} "));
 
             Console.ReadLine();
         }
@@ -136,6 +139,9 @@ namespace ZWaveDriverSample
 
             var multiChannel = node.GetCommandClass<MultiChannel>();
             multiChannel.Changed += (_, e) => LogMessage($"multichannel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
+
+            var switchMultiLevel = node.GetCommandClass<SwitchMultiLevel>();
+            switchMultiLevel.Changed += (_, e) => LogMessage($"switchMultiLevel report of Node {e.Report.Node:D3} changed to [{e.Report}]");
         }
 
         private static async Task InitializeWallPlug(Node node)
@@ -335,6 +341,51 @@ namespace ZWaveDriverSample
             await switchBinary.Set(true);
             await Task.Delay(1000);
             await switchBinary.Set(false);
+
+            Console.ReadLine();
+        }
+
+        private static async Task InitializeShutter(Node node)
+        {
+            var supportedCommandClasses = await node.GetSupportedCommandClasses();
+            LogMessage($"Supported commandclasses:\n{string.Join("\n", supportedCommandClasses.Cast<object>())}");
+
+            var manufacturerSpecific = node.GetCommandClass<ManufacturerSpecific>();
+            var manufacturerSpecificReport = await manufacturerSpecific.Get();
+            LogMessage($"Manufacturer specific report of Node {manufacturerSpecificReport.Node:D3} is [{manufacturerSpecificReport}]");
+
+            var association = node.GetCommandClass<Association>();
+            await association.Add(1, 1);
+            await association.Add(2, 1);
+            await association.Add(3, 1);
+            await association.Add(4, 1);
+            await association.Add(5, 1);
+            await association.Add(6, 1);
+            await association.Add(7, 1);
+            await association.Add(8, 1);
+            await association.Add(9, 1);
+
+            var multiChannelAssociation = node.GetCommandClass<MultiChannelAssociation>();
+            var multiLevel = node.GetCommandClass<SensorMultiLevel>();
+            var temperature = await multiLevel.Get(SensorType.Temperature);
+            LogMessage($"Temperature: {temperature}");
+
+            var meter = node.GetCommandClass<Meter>();
+            var electric = await meter.Get();
+            LogMessage($"Electric: {electric}");
+
+            var multiChannel = node.GetCommandClass<MultiChannel>();
+            var switchUp = multiChannel.GetEndPointCommandClass<SwitchBinary>(1);
+            var switchDown = multiChannel.GetEndPointCommandClass<SwitchBinary>(2);
+
+            var switchMultiLevel = node.GetCommandClass<SwitchMultiLevel>();
+            await switchMultiLevel.Set(50);
+
+            await switchUp.Set(false);
+            await switchDown.Set(false);
+            await switchUp.Set(true);
+            await switchDown.Set(false);
+
 
             Console.ReadLine();
         }
