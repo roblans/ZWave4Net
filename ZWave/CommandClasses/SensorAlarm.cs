@@ -28,6 +28,12 @@ namespace ZWave.CommandClasses
             return new SensorAlarmReport(Node, response);
         }
 
+        public async Task<SensorAlarmSupportedReport> GetSupported()
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport);
+            return new SensorAlarmSupportedReport(Node, response);
+        }
+
         protected internal override void HandleEvent(Command command)
         {
             base.HandleEvent(command);
