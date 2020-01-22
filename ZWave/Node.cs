@@ -170,6 +170,31 @@ namespace ZWave
             return results.ToArray();
         }
 
+        public Task<bool> IsNodeFailed()
+        {
+            return IsNodeFailed(CancellationToken.None);
+        }
+
+        public async Task<bool> IsNodeFailed(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Function.IsFailedNode, cancellationToken, NodeID);
+            return response.Length > 0 && response[0] > 0;
+        }
+
+        public Task RemoveFailedNode()
+        {
+            return RemoveFailedNode(CancellationToken.None);
+        }
+
+        public async Task RemoveFailedNode(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Function.RemoveFailedNodeId, cancellationToken, NodeID);
+            if (response.Length == 0 || response[0] != 0)
+            {
+                throw new InvalidOperationException("Remove failed node operation failed. Make sure that the node is in failed state first.");
+            }
+        }
+
         public override string ToString()
         {
             return $"{NodeID:D3}";

@@ -122,6 +122,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\WallPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fortrezz\BinarySwitch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Measure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Qubino\FlushShutter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\SetpointEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\MeasureEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\PhilioTech\DoorSensor.cs" />
