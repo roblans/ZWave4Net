@@ -135,6 +135,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)EnumConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ErrorEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenericType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HealNetworkStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ControllerRestService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\IControllerRestService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NeighborUpdateStatus.cs" />
