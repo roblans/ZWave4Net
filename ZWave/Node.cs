@@ -291,12 +291,7 @@ namespace ZWave
             var response = await Channel.Send(Function.DeleteReturnRoute, new byte[] { NodeID, functionID }, payload =>
             {
                 // check if response matches request 
-                if (payload[0] == functionID)
-                {
-                    return true;
-                }
-
-                return false;
+                return payload[0] == functionID;
             }, cancellationToken);
         }
 
@@ -307,12 +302,7 @@ namespace ZWave
             var response = await Channel.Send(Function.AssignReturnRoute, new byte[] { NodeID, associatedNodeId, functionID }, payload =>
             {
                 // check if response matches request 
-                if (payload[0] == functionID)
-                {
-                    return true;
-                }
-
-                return false;
+                return payload[0] == functionID;
             }, cancellationToken);
         }
     }
