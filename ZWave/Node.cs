@@ -76,12 +76,8 @@ namespace ZWave
             return _commandClasses.OfType<T>().FirstOrDefault();
         }
 
-        public Task<VersionCommandClassReport[]> GetSupportedCommandClasses()
-        {
-            return GetSupportedCommandClasses(CancellationToken.None);
-        }
 
-        public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses(CancellationToken cancellationToken)
+        public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses(CancellationToken cancellationToken = default)
         {
             // is this node the controller?
             if (await Controller.GetNodeID() == NodeID)
@@ -116,44 +112,50 @@ namespace ZWave
             return NodeProtocolInfo.Parse(response);
         }
 
-        public Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress = null)
+        public async Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress = null, CancellationToken cancellationToken = default)
         {
-            return RequestNeighborUpdate(progress, CancellationToken.None);
-        }
-
-        public async Task<NeighborUpdateStatus> RequestNeighborUpdate(Action<NeighborUpdateStatus> progress, CancellationToken cancellationToken)
-        {
-            // get next functionID (1..255) 
-            var functionID = GetNextFunctionID();
-
-            // send request, pass current node and functionID
-            var response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID, functionID }, (payload) =>
+            // send request, pass current node and functionID. In some cases, if the controller is busy, he won't send the START status.
+            // In this case, we will wait some time and retry.
+            bool operationStarted = false;
+            byte[] response = null;
+            for (int i = 0; i < 8 && !operationStarted; i++)
             {
-                // check if response matches request 
-                if (payload[0] == functionID)
+                // get next functionID (1..255) 
+                var functionID = GetNextFunctionID();
+                response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID, functionID }, (payload) =>
                 {
-                    // yes, so parse status
-                    var status =(NeighborUpdateStatus)payload[1];
+                    // check if response matches request 
+                    if (payload[0] == functionID)
+                    {
+                        // yes, so parse status
+                        var status = (NeighborUpdateStatus)payload[1];
+                        if (!operationStarted && status != NeighborUpdateStatus.Started)
+                        {
+                            return true;
+                        }
 
-                    // if callback delegate provided then invoke with progress 
-                    progress?.Invoke(status);
+                        operationStarted = true;
 
-                    // return true when final state reached (we're done)
-                    return status == NeighborUpdateStatus.Done || status == NeighborUpdateStatus.Failed;
+                        // if callback delegate provided then invoke with progress 
+                        progress?.Invoke(status);
+
+                        // return true when final state reached (we're done)
+                        return status == NeighborUpdateStatus.Done || status == NeighborUpdateStatus.Failed;
+                    }
+                    return false;
+                }, cancellationToken);
+
+                if (!operationStarted)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1));
                 }
-                return false;
-            }, cancellationToken);
+            }
 
             // return the status of the final response
             return (NeighborUpdateStatus)response[1];
         }
 
-        public Task<Node[]> GetNeighbours()
-        {
-            return GetNeighbours(CancellationToken.None);
-        }
-
-        public async Task<Node[]> GetNeighbours(CancellationToken cancellationToken)
+        public async Task<Node[]> GetNeighbours(CancellationToken cancellationToken = default)
         {
             var nodes = await Controller.GetNodes();
             var results = new List<Node>();
@@ -170,29 +172,61 @@ namespace ZWave
             return results.ToArray();
         }
 
-        public Task<bool> IsNodeFailed()
-        {
-            return IsNodeFailed(CancellationToken.None);
-        }
-
-        public async Task<bool> IsNodeFailed(CancellationToken cancellationToken)
+        public async Task<bool> IsNodeFailed(CancellationToken cancellationToken = default)
         {
             var response = await Channel.Send(Function.IsFailedNode, cancellationToken, NodeID);
             return response.Length > 0 && response[0] > 0;
         }
 
-        public Task RemoveFailedNode()
-        {
-            return RemoveFailedNode(CancellationToken.None);
-        }
-
-        public async Task RemoveFailedNode(CancellationToken cancellationToken)
+        public async Task RemoveFailedNode(CancellationToken cancellationToken = default)
         {
             var response = await Channel.Send(Function.RemoveFailedNodeId, cancellationToken, NodeID);
             if (response.Length == 0 || response[0] != 0)
             {
                 throw new InvalidOperationException("Remove failed node operation failed. Make sure that the node is in failed state first.");
             }
+        }
+
+        /// <summary>
+        /// Attempt to heal the node network.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The operation status.</returns>
+        public async Task<HealNetworkStatus> HealNodeNetwork(CancellationToken cancellationToken = default)
+        {
+            const int maximumNumberOfReturnRoute = 5;
+            NeighborUpdateStatus neighborUpdateStatus = await RequestNeighborUpdate(cancellationToken: cancellationToken);
+            if (neighborUpdateStatus != NeighborUpdateStatus.Done)
+            {
+                return HealNetworkStatus.Failed;
+            }
+
+            Association association = GetCommandClass<Association>();
+            AssociationGroupsReport associationGroupsReport = await association.GetGroups(cancellationToken);
+            List<byte> asociatedNodesIds = new List<byte>(maximumNumberOfReturnRoute);
+            for (byte i = 1; i <= associationGroupsReport.GroupsSupported && asociatedNodesIds.Count < maximumNumberOfReturnRoute; i++)
+            {
+                AssociationReport associationReport = await association.Get(i, cancellationToken);
+                foreach(byte nodeId in associationReport.Nodes)
+                {
+                    if (!asociatedNodesIds.Contains(nodeId))
+                    {
+                        asociatedNodesIds.Add(nodeId);
+                        if (asociatedNodesIds.Count == maximumNumberOfReturnRoute)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            await DeleteAllReturnRoute(cancellationToken);
+            foreach (byte associatedNodeId in asociatedNodesIds)
+            {
+                await AssignReturnRoute(associatedNodeId, cancellationToken);
+            }
+
+            return HealNetworkStatus.Succeeded;
         }
 
         public override string ToString()
@@ -248,6 +282,28 @@ namespace ZWave
         protected virtual void OnUnknownCommandReceived(NodeEventArgs args)
         {
             UnknownCommandReceived?.Invoke(this, args);
+        }
+
+        private async Task DeleteAllReturnRoute(CancellationToken cancellationToken)
+        {
+            var functionID = GetNextFunctionID();
+
+            var response = await Channel.Send(Function.DeleteReturnRoute, new byte[] { NodeID, functionID }, payload =>
+            {
+                // check if response matches request 
+                return payload[0] == functionID;
+            }, cancellationToken);
+        }
+
+        private async Task AssignReturnRoute(byte associatedNodeId, CancellationToken cancellationToken)
+        {
+            var functionID = GetNextFunctionID();
+
+            var response = await Channel.Send(Function.AssignReturnRoute, new byte[] { NodeID, associatedNodeId, functionID }, payload =>
+            {
+                // check if response matches request 
+                return payload[0] == functionID;
+            }, cancellationToken);
         }
     }
 }
