@@ -13,6 +13,7 @@ namespace ZWave.Channel
 {
     public class ZWaveChannel
     {
+        private static byte _functionID = 0;
         private readonly SemaphoreSlim _semaphore;
         private Task _portReadTask;
         private Task _processEventsTask;
@@ -27,6 +28,7 @@ namespace ZWave.Channel
         public TimeSpan ResponseTimeout = TimeSpan.FromSeconds(5);
         public event EventHandler<NodeEventArgs> NodeEventReceived;
         public event EventHandler<NodeUpdateEventArgs> NodeUpdateReceived;
+        internal event EventHandler<ControllerFunctionMessage> NodesNetworkChangeOccurred;
         public event EventHandler<ErrorEventArgs> Error;
         public event EventHandler Closed;
 
@@ -130,6 +132,12 @@ namespace ZWave.Channel
                     _responseQueue.Add(message);
                     // send ACK to controller
                     _transmitQueue.Add(Message.ACK);
+
+                    if ((message.Function == Function.AddNodeToNetwork || message.Function == Function.RemoveNodeFromNetwork)
+                        && message is ControllerFunctionMessage controllerFunctionMessage)
+                    {
+                        NodesNetworkChangeOccurred?.Invoke(this, controllerFunctionMessage);
+                    }
                 }
                 catch (ChecksumException ex)
                 {
@@ -367,12 +375,7 @@ namespace ZWave.Channel
             throw new TaskCanceledException();
         }
 
-        private Task<byte[]> Send(Function function, byte[] payload, Func<ControllerFunctionMessage, bool> predicate)
-        {
-            return Send(function, payload, predicate, CancellationToken.None);
-        }
-
-        private Task<byte[]> Send(Function function, byte[] payload, Func<ControllerFunctionMessage, bool> predicate, CancellationToken cancellationToken)
+        private Task<byte[]> Send(Function function, byte[] payload, Func<ControllerFunctionMessage, bool> predicate, CancellationToken cancellationToken = default)
         {
             return Exchange(async () =>
             {
@@ -398,25 +401,32 @@ namespace ZWave.Channel
             }, cancellationToken);
         }
 
-        public Task<byte[]> Send(Function function, byte[] payload, Func<byte[], bool> predicate)
+        public Task<byte[]> SendWithFunctionId(Function function, byte[] payload, Func<byte[], bool> predicate = null, CancellationToken cancellationToken = default)
         {
-            return Send(function, payload, predicate, CancellationToken.None);
-        }
-
-        public Task<byte[]> Send(Function function, byte[] payload, Func<byte[], bool> predicate, CancellationToken cancellationToken)
-        {
-            return Send(function, payload, (message) =>
+            byte functionId = GetNextFunctionID();
+            return Send(function, payload.Concat(new byte[] { functionId }).ToArray(), (message) =>
             {
-                return (message is ControllerFunctionEvent) && predicate(((ControllerFunctionEvent)message).Payload);
+                if (!(message is ControllerFunctionEvent))
+                {
+                    return false;
+                }
+
+                byte[] responsePayload = message.Payload;
+                if (!(message is ControllerFunctionEvent) || responsePayload[0] != functionId)
+                {
+                    return false;
+                }
+
+                if (predicate != null)
+                {
+                    return predicate(responsePayload.Skip(1).ToArray());
+                }
+
+                return true;
             }, cancellationToken);
         }
 
-        public Task Send(byte nodeID, Command command)
-        {
-            return Send(nodeID, command, CancellationToken.None);
-        }
-
-        public Task Send(byte nodeID, Command command, CancellationToken cancellationToken)
+        public Task Send(byte nodeID, Command command, CancellationToken cancellationToken = default)
         {
             if (nodeID == 0)
                 throw new ArgumentOutOfRangeException(nameof(nodeID), nodeID, "nodeID can not be 0");
@@ -437,22 +447,12 @@ namespace ZWave.Channel
             }, $"NodeID:{nodeID:D3}, Command:{command}", cancellationToken);
         }
 
-        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID)
-        {
-            return Send(nodeID, command, responseCommandID, CancellationToken.None);
-        }
-
-        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID, CancellationToken cancellationToken)
+        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID, CancellationToken cancellationToken = default)
         {
             return Send(nodeID, command, responseCommandID, null, cancellationToken);
         }
 
-        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID, Func<byte[], bool> payloadValidation)
-        {
-            return Send(nodeID, command, responseCommandID, payloadValidation, CancellationToken.None);
-        }
-
-        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID, Func<byte[], bool> payloadValidation, CancellationToken cancellationToken)
+        public Task<Byte[]> Send(byte nodeID, Command command, byte responseCommandID, Func<byte[], bool> payloadValidation, CancellationToken cancellationToken = default)
         {
             if (nodeID == 0)
                 throw new ArgumentOutOfRangeException(nameof(nodeID), nodeID, "nodeID can not be 0");
@@ -515,6 +515,11 @@ namespace ZWave.Channel
                     NodeEventReceived -= onNodeEventReceived;
                 }
             }, $"NodeID:{nodeID:D3}, Command:[{command}], Reponse:{responseCommandID}", cancellationToken);
+        }
+
+        private static byte GetNextFunctionID()
+        {
+            lock (typeof(ZWaveChannel)) { return _functionID = (byte)((_functionID % 255) + 1); }
         }
     }
 }

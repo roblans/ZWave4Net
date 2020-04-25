@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +11,15 @@ namespace ZWave
         internal void Add(Node node)
         {
             _nodes.Add(node);
+        }
+
+        internal void RemoveById(byte nodeId)
+        {
+            Node nodeToRemove = this[nodeId];
+            if (nodeToRemove != null)
+            {
+                _nodes.Remove(nodeToRemove);
+            }
         }
 
         public Node this[byte nodeID]
