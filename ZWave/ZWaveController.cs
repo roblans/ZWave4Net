@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
+using ZWave.Channel.Protocol;
 
 namespace ZWave
 {
     public class ZWaveController
     {
-        private Task<NodeCollection> _getNodes;
+        private NodeCollection _nodes = new NodeCollection();
         private string _version;
         private uint? _homeID;
         private byte? _nodeID;
         public readonly ZWaveChannel Channel;
         public event EventHandler<ErrorEventArgs> Error;
         public event EventHandler ChannelClosed;
+        public event EventHandler<NodesNetworkChangeEventArgs> NodesNetworkChanged;
 
         private ZWaveController(ZWaveChannel channel)
         {
@@ -57,9 +58,54 @@ namespace ZWave
         {
             Channel.NodeEventReceived += Channel_NodeEventReceived;
             Channel.NodeUpdateReceived += Channel_NodeUpdateReceived;
+            Channel.NodesNetworkChangeOccurred += Channel_NodesNetworkChangeOccurred;
             Channel.Error += Channel_Error;
             Channel.Closed += Channel_Closed;
             Channel.Open();
+        }
+
+        private enum AddRemoveNodeStatus
+        {
+            NodeStatusLearnReady = 1,
+            NodeStatusNodeFound = 2,
+            NodeStatusAddingSlave = 3,
+            NodeStatusAddingController = 4,
+            AddNodeSatusProtocolDone = 5,
+            NodeSatusDone = 6,
+            NodeSatusFailed = 7
+        }
+
+        private void Channel_NodesNetworkChangeOccurred(object sender, ControllerFunctionMessage e)
+        {
+            AddRemoveNodeStatus operationStatus = (AddRemoveNodeStatus)e.Payload[1];
+            byte nodeId = e.Payload[2];
+            if (operationStatus == AddRemoveNodeStatus.NodeStatusAddingSlave && nodeId > 0)
+            {
+                bool isAddNode = e.Function == Function.AddNodeToNetwork;
+                if (isAddNode)
+                {
+                    if (_nodes[nodeId] != null)
+                    {
+                        // This is attempt to add the same node twice.
+                        return;
+                    }
+
+                    _nodes.Add(new Node(nodeId, this));
+                }
+                else
+                {
+                    _nodes.RemoveById(nodeId);
+                }
+
+                byte dataLength = e.Payload[3];
+                if (dataLength <= 3)
+                {
+                    throw new FormatException("Expected to have node information on node status adding slave response.");
+                }
+
+                CommandClass[] commandClasses = e.Payload.Skip(7).Select(b => (CommandClass)b).ToArray();
+                NodesNetworkChanged?.Invoke(this, new NodesNetworkChangeEventArgs(isAddNode, nodeId, commandClasses));
+            }
         }
 
         private void Channel_Error(object sender, ErrorEventArgs e)
@@ -108,18 +154,14 @@ namespace ZWave
 
         public void Close()
         {
+            Channel.NodesNetworkChangeOccurred -= Channel_NodesNetworkChangeOccurred;
             Channel.Error -= Channel_Error;
             Channel.NodeEventReceived -= Channel_NodeEventReceived;
             Channel.NodeUpdateReceived -= Channel_NodeUpdateReceived;
             Channel.Close();
         }
 
-        public Task<string> GetVersion()
-        {
-            return GetVersion(CancellationToken.None);
-        }
-
-        public async Task<string> GetVersion(CancellationToken cancellationToken)
+        public async Task<string> GetVersion(CancellationToken cancellationToken = default)
         {
             if (_version == null)
             {
@@ -130,12 +172,7 @@ namespace ZWave
             return _version;
         }
 
-        public Task<uint> GetHomeID()
-        {
-            return GetHomeID(CancellationToken.None);
-        }
-
-        public async Task<uint> GetHomeID(CancellationToken cancellationToken)
+        public async Task<uint> GetHomeID(CancellationToken cancellationToken = default)
         {
             if (_homeID == null)
             {
@@ -145,12 +182,7 @@ namespace ZWave
             return _homeID.Value;
         }
 
-        public Task<byte> GetNodeID()
-        {
-            return GetNodeID(CancellationToken.None);
-        }
-
-        public async Task<byte> GetNodeID(CancellationToken cancellationToken)
+        public async Task<byte> GetNodeID(CancellationToken cancellationToken = default)
         {
             if (_nodeID == null)
             {
@@ -160,40 +192,91 @@ namespace ZWave
             return _nodeID.Value;
         }
 
-        public Task<NodeCollection> DiscoverNodes()
+        public async Task<NodeCollection> DiscoverNodes(CancellationToken cancellationToken = default)
         {
-            return DiscoverNodes(CancellationToken.None);
-        }
+            var response = await Channel.Send(Function.DiscoveryNodes, cancellationToken);
+            var values = response.Skip(3).Take(29).ToArray();
 
-        public Task<NodeCollection> DiscoverNodes(CancellationToken cancellationToken)
-        {
-            return _getNodes = Task.Run(async () =>
+            var nodes = new NodeCollection();
+            var bits = new BitArray(values);
+            for (byte i = 0; i < bits.Length; i++)
             {
-                var response = await Channel.Send(Function.DiscoveryNodes, cancellationToken);
-                var values = response.Skip(3).Take(29).ToArray();
-
-                var nodes = new NodeCollection();
-                var bits = new BitArray(values);
-                for (byte i = 0; i < bits.Length; i++)
+                if (bits[i])
                 {
-                    if (bits[i])
-                    {
-                        var node = new Node((byte)(i + 1), this);
-                        nodes.Add(node);
-                    }
+                    var node = new Node((byte)(i + 1), this);
+                    nodes.Add(node);
                 }
-                return nodes;
-            });
+            }
+
+            _nodes = nodes;
+            return _nodes;
         }
 
-        public Task<NodeCollection> GetNodes()
+        public async Task<NodeCollection> GetNodes(CancellationToken cancellationToken = default)
         {
-            return GetNodes(CancellationToken.None);
+            return _nodes ?? await DiscoverNodes(cancellationToken);
         }
 
-        public async Task<NodeCollection> GetNodes(CancellationToken cancellationToken)
+        [Flags]
+        private enum AddRemoveNodeMode : byte
         {
-            return await (_getNodes ?? (_getNodes = DiscoverNodes(cancellationToken)));
+            NodeAny = 0x01,
+            NodeStop = 0x05,
+            NodeOptionNetworkWide = 0x40,
+            NodeOptionNormalPower = 0x80
+        }
+
+        /// <summary>
+        /// Start adding nodes to the network.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>True if operation succeeded. False othersise.</returns>
+        public async Task<bool> StartAddingNodesToNetwork(CancellationToken cancellationToken = default)
+        {
+            byte[] res = await Channel.SendWithFunctionId(Function.AddNodeToNetwork, new byte[] { (byte)(AddRemoveNodeMode.NodeAny | AddRemoveNodeMode.NodeOptionNetworkWide | AddRemoveNodeMode.NodeOptionNormalPower) }, null, cancellationToken);
+            return (AddRemoveNodeStatus)res[1] == AddRemoveNodeStatus.NodeStatusLearnReady;
+        }
+
+        /// <summary>
+        /// Stop adding nodes to the network.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>True if operation succeeded. False othersise.</returns>
+        public async Task<bool> StopAddingNodesToNetwork(CancellationToken cancellationToken = default)
+        {
+            byte[] res = await Channel.SendWithFunctionId(Function.AddNodeToNetwork, new byte[] { (byte)AddRemoveNodeMode.NodeStop }, null, cancellationToken);
+            return (AddRemoveNodeStatus)res[1] == AddRemoveNodeStatus.NodeSatusDone;
+        }
+
+        /// <summary>
+        /// Start removing node from the network.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>True if operation succeeded. False othersise.</returns>
+        public async Task<bool> StartRemoveNodeFromNetwork(CancellationToken cancellationToken = default)
+        {
+            byte[] res = await Channel.SendWithFunctionId(Function.RemoveNodeFromNetwork, new byte[] { (byte)(AddRemoveNodeMode.NodeAny | AddRemoveNodeMode.NodeOptionNetworkWide) }, null, cancellationToken);
+            return (AddRemoveNodeStatus)res[1] == AddRemoveNodeStatus.NodeStatusLearnReady;
+        }
+
+        /// <summary>
+        /// Stop removing node from the network.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>True if operation succeeded. False othersise.</returns>
+        public async Task<bool> StopRemoveNodeFromNetwork(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                byte[] res = await Channel.SendWithFunctionId(Function.RemoveNodeFromNetwork, new byte[] { (byte)AddRemoveNodeMode.NodeStop }, null, cancellationToken);
+                return (AddRemoveNodeStatus)res[1] == AddRemoveNodeStatus.NodeSatusDone;
+            }
+            catch (TimeoutException)
+            {
+                // In case the controller isn't in exclusion state, it throws timeout.
+                // If we reach here we assume this is the case.
+                return true;
+            }
         }
     }
 }

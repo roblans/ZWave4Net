@@ -11,7 +11,6 @@ namespace ZWave
 {
     public class Node
     {
-        private static byte functionID = 0;
         private List<CommandClassBase> _commandClasses = new List<CommandClassBase>();
         private IDictionary<CommandClass, VersionCommandClassReport> _commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
 
@@ -59,11 +58,6 @@ namespace ZWave
             _commandClasses.Add(new CentralScene(this));
             _commandClasses.Add(new SceneActivation(this));
             _commandClasses.Add(new MultiChannelAssociation(this));
-        }
-
-        private static byte GetNextFunctionID()
-        {
-            lock (typeof(Node)) { return functionID = (byte)((functionID % 255) + 1); }
         }
 
         protected ZWaveChannel Channel
@@ -121,28 +115,22 @@ namespace ZWave
             for (int i = 0; i < 8 && !operationStarted; i++)
             {
                 // get next functionID (1..255) 
-                var functionID = GetNextFunctionID();
-                response = await Channel.Send(Function.RequestNodeNeighborUpdate, new byte[] { NodeID, functionID }, (payload) =>
+                response = await Channel.SendWithFunctionId(Function.RequestNodeNeighborUpdate, new byte[] { NodeID }, (payload) =>
                 {
-                    // check if response matches request 
-                    if (payload[0] == functionID)
+                    // Parse status
+                    var status = (NeighborUpdateStatus)payload[0];
+                    if (!operationStarted && status != NeighborUpdateStatus.Started)
                     {
-                        // yes, so parse status
-                        var status = (NeighborUpdateStatus)payload[1];
-                        if (!operationStarted && status != NeighborUpdateStatus.Started)
-                        {
-                            return true;
-                        }
-
-                        operationStarted = true;
-
-                        // if callback delegate provided then invoke with progress 
-                        progress?.Invoke(status);
-
-                        // return true when final state reached (we're done)
-                        return status == NeighborUpdateStatus.Done || status == NeighborUpdateStatus.Failed;
+                        return true;
                     }
-                    return false;
+
+                    operationStarted = true;
+
+                    // if callback delegate provided then invoke with progress 
+                    progress?.Invoke(status);
+
+                    // return true when final state reached (we're done)
+                    return status == NeighborUpdateStatus.Done || status == NeighborUpdateStatus.Failed;
                 }, cancellationToken);
 
                 if (!operationStarted)
@@ -286,24 +274,12 @@ namespace ZWave
 
         private async Task DeleteAllReturnRoute(CancellationToken cancellationToken)
         {
-            var functionID = GetNextFunctionID();
-
-            var response = await Channel.Send(Function.DeleteReturnRoute, new byte[] { NodeID, functionID }, payload =>
-            {
-                // check if response matches request 
-                return payload[0] == functionID;
-            }, cancellationToken);
+            await Channel.SendWithFunctionId(Function.DeleteReturnRoute, new byte[] { NodeID }, null, cancellationToken);
         }
 
         private async Task AssignReturnRoute(byte associatedNodeId, CancellationToken cancellationToken)
         {
-            var functionID = GetNextFunctionID();
-
-            var response = await Channel.Send(Function.AssignReturnRoute, new byte[] { NodeID, associatedNodeId, functionID }, payload =>
-            {
-                // check if response matches request 
-                return payload[0] == functionID;
-            }, cancellationToken);
+            await Channel.SendWithFunctionId(Function.AssignReturnRoute, new byte[] { NodeID, associatedNodeId }, null, cancellationToken);
         }
     }
 }

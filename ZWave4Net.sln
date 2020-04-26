@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ZWave", "ZWave\ZWave.shproj", "{91E0AE62-9C57-4210-B3DA-3EBD2E699C92}"
 EndProject
@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWaveControllerSample (core
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ZWave\ZWave.projitems*{6eb2d478-c016-4e31-b2f7-3c68d15f5ddc}*SharedItemsImports = 5
+		ZWave\ZWave.projitems*{78066960-cbbc-4be1-89f9-dfccf159b205}*SharedItemsImports = 5
 		ZWave\ZWave.projitems*{91e0ae62-9c57-4210-b3da-3ebd2e699c92}*SharedItemsImports = 13
 		ZWave\ZWave.projitems*{96b37a40-4227-4063-8008-06bb65862806}*SharedItemsImports = 4
 		ZWave\ZWave.projitems*{a3a5cf86-813c-4167-96dd-d9a56743f470}*SharedItemsImports = 4

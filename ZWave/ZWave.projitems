@@ -143,6 +143,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeProtocolInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NodesNetworkChangeEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PayloadConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ZWaveController.cs" />
