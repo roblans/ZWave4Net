@@ -11,7 +11,7 @@ namespace ZWave
 {
     public class ZWaveController
     {
-        private NodeCollection _nodes;
+        private Task<NodeCollection> _getNodes;
         private string _version;
         private uint? _homeID;
         private byte? _nodeID;
@@ -193,28 +193,30 @@ namespace ZWave
             return _nodeID.Value;
         }
 
-        public async Task<NodeCollection> DiscoverNodes(CancellationToken cancellationToken = default)
+        public Task<NodeCollection> DiscoverNodes(CancellationToken cancellationToken = default)
         {
-            var response = await Channel.Send(Function.DiscoveryNodes, cancellationToken);
-            var values = response.Skip(3).Take(29).ToArray();
-
-            var nodes = new NodeCollection();
-            var bits = new BitArray(values);
-            for (byte i = 0; i < bits.Length; i++)
+            return _getNodes = Task.Run(async () =>
             {
-                if (bits[i])
-                {
-                    var node = new Node((byte)(i + 1), this);
-                    nodes.Add(node);
-                }
-            }
+                var response = await Channel.Send(Function.DiscoveryNodes, cancellationToken);
+                var values = response.Skip(3).Take(29).ToArray();
 
-            return nodes;
+                var nodes = new NodeCollection();
+                var bits = new BitArray(values);
+                for (byte i = 0; i < bits.Length; i++)
+                {
+                    if (bits[i])
+                    {
+                        var node = new Node((byte)(i + 1), this);
+                        nodes.Add(node);
+                    }
+                }
+                return nodes;
+            });
         }
 
         public async Task<NodeCollection> GetNodes(CancellationToken cancellationToken = default)
         {
-            return _nodes ?? await DiscoverNodes(cancellationToken);
+            return await (_getNodes ?? (_getNodes = DiscoverNodes(cancellationToken)));
         }
 
         [Flags]
