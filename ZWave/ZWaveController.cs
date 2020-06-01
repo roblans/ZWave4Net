@@ -11,7 +11,7 @@ namespace ZWave
 {
     public class ZWaveController
     {
-        private NodeCollection _nodes = new NodeCollection();
+        private NodeCollection _nodes;
         private string _version;
         private uint? _homeID;
         private byte? _nodeID;
@@ -75,8 +75,9 @@ namespace ZWave
             NodeSatusFailed = 7
         }
 
-        private void Channel_NodesNetworkChangeOccurred(object sender, ControllerFunctionMessage e)
+        private async void Channel_NodesNetworkChangeOccurred(object sender, ControllerFunctionMessage e)
         {
+            var nodes = await GetNodes();
             AddRemoveNodeStatus operationStatus = (AddRemoveNodeStatus)e.Payload[1];
             byte nodeId = e.Payload[2];
             if (operationStatus == AddRemoveNodeStatus.NodeStatusAddingSlave && nodeId > 0)
@@ -84,17 +85,17 @@ namespace ZWave
                 bool isAddNode = e.Function == Function.AddNodeToNetwork;
                 if (isAddNode)
                 {
-                    if (_nodes[nodeId] != null)
+                    if (nodes[nodeId] != null)
                     {
                         // This is attempt to add the same node twice.
                         return;
                     }
 
-                    _nodes.Add(new Node(nodeId, this));
+                    nodes.Add(new Node(nodeId, this));
                 }
                 else
                 {
-                    _nodes.RemoveById(nodeId);
+                    nodes.RemoveById(nodeId);
                 }
 
                 byte dataLength = e.Payload[3];
@@ -208,8 +209,7 @@ namespace ZWave
                 }
             }
 
-            _nodes = nodes;
-            return _nodes;
+            return nodes;
         }
 
         public async Task<NodeCollection> GetNodes(CancellationToken cancellationToken = default)
