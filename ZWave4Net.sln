@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{80711F84
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWaveControllerSample", "Samples\uap\ZWaveControllerSample\ZWaveControllerSample.csproj", "{FDB826C2-7368-4656-A861-2B86DB1C0E4D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWave.netstandard2.0", "ZWave.NetStandard2.0\ZWave.netstandard2.0.csproj", "{6EB2D478-C016-4E31-B2F7-3C68D15F5DDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWave.NetStandard2.0", "ZWave.NetStandard2.0\ZWave.NetStandard2.0.csproj", "{6EB2D478-C016-4E31-B2F7-3C68D15F5DDC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWave.core2.0", "ZWave.core2.0\ZWave.core2.0.csproj", "{78066960-CBBC-4BE1-89F9-DFCCF159B205}"
 EndProject
