@@ -9,7 +9,7 @@ Supported Targets:
 - Universal Windows: uap10.0
 - Portable Class Library: net45 + win8
 - .NET Standard: 2.0 (uses SerialPortStream package for serial port)
-- .NET Core: 2.0 (uses SerialPortStream package for serial port)
+- .NET Core: 2.0 (uses SerialPortStream package for serial port), 3.0 (no need for SerialPortStream)
 
 Runs on Raspberry PI IoT Windows 10 (see note below)
 

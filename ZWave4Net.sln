@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{80711F84
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZWaveControllerSample", "Samples\uap\ZWaveControllerSample\ZWaveControllerSample.csproj", "{FDB826C2-7368-4656-A861-2B86DB1C0E4D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWave.netstandard2.0", "ZWave.NetStandard2.0\ZWave.netstandard2.0.csproj", "{6EB2D478-C016-4E31-B2F7-3C68D15F5DDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWave.NetStandard2.0", "ZWave.NetStandard2.0\ZWave.NetStandard2.0.csproj", "{6EB2D478-C016-4E31-B2F7-3C68D15F5DDC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWave.core2.0", "ZWave.core2.0\ZWave.core2.0.csproj", "{78066960-CBBC-4BE1-89F9-DFCCF159B205}"
 EndProject
@@ -42,8 +42,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{0E5FFE0D-8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWaveControllerSample (core)", "Samples\core\ZWaveControllerSample (core)\ZWaveControllerSample (core).csproj", "{D4C8B1B4-D21A-46DE-AFAB-0F756D299FD5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZWave.core3.0", "ZWave.core3.0\ZWave.core3.0.csproj", "{1513E1DF-253C-40E5-AF85-749E5DAA8855}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ZWave\ZWave.projitems*{1513e1df-253c-40e5-af85-749e5daa8855}*SharedItemsImports = 5
 		ZWave\ZWave.projitems*{6eb2d478-c016-4e31-b2f7-3c68d15f5ddc}*SharedItemsImports = 5
 		ZWave\ZWave.projitems*{78066960-cbbc-4be1-89f9-dfccf159b205}*SharedItemsImports = 5
 		ZWave\ZWave.projitems*{91e0ae62-9c57-4210-b3da-3ebd2e699c92}*SharedItemsImports = 13
@@ -270,6 +273,30 @@ Global
 		{D4C8B1B4-D21A-46DE-AFAB-0F756D299FD5}.Release|x64.Build.0 = Release|Any CPU
 		{D4C8B1B4-D21A-46DE-AFAB-0F756D299FD5}.Release|x86.ActiveCfg = Release|Any CPU
 		{D4C8B1B4-D21A-46DE-AFAB-0F756D299FD5}.Release|x86.Build.0 = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|ARM.Build.0 = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|x64.Build.0 = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Debug|x86.Build.0 = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|Any CPU.ActiveCfg = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|Any CPU.Build.0 = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|ARM.ActiveCfg = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|ARM.Build.0 = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|x64.ActiveCfg = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|x64.Build.0 = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|x86.ActiveCfg = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.NuGet|x86.Build.0 = Debug|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|ARM.Build.0 = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|x64.ActiveCfg = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|x64.Build.0 = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|x86.ActiveCfg = Release|Any CPU
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -288,6 +315,7 @@ Global
 		{78066960-CBBC-4BE1-89F9-DFCCF159B205} = {15C4E1D5-BC8A-4039-B9DC-6193CB10A752}
 		{0E5FFE0D-8527-40CB-8C69-DEB62A4D50FA} = {13646915-2614-40CE-93BE-C57691FA4D06}
 		{D4C8B1B4-D21A-46DE-AFAB-0F756D299FD5} = {0E5FFE0D-8527-40CB-8C69-DEB62A4D50FA}
+		{1513E1DF-253C-40E5-AF85-749E5DAA8855} = {15C4E1D5-BC8A-4039-B9DC-6193CB10A752}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B91231ED-3737-432A-B80D-AB2092E927F8}
