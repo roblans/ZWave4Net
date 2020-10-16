@@ -43,6 +43,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Alarm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmDetailType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeSupportedValuesReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Association.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AssociationGroupsReport.cs" />
@@ -93,6 +95,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SensorType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchBinary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\SwitchBinaryReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatSetpoint.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatSetpointReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatSetpointType.cs" />

@@ -11,6 +11,7 @@
         SensorMultiLevel = 0x31,
         Meter = 0x32,
         Color = 0x33,
+        ThermostatMode = 0x40,
         ThermostatSetpoint = 0x43,
         CentralScene = 0x5B,
         MultiChannel = 0x60,
