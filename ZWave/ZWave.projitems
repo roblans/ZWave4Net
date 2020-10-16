@@ -118,6 +118,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Device.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Eminent\PowerSwitch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\DoorSensor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\RadiatorThermostat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\SmokeSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\MotionSensor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Fibaro\BinarySensor.cs" />
