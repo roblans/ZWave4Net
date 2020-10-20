@@ -44,6 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmDetailType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Schedule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleStateReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleSupportedCommandClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleSupportedFunctionalitiesReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleReport.cs" />

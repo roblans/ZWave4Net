@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
@@ -133,6 +134,65 @@ namespace ZWave.CommandClasses
             }
 
             await Send(new Command(Class, command.Remove, scheduleIdBlock), cancellationToken);
+        }
+
+        public Task<ScheduleStateReport> GetState()
+        {
+            return GetState(CancellationToken.None);
+        }
+
+        public Task<ScheduleStateReport> GetState(CancellationToken cancellationToken)
+        {
+            return DoGetState(new Command(Class, command.StateGet), cancellationToken);
+        }
+
+        public Task<ScheduleStateReport> GetState(byte scheduleIdBlock)
+        {
+            return GetState(scheduleIdBlock, CancellationToken.None);
+        }
+
+        public Task<ScheduleStateReport> GetState(byte scheduleIdBlock, CancellationToken cancellationToken)
+        {
+            return DoGetState(new Command(Class, command.StateGet, scheduleIdBlock), cancellationToken);
+        }
+
+        public async Task<ScheduleStateReport> DoGetState(Command getStateCommand, CancellationToken cancellationToken)
+        {
+            var completion = new TaskCompletionSource<ScheduleStateReport>();
+            var responses = new List<byte[]>();
+            var node = Node;
+
+            void onEventReceived(object sender, NodeEventArgs args)
+            {
+                if (args.Command.ClassID == (byte)CommandClass.Schedule && args.Command.CommandID == (byte)command.StateReport)
+                {
+                    responses.Add(args.Command.Payload);
+                    int numberOfFollowupReports = args.Command.Payload[1] >> 1;
+                    if (numberOfFollowupReports == 0)
+                    {
+                        var report = new ScheduleStateReport(node, responses);
+                        completion.SetResult(report);
+                    }
+                }
+            }
+
+            Channel.NodeEventReceived += onEventReceived;
+            try
+            {
+                await Send(getStateCommand, cancellationToken).ConfigureAwait(false);
+
+                using (cancellationToken.Register(() =>
+                {
+                    completion.TrySetCanceled();
+                }))
+                {
+                    return await completion.Task.ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                Channel.NodeEventReceived -= onEventReceived;
+            }
         }
     }
 }

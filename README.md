@@ -30,10 +30,12 @@ Supported Z-Wave command classes:
 - MultiChannel
 - MultiChannelAssociation
 - SceneActivation
+- Schedule
 - SensorAlarm
 - SensorBinary
 - SensorMultiLevel
 - SwitchBinary
+- ThermostatMode
 - ThermostatSetpoint
 - Version
 - WakeUp
