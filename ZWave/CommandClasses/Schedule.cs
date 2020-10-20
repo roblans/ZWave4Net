@@ -73,5 +73,66 @@ namespace ZWave.CommandClasses
             var report = await Node.GetCommandClassVersionReport(Class, cancellationToken);
             return report.Version >= ScheduleIdBlockMinimalProtocolVersion;
         }
+
+        public Task<ScheduleReport> Get(byte scheduleId)
+        {
+            return Get(scheduleId, CancellationToken.None);
+        }
+
+        public async Task<ScheduleReport> Get(byte scheduleId, CancellationToken cancellationToken)
+        {
+            var response = await Send(new Command(Class, command.Get, scheduleId), command.Report, cancellationToken);
+            return new ScheduleReport(Node, response);
+        }
+
+        public Task Set(byte scheduleId, ScheduleData data)
+        {
+            return Set(scheduleId, data, CancellationToken.None);
+        }
+
+        public async Task Set(byte scheduleId, ScheduleData data, CancellationToken cancellationToken)
+        {
+            await Send(new Command(Class, command.Set, data.ToPayload(scheduleId)), cancellationToken);
+        }
+
+        public Task Set(byte scheduleId, byte scheduleIdBlock, ScheduleData data)
+        {
+            return Set(scheduleId, scheduleIdBlock, data, CancellationToken.None);
+        }
+
+        public async Task Set(byte scheduleId, byte scheduleIdBlock, ScheduleData data, CancellationToken cancellationToken)
+        {
+            if (!await IsSupportScheduleIdBlock(cancellationToken))
+            {
+                throw new VersionNotSupportedException($"Schedule ID blocks work with class type {Class} greater or equal to {ScheduleIdBlockMinimalProtocolVersion}.");
+            }
+
+            await Send(new Command(Class, command.Set, data.ToPayload(scheduleId, scheduleIdBlock)), cancellationToken);
+        }
+
+        public Task Remove(byte scheduleId)
+        {
+            return Remove(scheduleId, CancellationToken.None);
+        }
+
+        public async Task Remove(byte scheduleId, CancellationToken cancellationToken)
+        {
+            await Send(new Command(Class, command.Remove), cancellationToken);
+        }
+
+        public Task Remove(byte scheduleId, byte scheduleIdBlock)
+        {
+            return Remove(scheduleId, scheduleIdBlock, CancellationToken.None);
+        }
+
+        public async Task Remove(byte scheduleId, byte scheduleIdBlock, CancellationToken cancellationToken)
+        {
+            if (!await IsSupportScheduleIdBlock(cancellationToken))
+            {
+                throw new VersionNotSupportedException($"Schedule ID blocks work with class type {Class} greater or equal to {ScheduleIdBlockMinimalProtocolVersion}.");
+            }
+
+            await Send(new Command(Class, command.Remove, scheduleIdBlock), cancellationToken);
+        }
     }
 }
