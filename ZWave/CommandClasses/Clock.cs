@@ -33,7 +33,7 @@ namespace ZWave.CommandClasses
 
         public Task Set(DayOfWeek dayOfWeek, byte hour, byte minute)
         {
-            return Set(dayOfWeek, hour, minute);
+            return Set(dayOfWeek, hour, minute, CancellationToken.None);
         }
 
         public async Task Set(DayOfWeek dayOfWeek, byte hour, byte minute, CancellationToken cancellationToken)
