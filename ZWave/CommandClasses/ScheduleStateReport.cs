@@ -48,7 +48,7 @@ namespace ZWave.CommandClasses
                 .Where(item => item.state != ScheduleState.NotUsed)
                 .Select(item => $"#{item.index + 1}");
 
-            return $"Override: {OverrideActive}, used Schedules: [{string.Join(',', enabledStates)}]";
+            return $"Override: {OverrideActive}, used Schedules: [{string.Join(",", enabledStates)}]";
         }
     }
 }
