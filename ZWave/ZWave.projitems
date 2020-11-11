@@ -43,6 +43,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Alarm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmDetailType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Schedule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleStateReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleSupportedCommandClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleSupportedFunctionalitiesReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeSupportedValuesReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmType.cs" />
@@ -153,5 +158,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)PayloadConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Security.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ZWaveController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleOverrideType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleData.cs" />
   </ItemGroup>
 </Project>

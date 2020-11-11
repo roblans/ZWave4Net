@@ -13,6 +13,7 @@
         Color = 0x33,
         ThermostatMode = 0x40,
         ThermostatSetpoint = 0x43,
+        Schedule = 0x53,
         CentralScene = 0x5B,
         MultiChannel = 0x60,
         Configuration = 0x70,
