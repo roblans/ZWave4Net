@@ -13,12 +13,7 @@
         LeftAndRight = 0x08,
         UpAndDown = 0x09,
         Quiet = 0x0A,
-        ExternalCirculation = 0x0B,
-        EnergyCool = 0x0C,
-        Away = 0x0D,
-        Reserved = 0x0E,
-        FullPower = 0x0F,
-        ManufacturerSpecific = 0x1F
+        ExternalCirculation = 0x0B
     };
 }
 
