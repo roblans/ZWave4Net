@@ -48,7 +48,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleSupportedCommandClass.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleSupportedFunctionalitiesReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ScheduleReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanModeReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanModeSupportedValuesReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeSupportedValuesReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanModeValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\AlarmType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\Association.cs" />
