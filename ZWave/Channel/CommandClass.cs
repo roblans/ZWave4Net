@@ -12,6 +12,7 @@
         Meter = 0x32,
         Color = 0x33,
         ThermostatMode = 0x40,
+        ThermostatOperatingState = 0x42,
         ThermostatSetpoint = 0x43,
         ThermostatFanMode = 0x44,
         Schedule = 0x53,
