@@ -5,7 +5,7 @@ using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class ThermostatOperatingState : EndpointSupportedCommandClassBase
+    public class ThermostatOperatingState : CommandClassBase
     {
         public event EventHandler<ReportEventArgs<ThermostatOperatingStateReport>> Changed;
 
@@ -19,10 +19,6 @@ namespace ZWave.CommandClasses
             : base(node, CommandClass.ThermostatOperatingState)
         { }
 
-        internal ThermostatOperatingState(Node node, byte endpointId)
-            : base(node, CommandClass.ThermostatOperatingState, endpointId)
-        { }
-
         public Task<ThermostatOperatingStateReport> Get()
         {
             return Get(CancellationToken.None);
@@ -30,7 +26,7 @@ namespace ZWave.CommandClasses
 
         public async Task<ThermostatOperatingStateReport> Get(CancellationToken cancellationToken)
         {
-            var response = await Send(new Command(Class, command.Get), command.Report, cancellationToken);
+            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
             return new ThermostatOperatingStateReport(Node, response);
         }
 
