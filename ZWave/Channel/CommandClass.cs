@@ -15,6 +15,7 @@
         ThermostatOperatingState = 0x42,
         ThermostatSetpoint = 0x43,
         ThermostatFanMode = 0x44,
+        ThermostatFanState = 0x45,
         Schedule = 0x53,
         CentralScene = 0x5B,
         MultiChannel = 0x60,
