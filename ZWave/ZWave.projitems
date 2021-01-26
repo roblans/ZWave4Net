@@ -51,6 +51,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanMode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanModeReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanModeSupportedValuesReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanStateReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanStateValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatOperatingStateValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatOperatingStateReport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatOperatingState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeSupportedValuesReport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatFanModeValue.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CommandClasses\ThermostatModeValue.cs" />

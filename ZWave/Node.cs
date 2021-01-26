@@ -54,8 +54,10 @@ namespace ZWave
             _commandClasses.Add(new Color(this));
             _commandClasses.Add(new MultiChannel(this));
             _commandClasses.Add(new ThermostatMode(this));
+            _commandClasses.Add(new ThermostatOperatingState(this));
             _commandClasses.Add(new ThermostatSetpoint(this));
             _commandClasses.Add(new ThermostatFanMode(this));
+            _commandClasses.Add(new ThermostatFanState(this));
             _commandClasses.Add(new Schedule(this));
             _commandClasses.Add(new Clock(this));
             _commandClasses.Add(new CentralScene(this));
