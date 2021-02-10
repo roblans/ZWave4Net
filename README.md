@@ -5,11 +5,13 @@
 
 Supported Targets:
 
-- Managed Framework: net45
+- .NET 5.0
+- .NET 4.8
+- .NET Core 2.0
+- .NET Core 3.0
+- .NET Standard 2.0
 - Universal Windows: uap10.0
 - Portable Class Library: net45 + win8
-- .NET Standard: 2.0 (uses SerialPortStream package for serial port)
-- .NET Core: 2.0 (uses SerialPortStream package for serial port), 3.0 (no need for SerialPortStream)
 
 Runs on Raspberry PI IoT Windows 10 (see note below)
 
@@ -35,7 +37,9 @@ Supported Z-Wave command classes:
 - SensorBinary
 - SensorMultiLevel
 - SwitchBinary
+- ThermostatFanMode
 - ThermostatMode
+- ThermostatOperatingState
 - ThermostatSetpoint
 - Version
 - WakeUp
