@@ -160,6 +160,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Net\ControllerRestService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\IControllerRestService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NeighborUpdateStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Net\ZWaveRestControllerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Net\ZWaveRestServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)NodeCollection.cs" />

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SerialPortStream" Version="2.1.4" />
+    <PackageReference Include="SerialPortStream" Version="2.2.2" />
   </ItemGroup>
 
   <ItemGroup>
