@@ -105,38 +105,34 @@ namespace ZWave.Channel
                     // ignore ACK, no processing of ACK needed
                     if (message == Message.ACK)
                         continue;
+                    
+                    // first respond, send ACK
+                    _transmitQueue.Add(Message.ACK);
 
                     // is it a eventmessage from a node?
                     if (message is NodeEvent)
                     {
                         // yes, so add to eventqueue
                         _eventQueue.Add(message);
-                        // send ACK to controller
-                        _transmitQueue.Add(Message.ACK);
-                        // we're done
-                        continue;
                     }
 
                     // is it a updatemessage from a node?
-                    if (message is NodeUpdate)
+                    else if (message is NodeUpdate)
                     {
                         // yes, so add to eventqueue
                         _eventQueue.Add(message);
-                        // send ACK to controller
-                        _transmitQueue.Add(Message.ACK);
-                        // we're done
-                        continue;
                     }
 
-                    // not a event, so it's a response to a request
-                    _responseQueue.Add(message);
-                    // send ACK to controller
-                    _transmitQueue.Add(Message.ACK);
-
-                    if ((message.Function == Function.AddNodeToNetwork || message.Function == Function.RemoveNodeFromNetwork)
-                        && message is ControllerFunctionMessage controllerFunctionMessage)
+                    else 
                     {
-                        NodesNetworkChangeOccurred?.Invoke(this, controllerFunctionMessage);
+                        // not a event, so it's a response to a request
+                        _responseQueue.Add(message);
+
+                        if ((message.Function == Function.AddNodeToNetwork || message.Function == Function.RemoveNodeFromNetwork)
+                            && message is ControllerFunctionMessage controllerFunctionMessage)
+                        {
+                            NodesNetworkChangeOccurred?.Invoke(this, controllerFunctionMessage);
+                        }
                     }
                 }
                 catch (ChecksumException ex)
