@@ -46,6 +46,7 @@ Supported Z-Wave command classes:
  
 FIBARO Wall Plug sample:
 
+```cs
         public async Task TurnWallPlugOn()
         {
             // the nodeID of the wallplug
@@ -72,9 +73,11 @@ FIBARO Wall Plug sample:
             // close the controller
             controller.Close();
         }
+```
 
 FIBARO Motion Sensor sample:
 
+```cs
         public async Task SensorAlarm()
         {
             // the nodeID of the motion sensor
@@ -104,8 +107,11 @@ FIBARO Motion Sensor sample:
             // close the controller
             controller.Close();
         }
+```
 
 Note: running ZWave4Net on Raspberry PI IoT Windows 10:
 
+```cs
     // note: opening the serialport by name fails on Windows 10 IoT, use USB vendorId and productId instead
     var controller = new ZWaveController(vendorId: 0x0658, productId: 0x0200);
+```
