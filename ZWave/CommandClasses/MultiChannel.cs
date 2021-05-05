@@ -84,7 +84,7 @@ namespace ZWave.CommandClasses
             if (endPointId == 0)
                 throw new ArgumentException("Endpoint id must be grater then 0.", nameof(endPointId));
 
-            lock(_endpointCommandClasses)
+            lock (_endpointCommandClasses)
             {
                 // Search for cached instance. If exist, return it.
                 //
@@ -133,19 +133,20 @@ namespace ZWave.CommandClasses
         {
             base.HandleEvent(command);
 
-            if (command.Payload.Length < 4)
+            if (command.Payload.Length < 3)
                 throw new ReponseFormatException($"The response was not in the expected format. {GetType().Name}: Payload: {BitConverter.ToString(command.Payload)}");
 
             byte endPointId = command.Payload[0];
             CommandClass commandClass = (CommandClass)command.Payload[2];
-            lock(_endpointCommandClasses)
+            lock (_endpointCommandClasses)
             {
                 if (_endpointCommandClasses.ContainsKey(endPointId))
                 {
                     EndpointSupportedCommandClassBase endpointCommandClass = _endpointCommandClasses[endPointId].Values.FirstOrDefault(cc => cc.Class == commandClass);
                     if (endpointCommandClass != null)
                     {
-                        endpointCommandClass.HandleEndpointReport(command.Payload.Skip(4).ToArray(), command.Payload[3]);
+                        endpointCommandClass.HandleEndpointReport(command.Payload.Skip(4).ToArray(),
+                            command.Payload.Length >= 4 ? command.Payload[3] : (byte)0);
                     }
                 }
             }
