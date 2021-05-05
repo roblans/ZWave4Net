@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ZWave.Channel
 {
     public class NodeEventArgs : EventArgs
     {
+        public static new readonly NodeEventArgs Empty = new NodeEventArgs(0, new Command(CommandClass.NoOperation, 0, new byte[0]));
+
         public readonly byte NodeID;
         public readonly Command Command;
 

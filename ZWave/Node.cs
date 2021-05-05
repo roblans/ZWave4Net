@@ -25,12 +25,12 @@ namespace ZWave
         /// <summary>
         /// Will be fired when node update command received.
         /// </summary>
-        public event EventHandler<EventArgs> UpdateReceived;
+        public event EventHandler UpdateReceived;
 
         /// <summary>
         /// Will be fired when any command received.
         /// </summary>
-        public event EventHandler<EventArgs> MessageReceived;
+        public event EventHandler<NodeEventArgs> MessageReceived;
 
         public Node(byte nodeID, ZWaveController contoller)
         {
@@ -249,7 +249,9 @@ namespace ZWave
 
         internal void HandleEvent(Command command)
         {
-            MessageReceived?.Invoke(this, EventArgs.Empty);
+            var args = new NodeEventArgs(NodeID, command);
+            MessageReceived?.Invoke(this, args);
+
             var target = _commandClasses.FirstOrDefault(element => Convert.ToByte(element.Class) == command.ClassID);
             if (target != null)
             {
@@ -257,16 +259,16 @@ namespace ZWave
             }
             else
             {
-                OnUnknownCommandReceived(new NodeEventArgs(NodeID, command));
+                OnUnknownCommandReceived(args);
             }
         }
 
         internal void HandleUpdate()
         {
-            MessageReceived?.Invoke(this, EventArgs.Empty);
+            MessageReceived?.Invoke(this, NodeEventArgs.Empty);
             OnUpdateReceived(EventArgs.Empty);
         }
-        
+
         protected virtual void OnUpdateReceived(EventArgs args)
         {
             UpdateReceived?.Invoke(this, args);
