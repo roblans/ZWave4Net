@@ -39,7 +39,7 @@
         <dependency id="SerialPortStream" version="2.4.0" />
       </group>
       <group targetFramework="uap10.0">
-        <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.2" />
+        <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="5.2.4" />
       </group>
     </dependencies>
   </metadata>
