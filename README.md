@@ -5,13 +5,13 @@
 
 Supported Targets:
 
+- .NET 6.0
 - .NET 5.0
 - .NET 4.8
-- .NET Core 2.0
-- .NET Core 3.0
 - .NET Standard 2.0
-- Universal Windows: uap10.0
-- Portable Class Library: net45 + win8
+- .NET Standard 2.1
+- .NET Core 3.1
+- Universal App Platform: win10
 
 Runs on Raspberry PI IoT Windows 10 (see note below)
 
