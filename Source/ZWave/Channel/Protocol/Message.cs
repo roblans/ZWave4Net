@@ -106,9 +106,9 @@ namespace ZWave.Channel.Protocol
 
                 if (type == MessageType.Request)
                 {
-                    if (function == Channel.Function.ApplicationCommandHandler)
+                    if (function == Channel.Function.ApplicationCommandHandler || function == Channel.Function.ApplicationCommandHandlerBridge)
                     {
-                        return new NodeEvent(payload);
+                        return new NodeEvent(payload, function);
                     }
                     if (function == Channel.Function.SendData)
                     {

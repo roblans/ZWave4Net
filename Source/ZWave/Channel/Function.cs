@@ -82,6 +82,7 @@ namespace ZWave.Channel
         SetSlaveLearnMode = 0xa4,
         GetVirtualNodes = 0xa5,
         IsVirtualNode = 0xa6,
+        ApplicationCommandHandlerBridge = 0xa8,
         SetPromiscuousMode = 0xd0,
         SetConfiguration = 0xF2,
         GetConfiguration = 0xF3,
