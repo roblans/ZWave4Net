@@ -203,7 +203,7 @@ namespace ZWave.Channel
                 {
                     try
                     {
-                        invocation(this, new NodeEventArgs(@event.NodeID, @event.Command));
+                        invocation(this, new NodeEventArgs(@event.SourceNodeID, @event.Command));
                     }
                     catch (Exception ex)
                     {

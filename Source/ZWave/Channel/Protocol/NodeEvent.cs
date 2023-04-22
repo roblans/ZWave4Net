@@ -9,11 +9,12 @@ namespace ZWave.Channel.Protocol
     class NodeEvent : Message
     {
         public readonly ReceiveStatus ReceiveStatus;
-        public readonly byte NodeID;
+        public readonly byte TargetNodeID;
+        public readonly byte SourceNodeID;
         public readonly Command Command;
 
-        public NodeEvent(byte[] payload)
-            : base(FrameHeader.SOF, MessageType.Response, Channel.Function.ApplicationCommandHandler)
+        public NodeEvent(byte[] payload, Function function)
+            : base(FrameHeader.SOF, MessageType.Response, function)
         {
             if (payload == null)
                 throw new ArgumentNullException(nameof(payload));
@@ -37,13 +38,22 @@ namespace ZWave.Channel.Protocol
             if ((payload[0] & 0x40) > 0)
                 ReceiveStatus |= ReceiveStatus.ForeignFrame;
 
-            NodeID = payload[1];
-            Command = Command.Parse(payload.Skip(2).ToArray());
+            if (function == Channel.Function.ApplicationCommandHandlerBridge)
+            {
+                TargetNodeID = payload[1];
+                SourceNodeID = payload[2];
+                Command = Command.Parse(payload.Skip(3).ToArray());
+            }
+            else
+            {
+                SourceNodeID = payload[1];
+                Command = Command.Parse(payload.Skip(2).ToArray());
+            }
         }
 
         public override string ToString()
         {
-            return string.Concat(base.ToString(), " ", $"{ReceiveStatus}, NodeID:{NodeID:D3}, Command:[{Command}]");
+            return string.Concat(base.ToString(), " ", $"{ReceiveStatus}, NodeID:{SourceNodeID:D3}, Command:[{Command}]");
         }
     }
 }
