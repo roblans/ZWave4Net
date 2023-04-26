@@ -31,6 +31,7 @@ Supported Z-Wave command classes:
 - Meter
 - MultiChannel
 - MultiChannelAssociation
+- NodeNaming
 - SceneActivation
 - Schedule
 - SensorAlarm

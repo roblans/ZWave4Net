@@ -63,6 +63,7 @@ namespace ZWave
             _commandClasses.Add(new CentralScene(this));
             _commandClasses.Add(new SceneActivation(this));
             _commandClasses.Add(new MultiChannelAssociation(this));
+            _commandClasses.Add(new NodeNaming(this));
         }
 
         protected ZWaveChannel Channel
