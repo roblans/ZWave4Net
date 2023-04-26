@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 using ZWave.Channel.Protocol;
+using ZWave.CommandClasses;
 
 namespace ZWave
 {
@@ -162,6 +164,27 @@ namespace ZWave
                 _version = Encoding.UTF8.GetString(data, 0, data.Length);
             }
             return _version;
+        }
+
+        public async Task<ManufacturerSpecificReport> GetManufacturerSpecific(CancellationToken cancellationToken = default)
+        {
+            var response = await Channel.Send(Function.SerialGetCapabilities, cancellationToken);
+            return new ManufacturerSpecificReport(new Node(await GetNodeID(), this), response.Skip(2).ToArray());
+        }
+
+        public async Task<Function[]> GetSupportedFunctions(CancellationToken cancellationToken = default)
+        {
+            var response = await Channel.Send(Function.SerialGetCapabilities, cancellationToken);
+            var bits = new BitArray(response.Skip(8).ToArray());
+            List<Function> functions = new List<Function>();
+            for (short i = 0; i < bits.Count; i++)
+            {
+                if (bits[i])
+                {
+                    functions.Add((Function)i+1);
+                }
+            }
+            return functions.ToArray();
         }
 
         public async Task<uint> GetHomeID(CancellationToken cancellationToken = default)
