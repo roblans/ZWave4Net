@@ -207,6 +207,18 @@ namespace ZWave
             return _nodeID.Value;
         }
 
+        public async Task<sbyte[]> GetRSSIs(CancellationToken cancellationToken = default)
+        {
+            var response = await Channel.Send(Function.GetBackgroundRSSI, cancellationToken);
+            List<sbyte> rssis = new List<sbyte>();
+            foreach (byte b in response)
+            {
+                if (b != 0x7F)
+                    rssis.Add((sbyte)b);
+            }
+            return rssis.ToArray();
+        }
+
         public Task<NodeCollection> DiscoverNodes(CancellationToken cancellationToken = default)
         {
             return _getNodes = Task.Run(async () =>
