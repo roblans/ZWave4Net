@@ -10,7 +10,7 @@ namespace ZWave
         public byte Reserved { get; private set; }
         public BasicType BasicType { get; private set; }
         public GenericType GenericType { get; private set; }
-        public byte SpecificType { get; private set; }
+        public SpecificType SpecificType { get; private set; }
         public Security Security { get; private set; }
 
         public static NodeProtocolInfo Parse(byte[] data)
@@ -22,7 +22,7 @@ namespace ZWave
                 Reserved = data[2],
                 BasicType = (BasicType)data[3],
                 GenericType = (GenericType)data[4],
-                SpecificType = data[5],
+                SpecificType = SpecificTypeMapping.Get((GenericType)data[4], data[5]),
             };
         }
 
