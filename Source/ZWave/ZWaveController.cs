@@ -219,15 +219,15 @@ namespace ZWave
             return rssis.ToArray();
         }
 
-        public async Task<int[]> GetLongRangeNodes(CancellationToken cancellationToken = default)
+        public async Task<byte[]> GetLongRangeNodes(CancellationToken cancellationToken = default)
         {
             var response = await Channel.Send(Function.GetLRNodes, cancellationToken, new byte[] {0x0});
             var bits = new BitArray(response.Skip(3).ToArray());
-            List<int> nodeIds = new List<int>();
+            List<byte> nodeIds = new List<byte>();
             for (byte i = 0; i < 128; i++)
             {
                 if (bits[i])
-                    nodeIds.Add(i+1);
+                    nodeIds.Add((byte)(i+1));
             }
             return nodeIds.ToArray();
         }
