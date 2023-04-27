@@ -293,6 +293,12 @@ namespace ZWave.Channel
             _portReadTask.Start();
             _processEventsTask.Start();
             _transmitTask.Start();
+
+            //Reset Serial Connection
+            _transmitQueue.Add(Message.NAK);
+            var request = new ControllerFunction(Function.SerialApiSoftReset);
+            _transmitQueue.Add(request);
+            Task.Delay(1500).Wait();
         }
 
         public void Close()
