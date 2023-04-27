@@ -4,6 +4,7 @@
     {
         NoOperation = 0x00,
         Basic = 0x20,
+        ApplicationStatus = 0x22,
         SwitchBinary = 0x25,
         SwitchMultiLevel = 0x26,
         SceneActivation = 0x2B,
@@ -20,6 +21,7 @@
         ThermostatFanState = 0x45,
         ThermostatSetback = 0x47,
         Schedule = 0x53,
+        CRC16Encap = 0x56,
         CentralScene = 0x5B,
         AntiTheft = 0x5D,
         ZWavePlusInfo = 0x5E,
