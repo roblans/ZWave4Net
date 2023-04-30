@@ -28,6 +28,7 @@
         DoorLockLogging = 0x4C,
         ScheduleEntryLock = 0x4E,
         Schedule = 0x53,
+        CRC16Encap = 0x56,
         AssociationGroupInformation = 0x59,
         DeviceResetLocally = 0x5A,
         CentralScene = 0x5B,
