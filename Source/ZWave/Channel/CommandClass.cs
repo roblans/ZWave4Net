@@ -6,6 +6,8 @@
         Basic = 0x20,
         SwitchBinary = 0x25,
         SwitchMultiLevel = 0x26,
+        ToggleBinary = 0x28,
+        ToggleMultiLevel = 0x29,
         SceneActivation = 0x2B,
         SensorBinary = 0x30,
         SensorMultiLevel = 0x31,

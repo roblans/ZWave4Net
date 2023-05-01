@@ -8,10 +8,12 @@ namespace ZWave.CommandClasses
 {
     public class AlarmReport : NodeReport
     {
-        public AlarmType Type { get; private set; }
+        public NotificationType Type { get; private set; }
         public byte Level { get; private set; }
-        public AlarmDetailType Detail { get; private set; }
-        public byte Unknown { get; private set; }
+        public byte Status { get; private set; }
+        public AlarmDetailType Event { get; private set; }
+        public byte SourceNodeID { get; private set; }
+        public byte[] Params { get; private set; }
 
         internal AlarmReport(Node node, byte[] payload) : base(node)
         {
@@ -21,21 +23,37 @@ namespace ZWave.CommandClasses
             if (payload.Length < 2)
                 throw new ReponseFormatException($"The response was not in the expected format. Report: {GetType().Name}, Payload: {BitConverter.ToString(payload)}");
 
-            Type = (AlarmType)payload[0];
-            Level = payload[1];
-            if (payload.Length > 2)
-            {
-                Unknown = payload[2];
-            }
+            //Version 1
+            Type = (NotificationType)payload[0];
+            Status = Level = payload[1];
+
+            //Version 2
             if (payload.Length > 5)
             {
-                Detail = (AlarmDetailType)payload[5];
+                SourceNodeID = payload[2];
+                Status = payload[3];
+                Type = (NotificationType)payload[4];
+                Event = (AlarmDetailType)payload[5];
             }
+            else
+            {
+                SourceNodeID = 0;
+                Status = 0;
+                Event = AlarmDetailType.None;
+            }
+
+            if (payload.Length > 6)
+            {
+                Params = new byte[payload[6]];
+                Buffer.BlockCopy(payload, 7, Params, 0, Params.Length);
+            }
+            else
+                Params = new byte[0];
         }
 
         public override string ToString()
         {
-            return $"Type:{Type}, Level:{Level}, Detail:{Detail}, Unknown:{Unknown}";
+            return $"Type:{Type}, Level:{Level}, Event:{Event}, SourceID:{SourceNodeID}";
         }
     }
 }

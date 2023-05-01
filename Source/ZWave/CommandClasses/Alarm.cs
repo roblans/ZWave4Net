@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
@@ -9,12 +7,14 @@ namespace ZWave.CommandClasses
 {
     public class Alarm : CommandClassBase
     {
+        private const byte FIRST_AVAILABLE = 0xFF;
         public event EventHandler<ReportEventArgs<AlarmReport>> Changed;
 
         enum command
         {
             Get = 0x04,
             Report = 0x05,
+            Set = 0x06,
             SupportedGet = 0x07,
             SupportedReport = 0x09,
         }
@@ -30,8 +30,31 @@ namespace ZWave.CommandClasses
 
         public async Task<AlarmReport> Get(CancellationToken cancellationToken)
         {
-            var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
+            var response = await Channel.Send(Node, new Command(Class, command.Get, FIRST_AVAILABLE), command.Report, cancellationToken);
             return new AlarmReport(Node, response);
+        }
+
+        public Task<AlarmReport> Set(NotificationType type, bool activate)
+        {
+            return Set(type, activate, CancellationToken.None);
+        }
+
+        public async Task<AlarmReport> Set(NotificationType type, bool activate, CancellationToken cancellationToken)
+        {
+            byte status = activate ? (byte)0xFF : (byte)0x00;
+            var response = await Channel.Send(Node, new Command(Class, command.Get, (byte)type, status), command.Report, cancellationToken);
+            return new AlarmReport(Node, response);
+        }
+
+        public Task<AlarmSupportedReport> SupportedGet()
+        {
+            return SupportedGet(CancellationToken.None);
+        }
+
+        public async Task<AlarmSupportedReport> SupportedGet(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport, cancellationToken);
+            return new AlarmSupportedReport(Node, response);
         }
 
         protected internal override void HandleEvent(Command command)

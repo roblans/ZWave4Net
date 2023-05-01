@@ -76,7 +76,7 @@ namespace ZWave.Devices.Fibaro
 
         private void SensorAlarm_Changed(object sender, ReportEventArgs<SensorAlarmReport> e)
         {
-            if (e.Report.Type == AlarmType.General)
+            if (e.Report.Type == NotificationType.General)
             {
                 if (e.Report.Level == 0x00)
                 {
