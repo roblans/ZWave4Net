@@ -29,6 +29,13 @@ namespace ZWave.CommandClasses
 
         protected async Task<byte[]> Send(Command command, Enum responseCommand, CancellationToken cancellationToken)
         {
+            return await Send(command, responseCommand, false, cancellationToken);
+        }
+
+        protected async Task<byte[]> Send(Command command, Enum responseCommand, bool encrypted, CancellationToken cancellationToken)
+        {
+            if (encrypted)
+                throw new NotImplementedException("Encryption is not supported");
             if (_endpointId == 0)
             {
                 // Send in regular manner.
@@ -45,6 +52,13 @@ namespace ZWave.CommandClasses
 
         protected async Task Send(Command command, CancellationToken cancellationToken)
         {
+            await Send(command, false, cancellationToken);
+        }
+
+        protected async Task Send(Command command, bool encrypted, CancellationToken cancellationToken)
+        {
+            if (encrypted)
+                throw new NotImplementedException("Encryption is not supported");
             if (_endpointId == 0)
             {
                 // Send in regular manner.

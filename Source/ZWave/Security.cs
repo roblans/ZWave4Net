@@ -7,7 +7,7 @@ namespace ZWave
     [Flags()]
     public enum Security : byte
     {
-        Nonde = 0x00,
+        None = 0x00,
         Security = 0x01,
         Controller = 0x02,
         SpecificDevice = 0x04,
