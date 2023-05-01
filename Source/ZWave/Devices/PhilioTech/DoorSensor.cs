@@ -24,7 +24,7 @@ namespace ZWave.Devices.PhilioTech
             node.GetCommandClass<Basic>().Changed += Basic_Changed;
             node.GetCommandClass<SwitchBinary>().Changed += Contact_Changed;
             node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
-            node.GetCommandClass<Alarm>().Changed += Alarm_Changed;
+            node.GetCommandClass<Notification>().Changed += Notification_Changed;
         }
 
         private void SensorMultiLevel_Changed(object sender, ReportEventArgs<SensorMultiLevelReport> e)
@@ -94,9 +94,9 @@ namespace ZWave.Devices.PhilioTech
             LuminanceMeasured?.Invoke(this, e);
         }
 
-        private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
+        private void Notification_Changed(object sender, ReportEventArgs<NotificationReport> e)
         {
-            if (e.Report.Type == AlarmType.General)
+            if (e.Report.Type == NotificationType.General)
             {
                 if (e.Report.Level == 0x00)
                 {

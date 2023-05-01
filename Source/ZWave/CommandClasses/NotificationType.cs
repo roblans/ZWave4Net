@@ -9,7 +9,7 @@
         Heat = 0x04,
         Flood = 0x05,
         AccessControl = 0x06,
-        Burglar = 0x07,
+        HomeSecurity = 0x07,
         PowerManagement = 0x08,
         System = 0x09,
         Emergency = 0x0A,
@@ -25,6 +25,7 @@
         Pest = 0x13,
         Light = 0x14,
         WaterQuality = 0x15,
-        Home = 0x16
+        Home = 0x16,
+        Unknown = 0xFE
     };
 }

@@ -18,6 +18,11 @@ namespace ZWave.CommandClasses
 
             Class = (CommandClass)Enum.ToObject(typeof(CommandClass), payload[0]);
             Version = payload[1];
+
+            if (Class == CommandClass.Notification && Version < 3)
+                Class = CommandClass.Alarm;
+            else if (Class == CommandClass.Alarm && Version > 2)
+                Class = CommandClass.Notification;
         }
 
         internal static Func<byte[], bool> GetResponseValidatorForCommandClass(Node node, CommandClass @class)
