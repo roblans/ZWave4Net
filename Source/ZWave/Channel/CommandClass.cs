@@ -3,6 +3,8 @@
     public enum CommandClass : byte
     {
         NoOperation = 0x00,
+        ZWave = 0x01,
+        ZWaveLR = 0x04,
         Basic = 0x20,
         ApplicationStatus = 0x22,
         SwitchBinary = 0x25,
