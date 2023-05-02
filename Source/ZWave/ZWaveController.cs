@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 using ZWave.Channel.Protocol;
+using ZWave.CommandClasses;
 
 namespace ZWave
 {
@@ -164,6 +166,27 @@ namespace ZWave
             return _version;
         }
 
+        public async Task<ManufacturerSpecificReport> GetManufacturerSpecific(CancellationToken cancellationToken = default)
+        {
+            var response = await Channel.Send(Function.SerialGetCapabilities, cancellationToken);
+            return new ManufacturerSpecificReport(new Node(await GetNodeID(), this), response.Skip(2).ToArray());
+        }
+
+        public async Task<Function[]> GetSupportedFunctions(CancellationToken cancellationToken = default)
+        {
+            var response = await Channel.Send(Function.SerialGetCapabilities, cancellationToken);
+            var bits = new BitArray(response.Skip(8).ToArray());
+            List<Function> functions = new List<Function>();
+            for (short i = 0; i < bits.Count; i++)
+            {
+                if (bits[i])
+                {
+                    functions.Add((Function)i+1);
+                }
+            }
+            return functions.ToArray();
+        }
+
         public async Task<uint> GetHomeID(CancellationToken cancellationToken = default)
         {
             if (_homeID == null)
@@ -182,6 +205,61 @@ namespace ZWave
                 _nodeID = response[4];
             }
             return _nodeID.Value;
+        }
+
+        public async Task<sbyte[]> GetRSSIs(CancellationToken cancellationToken = default)
+        {
+            var response = await Channel.Send(Function.GetBackgroundRSSI, cancellationToken);
+            List<sbyte> rssis = new List<sbyte>();
+            foreach (byte b in response)
+            {
+                if (b != 0x7F)
+                    rssis.Add((sbyte)b);
+            }
+            return rssis.ToArray();
+        }
+
+        public async Task<byte[]> GetLongRangeNodes(CancellationToken cancellationToken = default)
+        {
+            var response = await Channel.Send(Function.GetLRNodes, cancellationToken, new byte[] {0x0});
+            var bits = new BitArray(response.Skip(3).ToArray());
+            List<byte> nodeIds = new List<byte>();
+            for (byte i = 0; i < 128; i++)
+            {
+                if (bits[i])
+                    nodeIds.Add((byte)(i+1));
+            }
+            return nodeIds.ToArray();
+        }
+
+        public async Task<byte[]> BackupNVM(CancellationToken cancellationToken = default)
+        {
+            var open = await Channel.Send(Function.NVMBackupRestore, cancellationToken, new byte[] { 0x0, 0x0, 0x0, 0x0 });
+            if (open[0] != 0)
+                throw new InvalidOperationException($"Failed to open NVM.  Response {open[0]}");
+            ushort len = PayloadConverter.ToUInt16(open, 2);
+            byte[] buffer = new byte[len];
+            try
+            {
+                ushort i = 0;
+                while (i < len)
+                {
+                    var offset = PayloadConverter.GetBytes(i);
+                    byte readLen = (byte)Math.Min(len - i, 255);
+                    var read = await Channel.Send(Function.NVMBackupRestore, cancellationToken, new byte[] { 0x1, readLen, offset[0], offset[1] });
+                    if (read[0] != 0 && read[0] != 0xFF)
+                        throw new InvalidOperationException($"Failed to open NVM.  Response {open[0]}");
+                    Buffer.BlockCopy(read, 4, buffer, i, read[1]);
+                    i += read[1];
+                }
+            }
+            finally
+            {
+                var close = await Channel.Send(Function.NVMBackupRestore, cancellationToken, new byte[] { 0x3, 0x0, 0x0, 0x0 });
+                if (close[0] != 0)
+                    throw new InvalidOperationException($"Backup Failed. Error {close[0]}");
+            }
+            return buffer;
         }
 
         public Task<NodeCollection> DiscoverNodes(CancellationToken cancellationToken = default)

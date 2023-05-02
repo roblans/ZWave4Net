@@ -49,7 +49,7 @@ namespace ZWave
             _commandClasses.Add(new WakeUp(this));
             _commandClasses.Add(new Meter(this));
             _commandClasses.Add(new SwitchBinary(this));
-            _commandClasses.Add(new ZWave.CommandClasses.Version(this));
+            _commandClasses.Add(new CommandClasses.Version(this));
             _commandClasses.Add(new Configuration(this));
             _commandClasses.Add(new Color(this));
             _commandClasses.Add(new MultiChannel(this));
@@ -64,6 +64,7 @@ namespace ZWave
             _commandClasses.Add(new SceneActivation(this));
             _commandClasses.Add(new MultiChannelAssociation(this));
             _commandClasses.Add(new NodeNaming(this));
+            _commandClasses.Add(new CommandClasses.Security(this));
         }
 
         protected ZWaveChannel Channel
@@ -76,7 +77,6 @@ namespace ZWave
             return _commandClasses.OfType<T>().FirstOrDefault();
         }
 
-
         public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses(CancellationToken cancellationToken = default)
         {
             // is this node the controller?
@@ -88,7 +88,7 @@ namespace ZWave
 
             var version = GetCommandClass<CommandClasses.Version>();
             var commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
-            foreach (var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
+            foreach (var commandClass in Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
             {
                 var report = await version.GetCommandClass(commandClass, cancellationToken);
                 commandClassVersions[commandClass] = report;
