@@ -52,6 +52,7 @@ namespace ZWave
             _commandClasses.Add(new Notification(this));
             _commandClasses.Add(new SceneActivation(this));
             _commandClasses.Add(new Schedule(this));
+            _commandClasses.Add(new CommandClasses.Security(this));
             _commandClasses.Add(new SensorAlarm(this));
             _commandClasses.Add(new SensorBinary(this));
             _commandClasses.Add(new SensorMultiLevel(this));
@@ -76,7 +77,6 @@ namespace ZWave
             return _commandClasses.OfType<T>().FirstOrDefault();
         }
 
-
         public async Task<VersionCommandClassReport[]> GetSupportedCommandClasses(CancellationToken cancellationToken = default)
         {
             // is this node the controller?
@@ -88,7 +88,7 @@ namespace ZWave
 
             var version = GetCommandClass<CommandClasses.Version>();
             var commandClassVersions = new Dictionary<CommandClass, VersionCommandClassReport>();
-            foreach (var commandClass in System.Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
+            foreach (var commandClass in Enum.GetValues(typeof(CommandClass)).Cast<CommandClass>())
             {
                 var report = await version.GetCommandClass(commandClass, cancellationToken);
                 commandClassVersions[commandClass] = report;
