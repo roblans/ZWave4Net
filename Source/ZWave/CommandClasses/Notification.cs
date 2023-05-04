@@ -63,11 +63,10 @@ namespace ZWave.CommandClasses
             return Get(CancellationToken.None);
         }
 
-        public async Task<NotificationReport> EventSupportedGet(NotificationType type, CancellationToken cancellationToken)
+        public async Task<NotificationStateReport> EventSupportedGet(NotificationType type, CancellationToken cancellationToken)
         {
             var response = await Channel.Send(Node, new Command(Class, command.EventSupportedGet, (byte)type), command.EventSupportedReport, cancellationToken);
-            //FIXME - This should be a NotificationStateReport
-            return new NotificationReport(Node, response);
+            return new NotificationStateReport(Node, type, response);
         }
 
         protected internal override void HandleEvent(Command command)

@@ -81,7 +81,7 @@ namespace ZWave.Devices.Fibaro
 
         private void Notification_Changed(object sender, ReportEventArgs<NotificationReport> e)
         {
-            if (e.Report.Type == NotificationType.General)
+            if (e.Report.Type == NotificationType.HomeSecurity)
             {
                 if (e.Report.Level == 0x00)
                 {

@@ -43,7 +43,7 @@ namespace ZWave.Devices.Vision
 
         private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
         {
-            if (e.Report.Event == NotificationState.TamperingProductCoveringRemoved)
+            if (e.Report.Event == NotificationState.TamperingProductCoverRemoved)
             {
                 if (e.Report.Level == 0x00)
                 {

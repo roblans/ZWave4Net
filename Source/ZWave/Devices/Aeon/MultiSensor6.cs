@@ -24,7 +24,7 @@ namespace ZWave.Devices.Aeon
 
         private void Notification_Changed(object sender, ReportEventArgs<NotificationReport> e)
         {
-            if (e.Report.Type == NotificationType.HomeSecurity && e.Report.Event == NotificationState.TamperingProductCoveringRemoved)
+            if (e.Report.Type == NotificationType.HomeSecurity && e.Report.Event == NotificationState.TamperingProductCoverRemoved)
             {
                 OnVibrationDetected(EventArgs.Empty);
             }

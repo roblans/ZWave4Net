@@ -36,34 +36,34 @@ namespace ZWave
         {
             NodeID = nodeID;
             Controller = contoller;
-
-            _commandClasses.Add(new Basic(this));
-            _commandClasses.Add(new ManufacturerSpecific(this));
-            _commandClasses.Add(new Battery(this));
-            _commandClasses.Add(new SwitchMultiLevel(this));
             _commandClasses.Add(new Alarm(this));
             _commandClasses.Add(new Association(this));
-            _commandClasses.Add(new SensorBinary(this));
-            _commandClasses.Add(new SensorAlarm(this));
-            _commandClasses.Add(new SensorMultiLevel(this));
-            _commandClasses.Add(new WakeUp(this));
-            _commandClasses.Add(new Meter(this));
-            _commandClasses.Add(new SwitchBinary(this));
-            _commandClasses.Add(new ZWave.CommandClasses.Version(this));
-            _commandClasses.Add(new Configuration(this));
+            _commandClasses.Add(new Basic(this));
+            _commandClasses.Add(new Battery(this));
+            _commandClasses.Add(new CentralScene(this));
+            _commandClasses.Add(new Clock(this));
             _commandClasses.Add(new Color(this));
+            _commandClasses.Add(new Configuration(this));
+            _commandClasses.Add(new ManufacturerSpecific(this));
+            _commandClasses.Add(new Meter(this));
             _commandClasses.Add(new MultiChannel(this));
+            _commandClasses.Add(new MultiChannelAssociation(this));
+            _commandClasses.Add(new NodeNaming(this));
+            _commandClasses.Add(new Notification(this));
+            _commandClasses.Add(new SceneActivation(this));
+            _commandClasses.Add(new Schedule(this));
+            _commandClasses.Add(new SensorAlarm(this));
+            _commandClasses.Add(new SensorBinary(this));
+            _commandClasses.Add(new SensorMultiLevel(this));
+            _commandClasses.Add(new SwitchBinary(this));
+            _commandClasses.Add(new SwitchMultiLevel(this));
+            _commandClasses.Add(new ThermostatFanMode(this));
+            _commandClasses.Add(new ThermostatFanState(this));
             _commandClasses.Add(new ThermostatMode(this));
             _commandClasses.Add(new ThermostatOperatingState(this));
             _commandClasses.Add(new ThermostatSetpoint(this));
-            _commandClasses.Add(new ThermostatFanMode(this));
-            _commandClasses.Add(new ThermostatFanState(this));
-            _commandClasses.Add(new Schedule(this));
-            _commandClasses.Add(new Clock(this));
-            _commandClasses.Add(new CentralScene(this));
-            _commandClasses.Add(new SceneActivation(this));
-            _commandClasses.Add(new MultiChannelAssociation(this));
-            _commandClasses.Add(new NodeNaming(this));
+            _commandClasses.Add(new ZWave.CommandClasses.Version(this));
+            _commandClasses.Add(new WakeUp(this));
         }
 
         protected ZWaveChannel Channel

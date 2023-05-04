@@ -61,12 +61,51 @@ namespace ZWave.CommandClasses
         SumpActive = 0x050A,
         SumpFailure = 0x050B,
 
-        //Access Control - TODO
+        //Access Control
+        ManualLockOperation = 0x0601,
+        ManualUnlockOperation = 0x0602,
+        RFLockOperation = 0x0603,
+        RFUnlockOperation = 0x0604,
+        KeypadLockOperation = 0x0605,
+        KeypadUnlockOperation = 0x0606,
+        ManualNotFullyLockedOperation = 0x0607,
+        RFNotFullyLockedOperation = 0x0608,
+        AutoLockLockedOperation = 0x0609,
+        AutoLockNotFullyLockedOperation = 0x060A,
+        LockJammed = 0x060B,
+        AllUserCodesDeleted = 0x060C,
+        SingleUserCodeDeleted = 0x060D,
+        NewUserCodeAdded = 0x060E,
+        NewUserCodeNotAddedDuplicate = 0x060F,
+        KeypadDisabled = 0x0610,
+        KeypadBusy = 0x0611,
+        NewCodeEntered = 0x0612,
+        CodeLimitExceeded = 0x0613,
+        UnlockByRFInvalidCode = 0x0614,
+        LockByRFInvalidCode = 0x0615,
+        WindowDoorOpen = 0x0616,
+        WindowDoorClosed = 0x0617,
+        WindowDoorHandleOpen = 0x0618,
+        WindowDoorHandleClosed = 0x0619,
+        UserCodeEnteredViaKeypad = 0x0620,
+        BarrierInitializing = 0x0640,
+        BarrierForceExceeded = 0x0641,
+        BarrierMotorTimeExceeded = 0x0642,
+        BarrierMechanicalLimitsExceeded = 0x0643,
+        BarrierUnableUL = 0x0644,
+        BarrierDisabledUL = 0x0645,
+        BarrierMalfunction = 0x0646,
+        BarrierVacationMode = 0x0647,
+        BarrierObstacle = 0x0648,
+        BarrierSupervisoryError = 0x0649,
+        BarrierSensorLowBattery = 0x064A,
+        BarrierWiriingShort = 0x064B,
+        BarrierNonZWave = 0x064C,
 
         //Home Security
         Intrusion = 0x0701,
         IntrusionUnknownLocation = 0x0702,
-        TamperingProductCoveringRemoved = 0x0703,
+        TamperingProductCoverRemoved = 0x0703,
         TamperingInvalidCode = 0x0704,
         GlassBreakage = 0x0705,
         GlassBreakageUnknownLocation = 0x0706,
@@ -77,9 +116,37 @@ namespace ZWave.CommandClasses
         MagneticInterference = 0x070B,
         RFJamming = 0x070C,
 
-        //Power Management - TODO
+        //Power Management
+        PowerApplied = 0x0801,
+        ACDisconnect = 0x0802,
+        ACReconnect = 0x0803,
+        SurgeDetected = 0x0804,
+        VoltageDrop = 0x0805,
+        OverCurrent = 0x0806,
+        OverVoltage = 0x0807,
+        OverLoad = 0x0808,
+        LoadError = 0x0809,
+        ReplaceBatterySoon = 0x080A,
+        ReplaceBatteryNow = 0x080B,
+        BatteryCharging = 0x080C,
+        BatteryCharged = 0x080D,
+        ChargeBatterySoon = 0x080E,
+        ChargeBatteryNow = 0x080F,
+        BatteryLow = 0x0810,
+        BatteryFluidLow = 0x0811,
+        BatteryDisconnected = 0x0812,
 
-        //System - TODO
+        //System
+        SystemHardwareFailure = 0x0901,
+        SystemSoftwareFailure = 0x0902,
+        SystemProprietaryHardwareFailure = 0x0903,
+        SystemProprietarySoftwareFailure = 0x0904,
+        Heartbeat = 0x0905,
+        SystemTamperingProductCoverRemoved = 0x0906,
+        EmergencyShutoff = 0x0907,
+        DigitalInputHigh = 0x0909,
+        DigitalInputLow = 0x090A,
+        DigitalInputOpen = 0x090B,
 
         //Emergency Alarm
         ContactPolice = 0x0A01,
@@ -99,13 +166,25 @@ namespace ZWave.CommandClasses
         //Siren
         SirenActive = 0x0E01,
 
-        //Water Valve - TODO
+        //Water Valve
+        ValveOperationStatus = 0x0F01,
+        MasterValveOperationStatus = 0x0F02,
+        ValveShortCircuit = 0x0F03,
+        MasterValveShortCircuit = 0x0F04,
+        ValveCurrentAlarmStatus = 0x0F05,
+        MasterValveCurrentAlarmStatus = 0x0F06,
 
         //Weather - TODO
 
         //Irrigation - TODO
 
-        //Gas - TODO
+        //Gas
+        CombustibleGasDetectedUnknownLocation = 0x1201,
+        CombustibleGasDetected = 0x1202,
+        ToxicGasDetectedUnknownLocation = 0x1203,
+        ToxicGasDetected = 0x1204,
+        GasAlarmTest = 0x1205,
+        ReplaceGasAlarm = 0x1206,
 
         //Pest Control - TODO
 

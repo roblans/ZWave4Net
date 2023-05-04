@@ -96,7 +96,7 @@ namespace ZWave.Devices.PhilioTech
 
         private void Notification_Changed(object sender, ReportEventArgs<NotificationReport> e)
         {
-            if (e.Report.Type == NotificationType.General)
+            if (e.Report.Type == NotificationType.AccessControl)
             {
                 if (e.Report.Level == 0x00)
                 {
