@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ZWave.CommandClasses;
-using ZWave.Devices.Fibaro;
 
 namespace ZWave.Devices.Aeon
 {
@@ -22,12 +19,12 @@ namespace ZWave.Devices.Aeon
         {
             node.GetCommandClass<Basic>().Changed += Basic_Changed;
             node.GetCommandClass<SensorMultiLevel>().Changed += SensorMultiLevel_Changed;
-            node.GetCommandClass<Alarm>().Changed += Alarm_Changed;
+            node.GetCommandClass<Notification>().Changed += Notification_Changed;
         }
 
-        private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
+        private void Notification_Changed(object sender, ReportEventArgs<NotificationReport> e)
         {
-            if (e.Report.Type == AlarmType.General && e.Report.Detail == AlarmDetailType.TamperingProductCoveringRemoved)
+            if (e.Report.Type == NotificationType.HomeSecurity && e.Report.Event == NotificationState.TamperingProductCoverRemoved)
             {
                 OnVibrationDetected(EventArgs.Empty);
             }

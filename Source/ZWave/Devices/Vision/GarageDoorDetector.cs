@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ZWave.CommandClasses;
 
@@ -46,7 +44,7 @@ namespace ZWave.Devices.Vision
 
         private void Alarm_Changed(object sender, ReportEventArgs<AlarmReport> e)
         {
-            if (e.Report.Detail == AlarmDetailType.TamperingProductCoveringRemoved)
+            if (e.Report.Event == NotificationState.TamperingProductCoverRemoved)
             {
                 if (e.Report.Level == 0x00)
                 {
@@ -59,7 +57,7 @@ namespace ZWave.Devices.Vision
                     return;
                 }
             }
-            if (e.Report.Type == AlarmType.Burglar)
+            if (e.Report.Type == NotificationType.HomeSecurity)
             {
                 if (e.Report.Level == 0x00)
                 {
@@ -93,7 +91,7 @@ namespace ZWave.Devices.Vision
             }
 
             var alarm = (await Node.GetCommandClass<Alarm>().Get());
-            if (alarm.Type == AlarmType.Burglar && alarm.Level == 0xFF)
+            if (alarm.Type == NotificationType.HomeSecurity && alarm.Level == 0xFF)
             {
                 return true;
             }

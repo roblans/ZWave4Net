@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
@@ -15,12 +13,19 @@ namespace ZWave.CommandClasses
         {
             Get = 0x04,
             Report = 0x05,
+            Set = 0x06,
             SupportedGet = 0x07,
-            SupportedReport = 0x09,
+            SupportedReport = 0x08
         }
 
         public Alarm(Node node) : base(node, CommandClass.Alarm)
         {
+        }
+
+        public async Task<bool> IsV2(CancellationToken cancellationToken)
+        {
+            var report = await Node.GetCommandClassVersionReport(Class, cancellationToken);
+            return report.Version >= 2;
         }
 
         public Task<AlarmReport> Get()
@@ -32,6 +37,32 @@ namespace ZWave.CommandClasses
         {
             var response = await Channel.Send(Node, new Command(Class, command.Get), command.Report, cancellationToken);
             return new AlarmReport(Node, response);
+        }
+
+        public Task Set(NotificationType type, bool activate)
+        {
+            return Set(type, activate, CancellationToken.None);
+        }
+
+        public async Task Set(NotificationType type, bool activate, CancellationToken cancellationToken)
+        {
+            if (!await IsV2(cancellationToken))
+                throw new VersionNotSupportedException($"Set works with class type {Class} version >= 2.");
+            byte status = activate ? (byte)0xFF : (byte)0x00;
+            await Channel.Send(Node, new Command(Class, command.Set, (byte)type, status), cancellationToken);
+        }
+
+        public Task<AlarmSupportedReport> SupportedGet()
+        {
+            return SupportedGet(CancellationToken.None);
+        }
+
+        public async Task<AlarmSupportedReport> SupportedGet(CancellationToken cancellationToken)
+        {
+            if (!await IsV2(cancellationToken))
+                throw new VersionNotSupportedException($"SupportedGet works with class type {Class} version >= 2.");
+            var response = await Channel.Send(Node, new Command(Class, command.SupportedGet), command.SupportedReport, cancellationToken);
+            return new AlarmSupportedReport(Node, response);
         }
 
         protected internal override void HandleEvent(Command command)
