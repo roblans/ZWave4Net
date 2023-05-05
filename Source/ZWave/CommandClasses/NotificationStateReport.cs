@@ -30,7 +30,7 @@ namespace ZWave.CommandClasses
 
         public override string ToString()
         {
-            return $"Supported States:{string.Join(',', SupportedStates)}";
+            return $"Supported States:{string.Join(",", SupportedStates)}";
         }
     }
 }

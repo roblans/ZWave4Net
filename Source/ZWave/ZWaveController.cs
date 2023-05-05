@@ -177,7 +177,7 @@ namespace ZWave
             var response = await Channel.Send(Function.SerialGetCapabilities, cancellationToken);
             var bits = new BitArray(response.Skip(8).ToArray());
             List<Function> functions = new List<Function>();
-            for (short i = 0; i < bits.Count; i++)
+            for (short i = 0; i < bits.Length; i++)
             {
                 if (bits[i])
                 {
