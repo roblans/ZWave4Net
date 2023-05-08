@@ -36,7 +36,7 @@ namespace ZWave.Devices.Fibaro
 
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
-            if (e.Report.Value)
+            if (e.Report.TargetValue == true)
             {
                 OnSwitchedOn(EventArgs.Empty);
             }
@@ -70,7 +70,7 @@ namespace ZWave.Devices.Fibaro
 
         public async Task<bool> IsSwitchOn()
         {
-            return (await Node.GetCommandClass<SwitchBinary>().Get()).Value;
+            return (await Node.GetCommandClass<SwitchBinary>().Get()).TargetValue == true;
         }
 
         public async Task AddAssociation(AssociationGroup group, Node node)

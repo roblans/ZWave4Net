@@ -24,7 +24,7 @@ namespace ZWave.Devices.Fibaro
 
         private void SwitchBinary1_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
-            if (e.Report.Value)
+            if (e.Report.TargetValue == true)
             {
                 OnSwitchedOn1(EventArgs.Empty);
             }
@@ -35,7 +35,7 @@ namespace ZWave.Devices.Fibaro
         }
         private void SwitchBinary2_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
-            if (e.Report.Value)
+            if (e.Report.TargetValue == true)
             {
                 OnSwitchedOn2(EventArgs.Empty);
             }

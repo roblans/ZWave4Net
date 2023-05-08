@@ -22,7 +22,7 @@ namespace ZWave.Devices.Fortrezz
 
         private void SwitchBinary_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
-            if (e.Report.Value)
+            if (e.Report.TargetValue == true)
             {
                 OnSwitchedOn(EventArgs.Empty);
             }

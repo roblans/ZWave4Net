@@ -54,7 +54,7 @@ namespace ZWave.Devices.PhilioTech
         }
         private void Contact_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
-            if (e.Report.Value)
+            if (e.Report.TargetValue == true)
             {
                 OnContactOpen(EventArgs.Empty);
             }

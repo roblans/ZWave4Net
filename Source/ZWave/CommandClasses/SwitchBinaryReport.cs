@@ -47,7 +47,7 @@ namespace ZWave.CommandClasses
 
         public override string ToString()
         {
-            return $"Value:{Value},Duration:{Duration}";
+            return $"TargetValue:{TargetValue},Duration:{Duration}";
         }
     }
 }
