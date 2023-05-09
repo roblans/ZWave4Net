@@ -40,6 +40,8 @@ Supported Z-Wave command classes:
 - SensorMultiLevel
 - SwitchBinary
 - SwitchMultiLevel
+- SwitchToggleBinary
+- SwitchToggleMultiLevel
 - ThermostatFanMode
 - ThermostatMode
 - ThermostatOperatingState
