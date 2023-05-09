@@ -21,7 +21,7 @@ namespace ZWave.CommandClasses
             SupportedReport = 0x08
         }
 
-        public Notification(Node node) : base(node, CommandClass.Alarm)
+        public Notification(Node node) : base(node, CommandClass.Notification)
         {
         }
 

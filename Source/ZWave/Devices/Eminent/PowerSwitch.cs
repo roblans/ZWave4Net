@@ -34,7 +34,7 @@ namespace ZWave.Devices.Eminent
 
         private void OnReportChanged(SwitchBinaryReport report)
         {
-            if (report.Value)
+            if (report.TargetValue == true)
             {
                 OnSwitchedOn(EventArgs.Empty);
             }

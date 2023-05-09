@@ -24,7 +24,7 @@ namespace ZWave.Devices.Fibaro
         public async Task<bool> IsDoorOpen()
         {
             var basic = await Node.GetCommandClass<Basic>().Get();
-            if (basic.Value == 0xFF)
+            if (basic.TargetValue == 0xFF)
             {
                 return true;
             }
@@ -40,12 +40,12 @@ namespace ZWave.Devices.Fibaro
 
         private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
-            if (e.Report.Value == 0xFF)
+            if (e.Report.TargetValue == 0xFF)
             {
                 OnDoorOpened(EventArgs.Empty);
                 return;
             }
-            if (e.Report.Value == 0x00)
+            if (e.Report.TargetValue == 0x00)
             {
                 OnDoorClosed(EventArgs.Empty);
                 return;

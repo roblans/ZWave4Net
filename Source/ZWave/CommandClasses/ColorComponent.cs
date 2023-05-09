@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ZWave.CommandClasses
+﻿namespace ZWave.CommandClasses
 {
     public class ColorComponent
     {
-        public readonly byte ID;
+        public readonly ColorComponentType ID;
         public readonly byte Value;
 
-        public ColorComponent(byte id, byte value)
+        public ColorComponent(ColorComponentType id, byte value)
         {
             ID = id;
             Value = value;
@@ -22,7 +18,7 @@ namespace ZWave.CommandClasses
 
         public byte[] ToBytes()
         {
-            return new[] { ID, Value };
+            return new[] { (byte)ID, Value };
         }
     }
 }

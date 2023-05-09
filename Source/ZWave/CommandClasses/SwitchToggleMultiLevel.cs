@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class SwitchMultiLevel : EndpointSupportedCommandClassBase
+    public class SwitchToggleMultiLevel : EndpointSupportedCommandClassBase
     {
         enum command : byte
         {
@@ -20,12 +18,12 @@ namespace ZWave.CommandClasses
 
         public event EventHandler<ReportEventArgs<SwitchMultiLevelReport>> Changed;
 
-        public SwitchMultiLevel(Node node)
-            : base(node, CommandClass.SwitchMultiLevel)
+        public SwitchToggleMultiLevel(Node node)
+            : base(node, CommandClass.SwitchToggleMultiLevel)
         { }
 
-        internal SwitchMultiLevel(Node node, byte endpointId)
-            : base(node, CommandClass.SwitchMultiLevel, endpointId)
+        internal SwitchToggleMultiLevel(Node node, byte endpointId)
+            : base(node, CommandClass.SwitchToggleMultiLevel, endpointId)
         { }
 
         public Task<SwitchMultiLevelReport> Get()
@@ -33,49 +31,50 @@ namespace ZWave.CommandClasses
             return Get(CancellationToken.None);
         }
 
-
         public async Task<SwitchMultiLevelReport> Get(CancellationToken cancellationToken)
         {
             var response = await Send(new Command(Class, command.Get), command.Report, cancellationToken);
             return new SwitchMultiLevelReport(Node, response);
         }
 
+        /// <summary>
+        /// Sets the multilevel toggle
+        /// </summary>
+        /// <param name="value">0x0 for off, 0xFF for On, 1-99 for percentages between</param>
+        /// <returns></returns>
         public Task Set(byte value)
         {
             return Set(value, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Sets the multilevel toggle
+        /// </summary>
+        /// <param name="value">0x0 for off, 0xFF for On, 1-99 for percentages between</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task Set(byte value, CancellationToken cancellationToken)
         {
+            if (value > 99 && value != 0xFF)
+                throw new ArgumentException(nameof(value) + " must be between 0 and 99 or 0xFF for 100%");
             await Channel.Send(Node, new Command(Class, command.Set, value), cancellationToken);
         }
 
-        public Task Set(byte value, TimeSpan duration)
+        public Task StartLevelChange(bool rollover, bool ignoreStart, byte startLevel)
         {
-            return Set(value, duration, CancellationToken.None);
+            return StartLevelChange(rollover, ignoreStart, startLevel, CancellationToken.None);
         }
 
-        public async Task Set(byte value, TimeSpan duration, CancellationToken cancellationToken)
+        public async Task StartLevelChange(bool rollover, bool ignoreStart, byte startLevel, CancellationToken cancellationToken)
         {
-            byte time = 0;
-            if (duration.TotalSeconds >= 1)
-                time = PayloadConverter.GetByte(duration);
-            await Send(new Command(Class, command.Set, value, time), cancellationToken);
-        }
+            byte cmd = 0x0;
+            if (rollover)
+                cmd = 0x80;
+            if (ignoreStart)
+                cmd |= 0x20;
 
-        public Task StartLevelChange(bool increase, int startLevel, byte duration)
-        {
-            return StartLevelChange(increase, startLevel, duration, CancellationToken.None);
-        }
-
-        public async Task StartLevelChange(bool increase, int startLevel, byte duration, CancellationToken cancellationToken)
-        {
-            byte flags = 0x0;
-            if (increase)
-                flags = 0x40;
-            if (startLevel < 0)
-                flags |= 0x20;
-            await Channel.Send(Node, new Command(Class, command.StartLevelChange, flags, (byte)Math.Max(0, startLevel),duration), cancellationToken);
+            await Channel.Send(Node, new Command(Class, command.StartLevelChange, cmd, startLevel), cancellationToken);
         }
 
         public Task StopLevelChange()

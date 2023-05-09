@@ -5,7 +5,7 @@ using ZWave.Channel;
 
 namespace ZWave.CommandClasses
 {
-    public class SwitchBinary : EndpointSupportedCommandClassBase
+    public class SwitchToggleBinary : EndpointSupportedCommandClassBase
     {
         public event EventHandler<ReportEventArgs<SwitchBinaryReport>> Changed;
 
@@ -16,12 +16,12 @@ namespace ZWave.CommandClasses
             Report = 0x03
         }
 
-        public SwitchBinary(Node node)
-            : base(node, CommandClass.SwitchBinary)
+        public SwitchToggleBinary(Node node)
+            : base(node, CommandClass.SwitchToggleBinary)
         { }
 
-        internal SwitchBinary(Node node, byte endpointId)
-            : base(node, CommandClass.SwitchBinary, endpointId)
+        internal SwitchToggleBinary(Node node, byte endpointId)
+            : base(node, CommandClass.SwitchToggleBinary, endpointId)
         { }
 
         public Task<SwitchBinaryReport> Get()
@@ -43,19 +43,6 @@ namespace ZWave.CommandClasses
         public async Task Set(bool value, CancellationToken cancellationToken)
         {
             await Send(new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00), cancellationToken);
-        }
-
-        public Task Set(bool value, TimeSpan duration)
-        {
-            return Set(value, duration, CancellationToken.None);
-        }
-
-        public async Task Set(bool value, TimeSpan duration, CancellationToken cancellationToken)
-        {
-            byte time = 0;
-            if (duration.TotalSeconds >= 1)
-                time = PayloadConverter.GetByte(duration);
-            await Send(new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00, time), cancellationToken);
         }
 
         protected internal override void HandleEvent(Command command)

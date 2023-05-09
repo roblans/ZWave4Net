@@ -41,12 +41,12 @@ namespace ZWave.Devices.PhilioTech
 
         private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
-            if (e.Report.Value == 0x00)
+            if (e.Report.TargetValue == 0x00)
             {
                 OnMotionCancelled(EventArgs.Empty);
                 return;
             }
-            if (e.Report.Value == 0xFF)
+            if (e.Report.TargetValue == 0xFF)
             {
                 OnMotionDetected(EventArgs.Empty);
                 return;
@@ -54,7 +54,7 @@ namespace ZWave.Devices.PhilioTech
         }
         private void Contact_Changed(object sender, ReportEventArgs<SwitchBinaryReport> e)
         {
-            if (e.Report.Value)
+            if (e.Report.TargetValue == true)
             {
                 OnContactOpen(EventArgs.Empty);
             }

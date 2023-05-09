@@ -58,6 +58,8 @@ namespace ZWave
             _commandClasses.Add(new SensorMultiLevel(this));
             _commandClasses.Add(new SwitchBinary(this));
             _commandClasses.Add(new SwitchMultiLevel(this));
+            _commandClasses.Add(new SwitchToggleBinary(this));
+            _commandClasses.Add(new SwitchToggleMultiLevel(this));
             _commandClasses.Add(new ThermostatFanMode(this));
             _commandClasses.Add(new ThermostatFanState(this));
             _commandClasses.Add(new ThermostatMode(this));

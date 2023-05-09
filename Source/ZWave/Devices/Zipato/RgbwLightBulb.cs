@@ -37,19 +37,13 @@ namespace ZWave.Devices.Zipato
         public async Task SetColor(byte warmWhite, byte coldWhite, byte red, byte green, byte blue)
         {
             var components = new List<ColorComponent>();
-            components.Add(new ColorComponent(Convert.ToByte(LightBulbColorComponent.WarmWhite), warmWhite));
-            components.Add(new ColorComponent(Convert.ToByte(LightBulbColorComponent.ColdWhite), coldWhite));
-            components.Add(new ColorComponent(Convert.ToByte(LightBulbColorComponent.Red), red));
-            components.Add(new ColorComponent(Convert.ToByte(LightBulbColorComponent.Green), green));
-            components.Add(new ColorComponent(Convert.ToByte(LightBulbColorComponent.Blue), blue));
+            components.Add(new ColorComponent(ColorComponentType.WarmWhite, warmWhite));
+            components.Add(new ColorComponent(ColorComponentType.CoolWhite, coldWhite));
+            components.Add(new ColorComponent(ColorComponentType.Red, red));
+            components.Add(new ColorComponent(ColorComponentType.Green, green));
+            components.Add(new ColorComponent(ColorComponentType.Blue, blue));
 
             await Node.GetCommandClass<Color>().Set(components.ToArray());
-        }
-
-        public async Task<byte> GetColor(LightBulbColorComponent component)
-        {
-            var response = await Node.GetCommandClass<Color>().Get(Convert.ToByte(component));
-            return response.Component.Value;
         }
 
         public async Task<byte> GetColorTemperature()
@@ -76,15 +70,6 @@ namespace ZWave.Devices.Zipato
                 throw new ArgumentOutOfRangeException(nameof(value), value, "Value must be between 0 and 31.");
 
             await Node.GetCommandClass<Configuration>().Set(2, value);
-        }
-
-        public enum LightBulbColorComponent : byte
-        {
-            WarmWhite= 0x00,
-            ColdWhite = 0x01,
-            Red = 0x02,
-            Green = 0x03,
-            Blue = 0x04,
         }
     }
 }
