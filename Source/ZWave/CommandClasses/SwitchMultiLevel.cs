@@ -50,20 +50,39 @@ namespace ZWave.CommandClasses
             await Channel.Send(Node, new Command(Class, command.Set, value), cancellationToken);
         }
 
-        public Task StartLevelChange(bool increase, byte duration)
+        public Task Set(byte value, TimeSpan duration)
         {
-            return StartLevelChange(increase, duration, CancellationToken.None);
+            return Set(value, duration, CancellationToken.None);
         }
 
-        public async Task StartLevelChange(bool increase, byte duration, CancellationToken cancellationToken)
+        public async Task Set(byte value, TimeSpan duration, CancellationToken cancellationToken)
         {
-            var payload = new byte[]
+            byte time = 0;
+            if (duration.TotalSeconds >= 1)
             {
-                increase ? (byte)0x20 : (byte)0x60,
-                0, // Start level - ignored (for now!)
-                duration,
-            };
-            await Channel.Send(Node, new Command(Class, command.StartLevelChange, payload), cancellationToken);
+                if (duration.TotalSeconds < 127)
+                    time = (byte)duration.TotalSeconds;
+                else if (duration.TotalMinutes < 126)
+                    time = (byte)(0x80 + duration.TotalMinutes);
+                else
+                    time = 0xFF;
+            }
+            await Send(new Command(Class, command.Set, value, time), cancellationToken);
+        }
+
+        public Task StartLevelChange(bool increase, int startLevel, byte duration)
+        {
+            return StartLevelChange(increase, startLevel, duration, CancellationToken.None);
+        }
+
+        public async Task StartLevelChange(bool increase, int startLevel, byte duration, CancellationToken cancellationToken)
+        {
+            byte flags = 0x0;
+            if (increase)
+                flags = 0x40;
+            if (startLevel < 0)
+                flags |= 0x20;
+            await Channel.Send(Node, new Command(Class, command.StartLevelChange, flags, (byte)Math.Max(0, startLevel),duration), cancellationToken);
         }
 
         public Task StopLevelChange()
