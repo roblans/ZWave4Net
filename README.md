@@ -19,35 +19,35 @@ NuGet package: https://www.nuget.org/packages/ZWave4Net/
 
 Supported Z-Wave command classes:
 
-- Alarm
+- Alarm v1-2
 - Association
-- Basic
-- Battery
-- CentralScene
-- Clock
-- Color
+- Basic v1-2
+- Battery v1*
+- CentralScene v1*
+- Clock v1
+- Color v1-3
 - Configuration
-- ManufacturerSpecific
-- Meter
+- ManufacturerSpecific v1*
+- Meter v1-6
 - MultiChannel
 - MultiChannelAssociation
-- NodeNaming
-- Notification
-- SceneActivation
-- Schedule
-- SensorAlarm
-- SensorBinary
-- SensorMultiLevel
-- SwitchBinary
-- SwitchMultiLevel
-- SwitchToggleBinary
-- SwitchToggleMultiLevel
-- ThermostatFanMode
-- ThermostatMode
-- ThermostatOperatingState
-- ThermostatSetpoint
-- Version
-- WakeUp
+- NodeNaming v1
+- Notification v3-8
+- SceneActivation v1
+- Schedule v1
+- SensorAlarm v1
+- SensorBinary v1-2
+- SensorMultiLevel v1-11
+- SwitchBinary v1-2
+- SwitchMultiLevel v1-2*
+- SwitchToggleBinary v1
+- SwitchToggleMultiLevel v1
+- ThermostatFanMode v1*
+- ThermostatMode v1*
+- ThermostatOperatingState v1*
+- ThermostatSetpoint v1*
+- Version v1*
+- WakeUp v1*
  
 FIBARO Wall Plug sample:
 

@@ -19,6 +19,8 @@ namespace ZWave.CommandClasses
             // Version 2
             SupportedGet = 0x03,
             SupportedReport = 0x04,
+
+            //Version 6
             Reset = 0x05
         }
 
