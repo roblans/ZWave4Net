@@ -19,12 +19,12 @@ namespace ZWave.Devices.Vision
 
         private void Basic_Changed(object sender, ReportEventArgs<BasicReport> e)
         {
-            if (e.Report.Value == 0x00)
+            if (e.Report.TargetValue == 0x00)
             {
                 OnShockCancelled(EventArgs.Empty);
                 return;
             }
-            if (e.Report.Value == 0xFF)
+            if (e.Report.TargetValue == 0xFF)
             {
                 OnShockDetected(EventArgs.Empty);
                 return;
