@@ -20,13 +20,13 @@ NuGet package: https://www.nuget.org/packages/ZWave4Net/
 Supported Z-Wave command classes:
 
 - Alarm v1-2
-- Association
+- Association v1-3
 - Basic v1-2
 - Battery v1*
 - CentralScene v1*
 - Clock v1
 - Color v1-3
-- Configuration
+- Configuration v1*
 - ManufacturerSpecific v1*
 - Meter v1-6
 - MultiChannel

@@ -22,12 +22,7 @@ namespace ZWave.CommandClasses
             {
                 //Version 2
                 TargetValue = payload[1];
-                if (payload[2] == 0xFE || payload[2] == 0x0)
-                    Duration = TimeSpan.Zero;
-                if (payload[2] < 0x80)
-                    Duration = new TimeSpan(0, 0, payload[2]);
-                else
-                    Duration = new TimeSpan(0, payload[2] - 0x80, 0);
+                Duration = PayloadConverter.ToTimeSpan(payload[2]);
             }
             else
             {

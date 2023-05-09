@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ZWave
 {
@@ -89,6 +87,29 @@ namespace ZWave
             }
         }
 
+        public static TimeSpan ToTimeSpan(byte payload)
+        {
+            if (payload == 0xFE || payload == 0x0)
+                return TimeSpan.Zero;
+            if (payload < 0x80)
+                return new TimeSpan(0, 0, payload);
+            else
+                return new TimeSpan(0, payload - 0x80, 0);
+        }
+
+        public static byte GetByte(TimeSpan value)
+        {
+            if (value.TotalSeconds >= 1)
+            {
+                if (value.TotalSeconds < 127)
+                    return (byte)value.TotalSeconds;
+                else if (value.TotalMinutes < 126)
+                    return (byte)(0x80 + value.TotalMinutes);
+                else
+                    return 0xFF;
+            }
+            return 0;
+        }
 
         public static byte[] GetBytes(sbyte value)
         {

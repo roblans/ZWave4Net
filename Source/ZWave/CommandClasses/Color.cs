@@ -37,19 +37,7 @@ namespace ZWave.CommandClasses
             payload.Add((byte)Math.Min(components.Length, 31)); //31 Components max
             payload.AddRange(components.SelectMany(element => element.ToBytes()));
             if (duration != null)
-            {
-                byte time = 0;
-                if (duration.Value.TotalSeconds >= 1)
-                {
-                    if (duration.Value.TotalSeconds < 127)
-                        time = (byte)duration.Value.TotalSeconds;
-                    else if (duration.Value.TotalMinutes < 126)
-                        time = (byte)(0x80 + duration.Value.TotalMinutes);
-                    else
-                        time = 0xFF;
-                }
-                payload.Add(time);
-            }
+                payload.Add(PayloadConverter.GetByte(duration.Value));
             await Channel.Send(Node, new Command(Class, command.Set, payload.ToArray()), cancellationToken);
         }
 

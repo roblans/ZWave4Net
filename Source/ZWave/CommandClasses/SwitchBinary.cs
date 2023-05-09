@@ -54,14 +54,7 @@ namespace ZWave.CommandClasses
         {
             byte time = 0;
             if (duration.TotalSeconds >= 1)
-            {
-                if (duration.TotalSeconds < 127)
-                    time = (byte)duration.TotalSeconds;
-                else if (duration.TotalMinutes < 126)
-                    time = (byte)(0x80 + duration.TotalMinutes);
-                else
-                    time = 0xFF;
-            }
+                time = PayloadConverter.GetByte(duration);
             await Send(new Command(Class, command.Set, value ? (byte)0xFF : (byte)0x00, time), cancellationToken);
         }
 

@@ -22,12 +22,7 @@ namespace ZWave.CommandClasses
             {
                 //Version 3
                 TargetValue = new ColorComponent((ColorComponentType)payload[0], payload[2]);
-                if (payload[3] == 0xFE || payload[3] == 0x0)
-                    Duration = TimeSpan.Zero;
-                if (payload[3] < 0x80)
-                    Duration = new TimeSpan(0, 0, payload[3]);
-                else
-                    Duration = new TimeSpan(0, payload[3] - 0x80, 0);
+                Duration = PayloadConverter.ToTimeSpan(payload[3]);
             }
             else
             {
