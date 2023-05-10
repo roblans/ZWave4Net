@@ -38,6 +38,7 @@ Supported Z-Wave command classes:
 - SensorAlarm v1
 - SensorBinary v1-2
 - SensorMultiLevel v1-11
+- SwitchAll v1
 - SwitchBinary v1-2
 - SwitchMultiLevel v1-2*
 - SwitchToggleBinary v1
