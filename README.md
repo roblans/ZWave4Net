@@ -48,7 +48,7 @@ Supported Z-Wave command classes:
 - ThermostatOperatingState v1*
 - ThermostatSetpoint v1*
 - Version v1-2*
-- WakeUp v1*
+- WakeUp v1-3
  
 FIBARO Wall Plug sample:
 
