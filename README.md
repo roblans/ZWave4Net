@@ -27,7 +27,7 @@ Supported Z-Wave command classes:
 - Clock v1
 - Color v1-3
 - Configuration v1*
-- ManufacturerSpecific v1*
+- ManufacturerSpecific v1-2
 - Meter v1-6
 - MultiChannel
 - MultiChannelAssociation
