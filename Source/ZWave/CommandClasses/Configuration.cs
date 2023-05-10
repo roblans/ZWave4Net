@@ -14,7 +14,10 @@ namespace ZWave.CommandClasses
         {
             Set = 0x04,
             Get = 0x05,
-            Report = 0x06
+            Report = 0x06,
+            BulkSet = 0x07,
+            BulkGet = 0x08,
+            BulkReport = 0x09
         }
 
         public Configuration(Node node) : base(node, CommandClass.Configuration)
@@ -32,15 +35,14 @@ namespace ZWave.CommandClasses
             return new ConfigurationReport(Node, response);
         }
 
-        public Task Set(byte parameter, object value, byte size)
+        public Task SetDefault(byte parameter)
         {
-            return Set(parameter, value, size, CancellationToken.None);
+            return Set(parameter, 0, false, 0, CancellationToken.None, true);
         }
 
-        public async Task Set(byte parameter, object value, byte size, CancellationToken cancellationToken)
+        public async Task SetDefault(byte parameter, CancellationToken cancellationToken)
         {
-            var int64 = Convert.ToInt64(value);
-            await Set(parameter, int64, true, size, cancellationToken);
+            await Set(parameter, 0, false, 0, cancellationToken, true);
         }
 
         public Task Set(byte parameter, sbyte value)
@@ -100,30 +102,10 @@ namespace ZWave.CommandClasses
 
         public async Task Set(byte parameter, uint value, CancellationToken cancellationToken)
         {
-            await Set(parameter, value, false, 0, cancellationToken);
+            await Set(parameter, (int)value, false, 0, cancellationToken);
         }
 
-        public Task Set(byte parameter, long value)
-        {
-            return Set(parameter, value, CancellationToken.None);
-        }
-
-        public async Task Set(byte parameter, long value, CancellationToken cancellationToken)
-        {
-            await Set(parameter, value, true, 0, cancellationToken);
-        }
-
-        public Task Set(byte parameter, ulong value)
-        {
-            return Set(parameter, value, CancellationToken.None);
-        }
-
-        public async Task Set(byte parameter, ulong value, CancellationToken cancellationToken)
-        {
-            await Set(parameter, (long)value, false, 0, cancellationToken);
-        }
-
-        private async Task Set(byte parameter, long value, bool signed, byte size, CancellationToken cancellationToken)
+        private async Task Set(byte parameter, int value, bool signed, byte size, CancellationToken cancellationToken, bool reset = false)
         {
             if (size == 0)
             {
@@ -142,15 +124,14 @@ namespace ZWave.CommandClasses
                     values = signed ? PayloadConverter.GetBytes((short)value) : PayloadConverter.GetBytes((ushort)value);
                     break;
                 case 4:
-                    values = signed ? PayloadConverter.GetBytes((int)value) : PayloadConverter.GetBytes((uint)value);
-                    break;
-                case 8:
-                    values = signed ? PayloadConverter.GetBytes((long)value) : PayloadConverter.GetBytes((ulong)value);
+                    values = signed ? PayloadConverter.GetBytes(value) : PayloadConverter.GetBytes((uint)value);
                     break;
                 default:
                     throw new NotSupportedException($"Size:{size} is not supported");
             }
-            await Channel.Send(Node, new Command(Class, command.Set, new[] { parameter, (byte)values.Length }.Concat(values).ToArray()), cancellationToken);
+            if (reset)
+                size |= 0x80;
+            await Channel.Send(Node, new Command(Class, command.Set, new[] { parameter, size }.Concat(values).ToArray()), cancellationToken);
         }
     }
 }
