@@ -7,7 +7,6 @@ namespace ZWave.CommandClasses
 {
     public class SecuritySupportedReport : NodeReport
     {
-        private const byte COMMAND_CLASS_MARK = 0xEF;
         public readonly CommandClass[] Classes;
 
         internal SecuritySupportedReport(Node node, byte[] payload) : base(node)
@@ -19,7 +18,7 @@ namespace ZWave.CommandClasses
             List<CommandClass> classes = new List<CommandClass>();
             for (int i = 1; i < payload.Length; i++)
             {
-                if (payload[i] == COMMAND_CLASS_MARK)
+                if (payload[i] == (byte)CommandClass.CommandMark)
                     break;
                 classes.Add((CommandClass)payload[i]);
             }
