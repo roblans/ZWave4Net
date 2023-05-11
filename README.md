@@ -27,7 +27,7 @@ Supported Z-Wave command classes:
 - Clock v1
 - Color v1-3
 - Configuration v1*
-- ManufacturerSpecific v1*
+- ManufacturerSpecific v1-2
 - Meter v1-6
 - MultiChannel
 - MultiChannelAssociation
@@ -38,8 +38,9 @@ Supported Z-Wave command classes:
 - SensorAlarm v1
 - SensorBinary v1-2
 - SensorMultiLevel v1-11
+- SwitchAll v1
 - SwitchBinary v1-2
-- SwitchMultiLevel v1-2*
+- SwitchMultiLevel v1-2, 4*
 - SwitchToggleBinary v1
 - SwitchToggleMultiLevel v1
 - ThermostatFanMode v1*
@@ -47,7 +48,7 @@ Supported Z-Wave command classes:
 - ThermostatOperatingState v1*
 - ThermostatSetpoint v1*
 - Version v1-2*
-- WakeUp v1*
+- WakeUp v1-3
  
 FIBARO Wall Plug sample:
 

@@ -28,7 +28,7 @@ namespace ZWave.Devices.Qubino
 
         private void switchMultiLevel_Changed(object sender, ReportEventArgs<SwitchMultiLevelReport> e)
         {
-            OnPositionChanged(new PositionEventArgs(e.Report.Value));
+            OnPositionChanged(new PositionEventArgs(e.Report.TargetValue));
         }
 
         protected virtual void OnPositionChanged(PositionEventArgs e)

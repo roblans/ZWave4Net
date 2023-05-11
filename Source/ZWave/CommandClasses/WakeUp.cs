@@ -17,7 +17,9 @@ namespace ZWave.CommandClasses
             IntervalGet = 0x05,
             IntervalReport = 0x06,
             Notification = 0x07,
-            NoMoreInformation = 0x08
+            NoMoreInformation = 0x08,
+            CapabilitiesGet = 0x09,
+            CapabilitiesReport = 0x0A
         }
 
         public WakeUp(Node node) : base(node, CommandClass.WakeUp)
@@ -33,6 +35,17 @@ namespace ZWave.CommandClasses
         {
             var response = await Channel.Send(Node, new Command(Class, command.IntervalGet), command.IntervalReport, cancellationToken);
             return new WakeUpIntervalReport(Node, response);
+        }
+
+        public Task<WakeUpCapabilitiesReport> GetIntervalCapabilities()
+        {
+            return GetIntervalCapabilities(CancellationToken.None);
+        }
+
+        public async Task<WakeUpCapabilitiesReport> GetIntervalCapabilities(CancellationToken cancellationToken)
+        {
+            var response = await Channel.Send(Node, new Command(Class, command.CapabilitiesGet), command.CapabilitiesReport, cancellationToken);
+            return new WakeUpCapabilitiesReport(Node, response);
         }
 
         public Task SetInterval(TimeSpan interval, byte targetNodeID)
