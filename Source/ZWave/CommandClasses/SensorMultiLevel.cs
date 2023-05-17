@@ -15,8 +15,10 @@ namespace ZWave.CommandClasses
         {
             SupportedGet = 0x01,
             SupportedReport = 0x02,
+            SupportedGetScale = 0x03,
             Get = 0x04,
-            Report = 0x05
+            Report = 0x05,
+            SupportedScaleReport = 0x06
         }
 
         public SensorMultiLevel(Node node)
@@ -38,12 +40,7 @@ namespace ZWave.CommandClasses
             return report.Version >= GetSupportedSensorsMinimalProtocolVersion;
         }
 
-        public Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors()
-        {
-            return GetSupportedSensors(CancellationToken.None);
-        }
-
-        public async Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors(CancellationToken cancellationToken)
+        public async Task<SensorMultilevelSupportedSensorReport> GetSupportedSensors(CancellationToken cancellationToken = default)
         {
             if (!await IsSupportGetSupportedSensors(cancellationToken))
             {
@@ -54,15 +51,49 @@ namespace ZWave.CommandClasses
             return new SensorMultilevelSupportedSensorReport(Node, response);
         }
 
-        public Task<SensorMultiLevelReport> Get(SensorType type)
+        /// <summary>
+        /// Get default sensor value (Version 1+)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<SensorMultiLevelReport> Get(CancellationToken cancellationToken = default)
         {
-            return Get(type, CancellationToken.None);
+            var response = await Send(new Command(Class, command.Get), command.Report, cancellationToken);
+            return new SensorMultiLevelReport(Node, response);
         }
 
-        public async Task<SensorMultiLevelReport> Get(SensorType type, CancellationToken cancellationToken)
+        /// <summary>
+        /// Get sensor value for type (Version 5+)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<SensorMultiLevelReport> Get(SensorType type, byte scale, CancellationToken cancellationToken = default)
         {
-            var response = await Send(new Command(Class, command.Get, (byte)type), command.Report, cancellationToken);
+            if (!await IsSupportGetSupportedSensors(cancellationToken))
+            {
+                throw new VersionNotSupportedException($"Get(SensorType) works with class type {Class} greater or equal to {GetSupportedSensorsMinimalProtocolVersion}.");
+            }
+            scale = (byte)((scale & 0x03) << 3);
+            var response = await Send(new Command(Class, command.Get, (byte)type, scale), command.Report, cancellationToken);
             return new SensorMultiLevelReport(Node, response);
+        }
+
+        /// <summary>
+        /// Get sensor scale for type (Version 5+)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<SensorMultilevelSupportedScaleReport> GetScale(SensorType type, CancellationToken cancellationToken = default)
+        {
+            if (!await IsSupportGetSupportedSensors(cancellationToken))
+            {
+                throw new VersionNotSupportedException($"GetScale works with class type {Class} greater or equal to {GetSupportedSensorsMinimalProtocolVersion}.");
+            }
+            var response = await Send(new Command(Class, command.SupportedGetScale, (byte)type), command.SupportedScaleReport, cancellationToken);
+            return new SensorMultilevelSupportedScaleReport(Node, response);
         }
 
         protected internal override void HandleEvent(Command command)

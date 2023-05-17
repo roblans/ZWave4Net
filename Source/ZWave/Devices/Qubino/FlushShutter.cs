@@ -62,7 +62,7 @@ namespace ZWave.Devices.Qubino
 
         public async Task<SensorMultiLevelReport> GetTemperature()
         {
-            return await _sensorMultiLevel.Get(SensorType.Temperature);
+            return await _sensorMultiLevel.Get(SensorType.Temperature, 0);
         }
     }
 

@@ -76,25 +76,25 @@ namespace ZWave.Devices.Aeon
 
         public async Task<Measure> GetTemperature()
         {
-            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Temperature);
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Temperature, 0);
             return new Measure(report.Value, Unit.Celsius);
         }
 
         public async Task<Measure> GetLuminance()
         {
-            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Luminance);
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Luminance, 0);
             return new Measure(report.Value, Unit.Lux);
         }
 
         public async Task<Measure> GetRelativeHumidity()
         {
-            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.RelativeHumidity);
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.RelativeHumidity, 0);
             return new Measure(report.Value, Unit.Humidity);
         }
 
         public async Task<Measure> GetUltraviolet()
         {
-            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Ultraviolet);
+            var report = await Node.GetCommandClass<SensorMultiLevel>().Get(SensorType.Ultraviolet, 0);
             return new Measure(report.Value, Unit.Ultraviolet);
         }
 
