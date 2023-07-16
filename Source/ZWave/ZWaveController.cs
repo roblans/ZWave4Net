@@ -57,6 +57,11 @@ namespace ZWave
             Channel.Open();
         }
 
+        public Task SoftReset(CancellationToken cancellationToken = default)
+        {
+            return Channel.SoftReset(cancellationToken);
+        }
+
         private enum AddRemoveNodeStatus
         {
             NodeStatusLearnReady = 1,

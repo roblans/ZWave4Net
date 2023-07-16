@@ -294,11 +294,6 @@ namespace ZWave.Channel
             _processEventsTask.Start();
             _transmitTask.Start();
 
-            //Reset Serial Connection
-            _transmitQueue.Add(Message.NAK);
-            var request = new ControllerFunction(Function.SerialApiSoftReset);
-            _transmitQueue.Add(request);
-            Task.Delay(1500).Wait();
         }
 
         public void Close()
@@ -312,6 +307,14 @@ namespace ZWave.Channel
             _portReadTask.Wait();
             _processEventsTask.Wait();
             _transmitTask.Wait();
+        }
+
+        internal async Task SoftReset(CancellationToken cancellationToken =  default)
+        {
+            // Reset Serial Connection
+            _transmitQueue.Add(Message.NAK);
+            _transmitQueue.Add(new ControllerFunction(Function.SerialApiSoftReset));
+            await Task.Delay(1500, cancellationToken);
         }
 
         private async Task<Byte[]> Exchange(Func<Task<Byte[]>> func, string message, CancellationToken cancellationToken)
