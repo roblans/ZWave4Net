@@ -64,6 +64,18 @@ namespace ZWave.CommandClasses
         }
 
         /// <summary>
+        /// Get sensor value for type (Version 1+)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<SensorMultiLevelReport> Get(SensorType type, CancellationToken cancellationToken = default)
+        {
+            var response = await Send(new Command(Class, command.Get, (byte)type), command.Report, cancellationToken);
+            return new SensorMultiLevelReport(Node, response);
+        }
+
+        /// <summary>
         /// Get sensor value for type (Version 5+)
         /// </summary>
         /// <param name="type"></param>
